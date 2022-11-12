@@ -74,7 +74,7 @@ A lazy way to handle caret and tabulation on textarea.
 Example:
 
 ```js
-const { LazyCaret } = require('@friquet-luca/lazy-portable');
+const { LazyCaret } = require('@lazy-toolbox/client');
 const textArea = document.querySelector('textarea');
 
 // Set the caret to the second position of a textarea
@@ -119,7 +119,7 @@ Note: You can't use `_packet` as property name.
 Example:
 
 ```js
-const { LazyClient } = require('@friquet-luca/lazy-portable');
+const { LazyClient } = require('@lazy-toolbox/client');
 // Create our client handler, listening to the host at a specific port.
 const socketClient = new LazyClient('localhost', 6060);
 // Register an array of all sender functions.
@@ -180,7 +180,7 @@ A lazy way to write `document.something`.
 Example:
 
 ```js
-const { LazyDoc } = require('@friquet-luca/lazy-portable');
+const { LazyDoc } = require('@lazy-toolbox/client');
 // document.createElement makes dev cry a lot.
 // It's just an easy way to make it work.
 // It could look ugly, but useful for a lot of cases.
@@ -237,7 +237,7 @@ Example:
 
 ```js
 // Everything in LazyHtNetwork is async, take that into account.
-const { LazyHtNetwork } = require('@friquet-luca/lazy-portable');
+const { LazyHtNetwork } = require('@lazy-toolbox/client');
 // Post form datas (for PHP as example)
 // Takes a callback from the server for anything.
 LazyHtNetwork.post('http://somewhere.com/somethingToPost/', {
@@ -275,7 +275,7 @@ It's useful to handle multiple theme with CSS without having the need to manuall
 Example:
 
 ```js
-const { LazyTheme } = require('@friquet-luca/lazy-portable');
+const { LazyTheme } = require('@lazy-toolbox/client');
 const myThemes = new LazyTheme(
     [ // Themes class name
         'light',
@@ -340,7 +340,7 @@ Example:
 ```
 `main.js`:
 ```js
-const { LazyView } = require('@friquet-luca/lazy-portable');
+const { LazyView } = require('@lazy-toolbox/client');
 const testView = document.querySelector('.someDiv');
 LazyView.inject(testView, // Replace all insert[data='targetElement']
 'replaceUseless', // Data to replace
@@ -391,7 +391,7 @@ It will be showned as `[HH:MM:SS] MY_MESSAGE`.
 Example:
 
 ```js
-const { dateLog } = require('@friquet-luca/lazy-shared');
+const { dateLog } = require('@lazy-toolbox/portable');
 console.log(dateLog("Hello world")); // [10:37:12] Hello world
 ```
 
@@ -406,7 +406,7 @@ It will be showned as `[HH:MM:SS.DCM] MY_MESSAGE`.
 Example:
 
 ```js
-const { dateLogMS } = require('@friquet-luca/lazy-shared');
+const { dateLogMS } = require('@lazy-toolbox/portable');
 console.log(dateLogMS("Hello world")); // [10:37:12.123] Hello world
 ```
 
@@ -420,7 +420,7 @@ Get the type of the parameter, extending `typeof` to support `class` and `array`
 Example:
 
 ```js
-const { getType } = require('@friquet-luca/lazy-shared');
+const { getType } = require('@lazy-toolbox/portable');
 class Animal {
     constructor(name) {
         this.name = name;
@@ -458,7 +458,7 @@ Add some lazy math that should have been available at first on JS.
 Example:
 
 ```js
-const { LazyMath } = require('@friquet-luca/lazy-shared');
+const { LazyMath } = require('@lazy-toolbox/portable');
 // The JS modulo operator violate the property (a + n) mod n = a mod n.
 // So we've implemented a modulo that doesn't violate it.
 // JS modulo = a - ([a / b] * b)

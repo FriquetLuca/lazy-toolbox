@@ -15,7 +15,7 @@ A lazy way to handle caret and tabulation on textarea.
 Example:
 
 ```js
-const { LazyCaret } = require('@friquet-luca/lazy-portable');
+const { LazyCaret } = require('@lazy-toolbox/client');
 const textArea = document.querySelector('textarea');
 
 // Set the caret to the second position of a textarea

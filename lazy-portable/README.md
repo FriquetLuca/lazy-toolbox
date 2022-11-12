@@ -42,7 +42,7 @@ It will be showned as `[HH:MM:SS] MY_MESSAGE`.
 Example:
 
 ```js
-const { dateLog } = require('@friquet-luca/lazy-shared');
+const { dateLog } = require('@lazy-toolbox/portable');
 console.log(dateLog("Hello world")); // [10:37:12] Hello world
 ```
 
@@ -57,7 +57,7 @@ It will be showned as `[HH:MM:SS.DCM] MY_MESSAGE`.
 Example:
 
 ```js
-const { dateLogMS } = require('@friquet-luca/lazy-shared');
+const { dateLogMS } = require('@lazy-toolbox/portable');
 console.log(dateLogMS("Hello world")); // [10:37:12.123] Hello world
 ```
 
@@ -71,7 +71,7 @@ Get the type of the parameter, extending `typeof` to support `class` and `array`
 Example:
 
 ```js
-const { getType } = require('@friquet-luca/lazy-shared');
+const { getType } = require('@lazy-toolbox/portable');
 class Animal {
     constructor(name) {
         this.name = name;
@@ -109,7 +109,7 @@ Add some lazy math that should have been available at first on JS.
 Example:
 
 ```js
-const { LazyMath } = require('@friquet-luca/lazy-shared');
+const { LazyMath } = require('@lazy-toolbox/portable');
 // The JS modulo operator violate the property (a + n) mod n = a mod n.
 // So we've implemented a modulo that doesn't violate it.
 // JS modulo = a - ([a / b] * b)

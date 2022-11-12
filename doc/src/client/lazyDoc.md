@@ -20,7 +20,7 @@ A lazy way to write `document.something`.
 Example:
 
 ```js
-const { LazyDoc } = require('@friquet-luca/lazy-portable');
+const { LazyDoc } = require('@lazy-toolbox/client');
 // document.createElement makes dev cry a lot.
 // It's just an easy way to make it work.
 // It could look ugly, but useful for a lot of cases.

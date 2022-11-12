@@ -9,6 +9,6 @@ It will be showned as `[HH:MM:SS.DCM] MY_MESSAGE`.
 Example:
 
 ```js
-const { dateLogMS } = require('@friquet-luca/lazy-shared');
+const { dateLogMS } = require('@lazy-toolbox/portable');
 console.log(dateLogMS("Hello world")); // [10:37:12.123] Hello world
 ```

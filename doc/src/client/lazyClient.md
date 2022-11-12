@@ -14,7 +14,7 @@ Note: You can't use `_packet` as property name.
 Example:
 
 ```js
-const { LazyClient } = require('@friquet-luca/lazy-portable');
+const { LazyClient } = require('@lazy-toolbox/client');
 // Create our client handler, listening to the host at a specific port.
 const socketClient = new LazyClient('localhost', 6060);
 // Register an array of all sender functions.

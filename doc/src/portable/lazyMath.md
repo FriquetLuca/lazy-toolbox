@@ -23,7 +23,7 @@ Add some lazy math that should have been available at first on JS.
 Example:
 
 ```js
-const { LazyMath } = require('@friquet-luca/lazy-shared');
+const { LazyMath } = require('@lazy-toolbox/portable');
 // The JS modulo operator violate the property (a + n) mod n = a mod n.
 // So we've implemented a modulo that doesn't violate it.
 // JS modulo = a - ([a / b] * b)

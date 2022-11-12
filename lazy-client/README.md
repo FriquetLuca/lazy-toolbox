@@ -50,7 +50,7 @@ A lazy way to handle caret and tabulation on textarea.
 Example:
 
 ```js
-const { LazyCaret } = require('@friquet-luca/lazy-portable');
+const { LazyCaret } = require('@lazy-toolbox/client');
 const textArea = document.querySelector('textarea');
 
 // Set the caret to the second position of a textarea
@@ -95,7 +95,7 @@ Note: You can't use `_packet` as property name.
 Example:
 
 ```js
-const { LazyClient } = require('@friquet-luca/lazy-portable');
+const { LazyClient } = require('@lazy-toolbox/client');
 // Create our client handler, listening to the host at a specific port.
 const socketClient = new LazyClient('localhost', 6060);
 // Register an array of all sender functions.
@@ -156,7 +156,7 @@ A lazy way to write `document.something`.
 Example:
 
 ```js
-const { LazyDoc } = require('@friquet-luca/lazy-portable');
+const { LazyDoc } = require('@lazy-toolbox/client');
 // document.createElement makes dev cry a lot.
 // It's just an easy way to make it work.
 // It could look ugly, but useful for a lot of cases.
@@ -213,7 +213,7 @@ Example:
 
 ```js
 // Everything in LazyHtNetwork is async, take that into account.
-const { LazyHtNetwork } = require('@friquet-luca/lazy-portable');
+const { LazyHtNetwork } = require('@lazy-toolbox/client');
 // Post form datas (for PHP as example)
 // Takes a callback from the server for anything.
 LazyHtNetwork.post('http://somewhere.com/somethingToPost/', {
@@ -251,7 +251,7 @@ It's useful to handle multiple theme with CSS without having the need to manuall
 Example:
 
 ```js
-const { LazyTheme } = require('@friquet-luca/lazy-portable');
+const { LazyTheme } = require('@lazy-toolbox/client');
 const myThemes = new LazyTheme(
     [ // Themes class name
         'light',
@@ -316,7 +316,7 @@ Example:
 ```
 `main.js`:
 ```js
-const { LazyView } = require('@friquet-luca/lazy-portable');
+const { LazyView } = require('@lazy-toolbox/client');
 const testView = document.querySelector('.someDiv');
 LazyView.inject(testView, // Replace all insert[data='targetElement']
 'replaceUseless', // Data to replace

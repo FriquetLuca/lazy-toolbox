@@ -18,7 +18,7 @@ It's useful to handle multiple theme with CSS without having the need to manuall
 Example:
 
 ```js
-const { LazyTheme } = require('@friquet-luca/lazy-portable');
+const { LazyTheme } = require('@lazy-toolbox/client');
 const myThemes = new LazyTheme(
     [ // Themes class name
         'light',

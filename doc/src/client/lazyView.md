@@ -29,7 +29,7 @@ Example:
 ```
 `main.js`:
 ```js
-const { LazyView } = require('@friquet-luca/lazy-portable');
+const { LazyView } = require('@lazy-toolbox/client');
 const testView = document.querySelector('.someDiv');
 LazyView.inject(testView, // Replace all insert[data='targetElement']
 'replaceUseless', // Data to replace

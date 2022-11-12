@@ -17,7 +17,7 @@ Example:
 
 ```js
 // Everything in LazyHtNetwork is async, take that into account.
-const { LazyHtNetwork } = require('@friquet-luca/lazy-portable');
+const { LazyHtNetwork } = require('@lazy-toolbox/client');
 // Post form datas (for PHP as example)
 // Takes a callback from the server for anything.
 LazyHtNetwork.post('http://somewhere.com/somethingToPost/', {

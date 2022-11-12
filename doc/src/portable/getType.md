@@ -8,7 +8,7 @@ Get the type of the parameter, extending `typeof` to support `class` and `array`
 Example:
 
 ```js
-const { getType } = require('@friquet-luca/lazy-shared');
+const { getType } = require('@lazy-toolbox/portable');
 class Animal {
     constructor(name) {
         this.name = name;
