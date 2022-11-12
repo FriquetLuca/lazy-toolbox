@@ -1,6 +1,6 @@
 {
   "name": "lazy-toolbox",
-  "version": "0.0.0",
+  "version": "1.3.0",
   "description": "",
   "files": [
     "wrapper.mjs",
@@ -29,9 +29,7 @@
     "socket",
     "sockets"
   ],
-  "scripts": {
-    
-  },
+  "scripts": {},
   "homepage": "https://github.com/FriquetLuca/lazy-toolbox",
   "bugs": {
     "url": "https://github.com/FriquetLuca/lazy-toolbox/issues"
@@ -49,7 +47,7 @@
   },
   "dependencies": {
     "@fastify/static": "^6.5.0",
-    "@friquet-luca/lazy-shared": "^1.0.0",
+    "@lazy-toolbox/portable": "^0.0.0",
     "fastify": "^4.9.2",
     "node": "^14.21.0",
     "ws": "^8.10.0"

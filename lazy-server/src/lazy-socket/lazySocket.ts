@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import {LazyModLoader} from '../lazyModLoader';
-import { dateLogMS } from '@friquet-luca/lazy-shared';
+import { dateLogMS } from '@lazy-toolbox/portable';
 
 /**
  * The relative path of all three folders that will contain the modules needed for the socket logic to implement. 

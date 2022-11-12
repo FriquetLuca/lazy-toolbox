@@ -1,3 +1,6 @@
 ## [Updates](#updates)
 
-### [v0.0.0 - Initial commit](#se-vo-o-o)
+### [v1.3.0 - Project repack](#se-vo-o-o)
+
+Full project repack.
+Deprecated all previous versions support, getting rid of all previous known bugs.

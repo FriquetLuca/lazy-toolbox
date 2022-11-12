@@ -1,4 +1,4 @@
-import { dateLogMS } from '@friquet-luca/lazy-shared';
+import { dateLogMS } from '@lazy-toolbox/portable';
 const { spawn } = require('node:child_process');
 /**
  * A lazy way to encapsulate a node process.
