@@ -1,0 +1,51 @@
+{
+  "name": "@lazy-toolbox/client",
+  "version": "0.0.0",
+  "description": "",
+  "files": [
+    "wrapper.mjs",
+    "dist/**/*"
+  ],
+  "main": "./dist/index.js",
+  "exports": {
+    "import": "./wrapper.mjs",
+    "require": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "types": "./dist/index.d.ts",
+  "keywords": [
+    "lazy",
+    "toolbox",
+    "client",
+    "scripts",
+    "document",
+    "html",
+    "node",
+    "element",
+    "theme",
+    "caret",
+    "socket",
+    "sockets",
+    "view",
+    "views",
+    "fetch",
+    "get",
+    "post"
+  ],
+  "scripts": {
+    
+  },
+  "homepage": "https://github.com/FriquetLuca/lazy-toolbox",
+  "bugs": {
+    "url": "https://github.com/FriquetLuca/lazy-toolbox/issues"
+  },
+  "author": "Friquet Luca",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FriquetLuca/lazy-toolbox.git"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  }
+}

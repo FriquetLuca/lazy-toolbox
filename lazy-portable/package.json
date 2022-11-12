@@ -1,0 +1,44 @@
+{
+  "name": "@lazy-toolbox/portable",
+  "version": "0.0.0",
+  "description": "",
+  "files": [
+    "wrapper.mjs",
+    "dist/**/*"
+  ],
+  "main": "./dist/index.js",
+  "exports": {
+    "import": "./wrapper.mjs",
+    "require": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "types": "./dist/index.d.ts",
+  "keywords": [
+    "lazy",
+    "toolbox",
+    "portable",
+    "scripts",
+    "class",
+    "classes",
+    "typeof",
+    "log",
+    "console",
+    "time"
+  ],
+  "scripts": {
+    
+  },
+  "homepage": "https://github.com/FriquetLuca/lazy-toolbox",
+  "bugs": {
+    "url": "https://github.com/FriquetLuca/lazy-toolbox/issues"
+  },
+  "author": "Friquet Luca",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FriquetLuca/lazy-toolbox.git"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  }
+}

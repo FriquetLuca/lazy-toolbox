@@ -1,0 +1,5 @@
+- [Portable](#portable)
+    - [getType](#getType)
+    - [dateLog](#dateLog)
+    - [dateLogMS](#dateLogMs)
+    - [LazyMath](#lazyMath)
