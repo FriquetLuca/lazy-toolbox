@@ -2,5 +2,5 @@
 
 The installation is pretty straight forward:
 ```terminal
-npm i lazy-maker
+npm i lazy-toolbox
 ```

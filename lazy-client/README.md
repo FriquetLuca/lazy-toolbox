@@ -1,3 +1,8 @@
+# Lazy Toolbox - Client
+
+> A NodeJS toolbox made for a lazy development anywhere you need on your webpage.
+
+Made to create a webpage as fast as possible. Explore more, focus more on developing features.
 
 ## Index
 
@@ -16,8 +21,9 @@
 
 The installation is pretty straight forward:
 ```terminal
-npm i @lazy-maker/client
+npm i @lazy-toolbox/client
 ```
+
 ## [Updates](#updates)
 
 ### [v0.0.0 - Initial commit](#se-vo-o-o)

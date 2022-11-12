@@ -1,3 +1,8 @@
+# Lazy Toolbox - Server
+
+> A NodeJS toolbox made for a lazy development on server part.
+
+Made to setup a server as fast as possible, the lazy toolbox is made so you have as few as possible to write to get things done.
 
 ## Index
 
@@ -17,8 +22,9 @@
 
 The installation is pretty straight forward:
 ```terminal
-npm i lazy-maker
+npm i lazy-toolbox
 ```
+
 ## [Updates](#updates)
 
 ### [v0.0.0 - Initial commit](#se-vo-o-o)

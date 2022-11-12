@@ -1,8 +1,13 @@
-# Lazy Maker
+# Lazy Toolbox
 
 > A NodeJS toolbox made for a lazy development of websites or even applications.
 
-The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-toolbox) and the project on [NPM - Server toolbox](https://www.npmjs.com/package/lazy-toolbox) and [NPM - Client toolbox](https://www.npmjs.com/package/@friquet-luca/lazy-portable).
+The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-toolbox).
+
+Lazy Toolbox is made of multiples parts, you can find the source of those parts over here:
+- [Server](https://github.com/FriquetLuca/lazy-toolbox/tree/master/lazy-server)
+- [Client](https://github.com/FriquetLuca/lazy-toolbox/tree/master/lazy-client)
+- [Portable](https://github.com/FriquetLuca/lazy-toolbox/tree/master/lazy-portable)
 
 ## Index
 
@@ -41,7 +46,7 @@ The project is divided in three different part that could need some dependances:
     The server dependances are `fastify`, `ws` and `node`.
 - Portable
 
-    The portable part don't need any dependances since it's gonna be either used by the client or the server.
+    It doesn't need any dependances, it can be used on either a webpage or a server.
 ## [Updates](#updates)
 
 All updates are availables on their respective parts.

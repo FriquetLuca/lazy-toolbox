@@ -1,5 +1,5 @@
-# Lazy Maker
+# Lazy Toolbox - Portable
 
-> A NodeJS toolbox made for a lazy development of websites or even applications.
+> A NodeJS toolbox made for a lazy development anywhere you need.
 
-The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-toolbox) and the project on [NPM - Server toolbox](https://www.npmjs.com/package/lazy-toolbox) and [NPM - Client toolbox](https://www.npmjs.com/package/@friquet-luca/lazy-portable).
+Made to handle a bunch of cases that have to be handle on either a server or a client part.

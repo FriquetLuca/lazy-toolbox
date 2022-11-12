@@ -2,5 +2,5 @@
 
 The installation is pretty straight forward:
 ```terminal
-npm i @lazy-maker/portable
+npm i @lazy-toolbox/portable
 ```
