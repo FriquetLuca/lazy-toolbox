@@ -2,7 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 const fsp = util.promisify(fs.readFile);
-
+if(typeof String.prototype.replaceAll === "undefined") {
+    String.prototype.replaceAll = function(match, replace) {
+       return this.replace(new RegExp(match, 'g'), () => replace);
+    }
+}
 const readSource = async (sourcePath) => {
     return await fsp(path.join(__dirname, './src/', sourcePath));
 };
@@ -133,3 +137,4 @@ const makeDocumentation = async () => {
 };
 
 makeDocumentation();
+console.log("Documentation has been generated!");

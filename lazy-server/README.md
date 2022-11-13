@@ -29,7 +29,16 @@ npm i lazy-toolbox
 
 ## [Updates](#updates)
 
-### [v1.3.0 - Project repack](#se-vo-o-o)
+### v1.3.3 - Encap Process freedom
+
+Add `process` property to `LazyEncapProcess`.
+Add optional `inject` argument to `start` method in `LazyEncapProcess`.
+
+### v1.3.1 - Encap Process
+
+Modification of the `LazyEncapProcess` constructor.
+
+### v1.3.0 - Project repack
 
 Full project repack.
 Deprecated all previous versions support, getting rid of all previous known bugs.
@@ -43,10 +52,9 @@ This part explain all tools with examples if it's needed.
 #### [LazyEncapProcess](#lazyEncapProcess)
 ```ts
 class LazyEncapProcess {
-    constructor(root: string, processPath: string, logInfo: boolean = true, showDates: boolean = true);
-    // Last update at version: 1.1.2
-    async start(): Promise<void>;
-    // Last update at version: 1.1.2
+    get process();
+    constructor(root: string, processPath: string, nodeType: string = 'node', logInfo: boolean = true, showDates: boolean = true);
+    async start(inject?: (process: any) => Promise<void>): Promise<void>;
     async stop(): Promise<void>;
 }
 ```

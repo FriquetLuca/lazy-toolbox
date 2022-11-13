@@ -5,6 +5,7 @@ const { spawn } = require('node:child_process');
  */
 export class LazyEncapProcess {
     private root: string;
+    private nodeType: string;
     private processPath: string;
     private isRunning: boolean;
     private reset: boolean;
@@ -14,20 +15,28 @@ export class LazyEncapProcess {
      * Create a new node process that can be executed in the background.
      * @param {string} root The root of the project.
      * @param {string} processPath The relative path to the process.
+     * @param {string} nodeType The process type. By default, it's node.
      * @param {boolean} logInfo Show the socket's log.
      * @param {boolean} showDates Show the time in the socket's log.
      */
-    constructor(root: string, processPath: string, logInfo: boolean = true, showDates: boolean = true) {
+    constructor(root: string, processPath: string, nodeType: string = 'node', logInfo: boolean = true, showDates: boolean = true) {
         if(showDates) {
             this.log = logInfo ? (m) => console.log(dateLogMS(m)) : () => {};
         } else {
             this.log = logInfo ? (m) => console.log(m) : () => {};
         }
         this.root = root;
+        this.nodeType = nodeType;
         this.processPath = processPath;
         this.isRunning = false;
         this.reset = false;
         this.node = null;
+    }
+    /**
+     * Get the current process.
+     */
+    public get process() {
+        return this.node;
     }
     /**
      * Stop the node process if it exist or it's still executed.
@@ -41,14 +50,15 @@ export class LazyEncapProcess {
     }
     /**
      * Start the node process.
+     * @param {(process: any) => void} inject Inject behaviour for the process spawn.
      */
-    public async start(): Promise<void> {
+    public async start(inject?: (process: any) => Promise<void>): Promise<void> {
         if(this.isRunning) {
             setTimeout(() => {
                 this.start();
             }, 100);
         } else {
-            const newNode = spawn('node', [this.processPath], {
+            const newNode = spawn(this.nodeType, [this.processPath], {
                 cwd: this.root,
                 stdio: ['ipc'],
             });
@@ -64,6 +74,9 @@ export class LazyEncapProcess {
                 this.log(`Node ${newNode.pid} stopped.`);
                 this.isRunning = false;
             });
+            if(inject) {
+                await inject(newNode);
+            }
             this.log(`Starting node ${newNode.pid}...`);
             this.node = newNode;
             this.reset = false;

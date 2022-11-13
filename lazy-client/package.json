@@ -33,7 +33,9 @@
     "post"
   ],
   "scripts": {
-    
+    "doc": "node ../doc/generate.js",
+    "delDist": "rmdir /q /s dist",
+    "publish": "npm run doc && npm run delDist && tsc && npm publish"
   },
   "homepage": "https://github.com/FriquetLuca/lazy-toolbox",
   "bugs": {

@@ -1,10 +1,9 @@
 #### [LazyEncapProcess](#lazyEncapProcess)
 ```ts
 class LazyEncapProcess {
-    constructor(root: string, processPath: string, logInfo: boolean = true, showDates: boolean = true);
-    // Last update at version: 1.1.2
-    async start(): Promise<void>;
-    // Last update at version: 1.1.2
+    get process();
+    constructor(root: string, processPath: string, nodeType: string = 'node', logInfo: boolean = true, showDates: boolean = true);
+    async start(inject?: (process: any) => Promise<void>): Promise<void>;
     async stop(): Promise<void>;
 }
 ```
