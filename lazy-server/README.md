@@ -53,7 +53,7 @@ This part explain all tools with examples if it's needed.
 ```ts
 class LazyEncapProcess {
     get process();
-    constructor(root: string, processPath: string, nodeType: string = 'node', logInfo: boolean = true, showDates: boolean = true);
+    constructor(root: string, processPath: string, nodeType: string | string[] = 'node', logInfo: boolean = true, showDates: boolean = true);
     async start(inject?: (process: any) => Promise<void>): Promise<void>;
     async stop(): Promise<void>;
 }

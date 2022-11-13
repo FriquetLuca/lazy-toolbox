@@ -1,11 +1,11 @@
-import { dateLogMS } from '@lazy-toolbox/portable';
+import { dateLogMS, getType } from '@lazy-toolbox/portable';
 const { spawn } = require('node:child_process');
 /**
  * A lazy way to encapsulate a node process.
  */
 export class LazyEncapProcess {
     private root: string;
-    private nodeType: string;
+    private nodeType: string | string[];
     private processPath: string;
     private isRunning: boolean;
     private reset: boolean;
@@ -15,11 +15,11 @@ export class LazyEncapProcess {
      * Create a new node process that can be executed in the background.
      * @param {string} root The root of the project.
      * @param {string} processPath The relative path to the process.
-     * @param {string} nodeType The process type. By default, it's node.
+     * @param {string | string[]} nodeType The process type. By default, it's node.
      * @param {boolean} logInfo Show the socket's log.
      * @param {boolean} showDates Show the time in the socket's log.
      */
-    constructor(root: string, processPath: string, nodeType: string = 'node', logInfo: boolean = true, showDates: boolean = true) {
+    constructor(root: string, processPath: string, nodeType: string | string[] = 'node', logInfo: boolean = true, showDates: boolean = true) {
         if(showDates) {
             this.log = logInfo ? (m) => console.log(dateLogMS(m)) : () => {};
         } else {
@@ -58,7 +58,16 @@ export class LazyEncapProcess {
                 this.start();
             }, 100);
         } else {
-            const newNode = spawn(this.nodeType, [this.processPath], {
+            let spawning = null;
+            let args = null;
+            if(getType(this.nodeType) === 'array') {
+                args = [...this.nodeType, this.processPath];
+                spawning = args.shift();
+            } else {
+                spawning = this.nodeType;
+                args = [this.processPath];
+            }
+            const newNode = spawn(spawning, args, {
                 cwd: this.root,
                 stdio: ['ipc'],
             });
