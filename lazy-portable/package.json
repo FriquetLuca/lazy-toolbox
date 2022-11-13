@@ -26,9 +26,11 @@
     "time"
   ],
   "scripts": {
+    "skip": "echo \"Skipping delete dist folder...\"",
     "doc": "node ../doc/generate.js",
     "delDist": "rmdir /q /s dist",
-    "publish": "npm run doc && npm run delDist && tsc && npm publish"
+    "gitPushAll": "cd .. && git add . && git commit && git push -u origin master && cd lazy-portable",
+    "publishAll": "npm run doc && (npm run delDist || npm run skip) && tsc && npm run gitPushAll && npm publish"
   },
   "homepage": "https://github.com/FriquetLuca/lazy-toolbox",
   "bugs": {
