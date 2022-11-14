@@ -31,7 +31,7 @@ npm i lazy-toolbox
 
 ## [Updates](#updates)
 
-### v1.3.6 - LazySocket Sharing
+### v1.3.7 - LazySocket Sharing
 
 New content were added:
 - Add `getData`, `setData` and `deleteData` methods to `LazySocket`.
