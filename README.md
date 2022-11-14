@@ -1,3 +1,5 @@
+![Lazy Toolbox](/doc/img/logo.png)
+
 # Lazy Toolbox
 
 > A NodeJS toolbox made for a lazy development of websites or even applications.
@@ -22,9 +24,11 @@ Lazy Toolbox is made of multiples parts, you can find the source of those parts 
 	    - [LazyView](#lazyView)
 	    - [LazyTheme](#lazyTheme)
 	- [Portable](#portable)
-	    - [getType](#getType)
 	    - [dateLog](#dateLog)
 	    - [dateLogMS](#dateLogMs)
+	    - [getType](#getType)
+	    - [LazyDataGraph](#lazyDataGraph)
+	    - [LazyMapper](#lazyMapper)
 	    - [LazyMath](#lazyMath)
 	- [Server](#server)
 	    - [LazyModLoader](#lazyModLoader)
@@ -433,6 +437,87 @@ console.log(getType(y)); // array
 // Everything else is the same as typeof
 ```
 
+#### [LazyDataGraph](#lazyDataGraph)
+```ts
+interface GraphPoint {
+    value: number;
+    label: string;
+    increasePercent?: number;
+    localMean?: number;
+    localVariance?: number;
+}
+class LazyDataGraph {
+    constructor(...datas: GraphPoint[]);
+    get points(): GraphPoint[];
+    set points(pts: GraphPoint[]);
+    isTangentGraph(): boolean;
+    getTangentGraph(): LazyDataGraph;
+    generateSlope(): GraphPoint[];
+}
+```
+
+A non-visual graph to analyze variation in datas.
+
+Example:
+
+```js
+const { LazyDataGraph } = require('@lazy-toolbox/portable');
+// Create the graph
+const lazyGraph = new LazyDataGraph(
+    // Set an ordered bunch of points
+    {label:'d1', value:100},
+    {label:'d2', value:100},
+    {label:'d3', value:200},
+    {label:'d4', value:150},
+    {label:'d5', value:100}
+);
+// Generate the tangent of the graph to see the differentiation in the graph
+const tangentGraph = lazyGraph.generateSlope();
+// Just showing what was made on the way.
+for(let tanPt of tangentGraph) {
+    console.log(`- ${tanPt.label}: [value: ${tanPt.value}, increasePercent: ${tanPt.increasePercent}, localMean: ${tanPt.localMean}, localVariance: ${tanPt.localVariance}]`);
+}
+/* Result:
+- d1-d2: [value: 0, increasePercent: 0.0 ]
+- d2-d3: [value: 100, increasePercent: 2.0 ]
+- d3-d4: [value: -50, increasePercent: -0.25 ]
+- d4-d5: [value: -50, increasePercent: -0.33 ]
+*/
+```
+
+#### [LazyMapper](#lazyMapper)
+```ts
+class LazyMapper {
+    static filterData<T>(data: any, defaultValue: T, transform: (d: any) => T, filter: (d: T) => T): T;
+    static defaultData<T>(data: any, defaultValue: T, transform: (d: any) => T): T;
+    static boolean(data: any): boolean;
+    static defaultBoolean(data: any, defaultValue: boolean): boolean;
+    static number(data: any): number;
+    static defaultNumber(data: any, defaultValue: number): number;
+    static filterNumber(data: any, defaultValue: number, filter: (d: number) => number): number;
+    static string(data: any): string;
+    static defaultString(data: any, defaultValue: string): string;
+    static filterString(data: any, defaultValue: string, filter: (d: string) => string): string;
+}
+```
+
+A mapper to allow some filtering for retrieved variables that could be undefined.
+
+Example:
+
+```js
+const { LazyMapper } = require('@lazy-toolbox/portable');
+const someData = {
+    propA: "hello",
+    propB: 123,
+    propC: {
+        subProp: "uwu"
+    }
+};
+console.log(LazyMapper.defaultString(someData.propA, 'error!')); // hello
+console.log(LazyMapper.defaultString(someData.propD, 'error!')); // error!
+```
+
 #### [LazyMath](#lazyMath)
 
 ```ts
@@ -450,6 +535,7 @@ class LazyMath {
     static derivative(x: number, f: (x: number) => number): number;
     static antiDerivative(x: number, f: (x: number) => number, subdivide: number = 1): number;
     static integral(a: number, b: number, f: (x: number) => number, subdivide: number = 1): number;
+    static combinationArrayNRNO<T>(objects: T[], k: number): T[];
 }
 ```
 
@@ -518,6 +604,19 @@ console.log(LazyMath.antiDerivative(3, (x) => { return 2 * x; })); // 8.81999999
 // Evaluate the area under the curve of a function f' from a to b.
 // The result should be 15 if the approximation was perfect.
 console.log(LazyMath.integral(1, 4, (x) => { return 2 * x; })); // 14.819999999999997
+
+// Return an array of ordered combination without repetition of n objets (a string array) classified in k groups.
+console.log(LazyMath.combinationArrayNRNO([7, 6, 3, 4], 2));
+/* Result:
+[
+    [7, 6],
+    [7, 3],
+    [7, 4],
+    [6, 3],
+    [6, 4],
+    [3, 4]
+]
+*/
 ```
 
 
@@ -779,6 +878,9 @@ class LazySocket {
     getClient(socket: WebSocket.WebSocket): LazyClient;
     getServer(): WebSocket.Server<WebSocket.WebSocket>;
     setDB(db: any): void;
+    getData(label: string): any;
+    setData(label: string, data: any): void;
+    deleteData(label: string): void;
     static sendToClient(packet: string, socket: WebSocket.WebSocket, data: any): void;
     static closeClient(socket: WebSocket.WebSocket): void;
 }

@@ -15,6 +15,7 @@ class LazyMath {
     static derivative(x: number, f: (x: number) => number): number;
     static antiDerivative(x: number, f: (x: number) => number, subdivide: number = 1): number;
     static integral(a: number, b: number, f: (x: number) => number, subdivide: number = 1): number;
+    static combinationArrayNRNO<T>(objects: T[], k: number): T[];
 }
 ```
 
@@ -83,4 +84,17 @@ console.log(LazyMath.antiDerivative(3, (x) => { return 2 * x; })); // 8.81999999
 // Evaluate the area under the curve of a function f' from a to b.
 // The result should be 15 if the approximation was perfect.
 console.log(LazyMath.integral(1, 4, (x) => { return 2 * x; })); // 14.819999999999997
+
+// Return an array of ordered combination without repetition of n objets (a string array) classified in k groups.
+console.log(LazyMath.combinationArrayNRNO([7, 6, 3, 4], 2));
+/* Result:
+[
+    [7, 6],
+    [7, 3],
+    [7, 4],
+    [6, 3],
+    [6, 4],
+    [3, 4]
+]
+*/
 ```

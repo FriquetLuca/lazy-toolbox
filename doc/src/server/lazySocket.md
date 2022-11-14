@@ -17,6 +17,9 @@ class LazySocket {
     getClient(socket: WebSocket.WebSocket): LazyClient;
     getServer(): WebSocket.Server<WebSocket.WebSocket>;
     setDB(db: any): void;
+    getData(label: string): any;
+    setData(label: string, data: any): void;
+    deleteData(label: string): void;
     static sendToClient(packet: string, socket: WebSocket.WebSocket, data: any): void;
     static closeClient(socket: WebSocket.WebSocket): void;
 }

@@ -1,3 +1,5 @@
+![Lazy Toolbox](/doc/img/logo.png)
+
 # Lazy Toolbox - Client
 
 > A NodeJS toolbox made for a lazy development anywhere you need on your webpage.

@@ -40,6 +40,7 @@ interface LazyClient {
  * @function closeClient Close a specific socket's connection.
  */
 export class LazySocket {
+    protected datas: {[label: string]: any} = {};
     protected serverSocket: WebSocket.Server<WebSocket.WebSocket>;
     protected id: number;
     protected clients: any;
@@ -49,7 +50,6 @@ export class LazySocket {
     protected onMessages: {[filePath: string]: any};
     protected onDisconnect: {[filePath: string]: any};
     protected db: any;
-
     /**
      * Create the socket server.
      * @param {number} port The port to listen to.
@@ -82,7 +82,7 @@ export class LazySocket {
         this.db = db;
     }
     /**
-     * Handle all the logic for client's connection.
+     * Handle all the logic for the client's connection.
      */
     public connect(): void {
         this.serverSocket.on('connection', ws => {
@@ -112,7 +112,7 @@ export class LazySocket {
                 }
             });
             ws.on('close', () => {
-                this.log(`Client ${_ID} has disconnected. There's ${this.clientCount()} clients left.`);
+                this.log(`Client ${_ID} has been disconnected. Still connected: ${this.clientCount()} clients.`);
                 for(let closed in this.onDisconnect) {
                     this.onDisconnect[closed](this, ws, this.db);
                 }
@@ -150,11 +150,7 @@ export class LazySocket {
      * @returns {number} The number of client connected to the server.
      */
     public clientCount(): number {
-        let clientCount = 0;
-        this.serverSocket.clients.forEach(() => {
-            clientCount++;
-        });
-        return clientCount;
+        return this.serverSocket.clients.size;
     }
     /**
      * Get the client's datas.
@@ -187,6 +183,29 @@ export class LazySocket {
     protected deleteClient(socket: WebSocket.WebSocket): void {
         const val: any = socket;
         delete this.clients[val];
+    }
+    /**
+     * Get a data shared across the socket communication.
+     * @param {string} label The data name.
+     * @returns {any} The desired data.
+     */
+    public getData(label: string): any {
+        return this.datas[label];
+    }
+    /**
+     * Set a data shared across the socket communication.
+     * @param {string} label The data name.
+     * @param {any} data The data to set.
+     */
+    public setData(label: string, data: any): void {
+        this.datas[label] = data;
+    }
+    /**
+     * Delete a data shared across the socket communication.
+     * @param {string} label The data name.
+     */
+    public deleteData(label: string): void {
+        delete this.datas[label];
     }
     /**
      * Inject a property in data named `_packet` with the value of any message in `packet`, then stringify the JSON value.

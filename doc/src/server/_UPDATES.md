@@ -1,13 +1,17 @@
 ## [Updates](#updates)
 
-### v1.3.3 - Encap Process freedom
+### v1.3.6 - LazySocket Sharing
 
-Add `process` property to `LazyEncapProcess`.
-Add optional `inject` argument to `start` method in `LazyEncapProcess`.
+New content were added:
+- Add `getData`, `setData` and `deleteData` methods to `LazySocket`.
+- Add `process` property to `LazyEncapProcess`.
+- Add optional `inject` argument to `start` method in `LazyEncapProcess`.
 
-### v1.3.1 - Encap Process
+New modifications were introduced:
+- Change the `LazyEncapProcess`'s constructor.
 
-Modification of the `LazyEncapProcess` constructor.
+New patches were introduced:
+- Patch `clientCount` method from `LazySocket` to make it faster.
 
 ### v1.3.0 - Project repack
 

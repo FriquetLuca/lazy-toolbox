@@ -1,5 +1,7 @@
 - [Portable](#portable)
-    - [getType](#getType)
     - [dateLog](#dateLog)
     - [dateLogMS](#dateLogMs)
+    - [getType](#getType)
+    - [LazyDataGraph](#lazyDataGraph)
+    - [LazyMapper](#lazyMapper)
     - [LazyMath](#lazyMath)
