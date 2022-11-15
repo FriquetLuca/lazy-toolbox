@@ -1,9 +1,17 @@
 ## [Updates](#updates)
 
-### v1.4.0 - Lazy release
+### v1.4.2 - Better Sockets handling
+
+New modifications were introduced:
+- Add `noError` method in `LazySocket`.
+
+### v1.4.1 - Lazy release
+
+Stable version.
 
 New modifications were introduced:
 - Add `clientID` in parameters for `onMessages`, `onConnect` and `onDisconnect` modules.
+
 
 ### v1.3.9 - LazySocket Sharing
 

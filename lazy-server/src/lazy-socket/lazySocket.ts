@@ -75,6 +75,12 @@ export class LazySocket {
         this.db = db;
     }
     /**
+     * Remove error handling on sockets.
+     */
+    public noError(): void {
+        this.errLog = () => {};
+    }
+    /**
      * Set a database to use/
      * @param {any} db The database to use.
      */
