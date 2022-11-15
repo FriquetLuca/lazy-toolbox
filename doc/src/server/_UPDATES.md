@@ -1,6 +1,6 @@
 ## [Updates](#updates)
 
-### v1.4.0 - Lazy release
+### v1.4.1 - Lazy release
 
 New modifications were introduced:
 - Add `clientID` in parameters for `onMessages`, `onConnect` and `onDisconnect` modules.
