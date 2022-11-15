@@ -114,7 +114,7 @@ export class LazySocket {
             ws.on('close', () => {
                 this.log(`Client ${_ID} has been disconnected. Still connected: ${this.clientCount()} clients.`);
                 for(let closed in this.onDisconnect) {
-                    this.onDisconnect[closed](this, ws, this.db);
+                    this.onDisconnect[closed](this, _ID, this.db);
                 }
                 this.deleteClient(ws);
             });

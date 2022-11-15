@@ -31,7 +31,7 @@ npm i lazy-toolbox
 
 ## [Updates](#updates)
 
-### v1.3.7 - LazySocket Sharing
+### v1.3.8 - LazySocket Sharing
 
 New content were added:
 - Add `getData`, `setData` and `deleteData` methods to `LazySocket`.
@@ -40,9 +40,11 @@ New content were added:
 
 New modifications were introduced:
 - Change the `LazyEncapProcess`'s constructor.
+- Change `client` parameters of type `Websocket.Websocket` to `clientID` of type `number` in disconnect socket module for `LazySocket` since the socket doesn't exist anymore at disconnect.
 
 New patches were introduced:
 - Patch `clientCount` method from `LazySocket` to make it faster.
+- Patch eternal `created` event on `FileWatcher`.
 
 ### v1.3.0 - Project repack
 
@@ -368,7 +370,7 @@ module.exports = (server, clientSocket, data, db) => {
 `onDisconnect/disconnect.js`
 ```js
 // Executed whenever a client disconnect from the server.
-module.exports = (server, clientSocket, db) => {
+module.exports = (server, clientID, db) => {
     // Do something if a client disconnect from the server.
 };
 ```

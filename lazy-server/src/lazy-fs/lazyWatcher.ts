@@ -88,6 +88,7 @@ export class LazyWatcher {
                     file: f,
                     eventType: 'created'
                 });
+                this.oldFiles.push(f);
             });
         }
         return result;

@@ -73,7 +73,7 @@ module.exports = (server, clientSocket, data, db) => {
 `onDisconnect/disconnect.js`
 ```js
 // Executed whenever a client disconnect from the server.
-module.exports = (server, clientSocket, db) => {
+module.exports = (server, clientID, db) => {
     // Do something if a client disconnect from the server.
 };
 ```
