@@ -87,12 +87,9 @@ export class LazySocket {
     public connect(): void {
         this.serverSocket.on('connection', ws => {
             const _ID = this.id++;
-            this.createClient(ws, {
-                id: _ID
-            });
             this.log(`Client ${_ID} is now connected.`);
             for(let connected in this.onConnect) {
-                this.onConnect[connected](this, ws, this.db);
+                this.onConnect[connected](this, ws, this.db, _ID);
             }
             ws.on('message', jsonData => {
                 const data = JSON.parse(jsonData.toString());
@@ -103,7 +100,7 @@ export class LazySocket {
                     if(LazyModLoader.isClass(this.onMessages[_packet])) {
                         this.errLog(`Packet ${_packet} failed. Class aren't supported for messages by SocketServer.`);
                     } else if(LazyModLoader.isFunction(this.onMessages[_packet])) {
-                        this.onMessages[_packet](this, ws, data, this.db);
+                        this.onMessages[_packet](this, ws, data, this.db, _ID);
                     } else {
                         this.errLog(`Packet ${_packet} failed. Unknown message type.`);
                     }
@@ -116,7 +113,6 @@ export class LazySocket {
                 for(let closed in this.onDisconnect) {
                     this.onDisconnect[closed](this, _ID, this.db);
                 }
-                this.deleteClient(ws);
             });
         });
     }
@@ -167,22 +163,6 @@ export class LazySocket {
      */
     public getServer(): WebSocket.Server<WebSocket.WebSocket> {
         return this.serverSocket;
-    }
-    /**
-     * Create a client in the clients list : it's a typescript hack.
-     * @param {WebSocket.WebSocket} socket 
-     */
-    protected createClient(socket: WebSocket.WebSocket, value: any): void {
-        const val: any = socket;
-        this.clients[val] = value;
-    }
-    /**
-     * Remove a client from the clients list : it's a typescript hack.
-     * @param {WebSocket.WebSocket} socket 
-     */
-    protected deleteClient(socket: WebSocket.WebSocket): void {
-        const val: any = socket;
-        delete this.clients[val];
     }
     /**
      * Get a data shared across the socket communication.

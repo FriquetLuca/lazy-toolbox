@@ -1,5 +1,10 @@
 ## [Updates](#updates)
 
+### v1.4.0 - Lazy release
+
+New modifications were introduced:
+- Add `clientID` in parameters for `onMessages`, `onConnect` and `onDisconnect` modules.
+
 ### v1.3.9 - LazySocket Sharing
 
 New content were added:

@@ -31,7 +31,12 @@ npm i lazy-toolbox
 
 ## [Updates](#updates)
 
-### v1.3.8 - LazySocket Sharing
+### v1.4.0 - Lazy release
+
+New modifications were introduced:
+- Add `clientID` in parameters for `onMessages`, `onConnect` and `onDisconnect` modules.
+
+### v1.3.9 - LazySocket Sharing
 
 New content were added:
 - Add `getData`, `setData` and `deleteData` methods to `LazySocket`.
@@ -350,7 +355,7 @@ socketServer.connect();
 `onConnect/connect.js`
 ```js
 // Executed whenever a client connect to the server.
-module.exports = (server, clientSocket, db) => {
+module.exports = (server, clientSocket, db, clientID) => {
     // Do something when a client connect to the server.
 };
 ```
@@ -359,7 +364,7 @@ module.exports = (server, clientSocket, db) => {
 // This packet name is: test_msg
 // If it was inside a folder called myFolder, then the
 // packet would be called: myFolder/test_msg
-module.exports = (server, clientSocket, data, db) => {
+module.exports = (server, clientSocket, data, db, clientID) => {
     // Send a packet from the server to all clients.
     server.sendToAll('message_for_all', {
         author: data.author,
