@@ -3,5 +3,6 @@
     - [LazyClient](#lazyClient)
     - [LazyDoc](#lazyDoc)
     - [LazyHtNetwork](#lazyHtNetwork)
+    - [LazySchedule](#lazySchedule)
     - [LazyView](#lazyView)
     - [LazyTheme](#lazyTheme)

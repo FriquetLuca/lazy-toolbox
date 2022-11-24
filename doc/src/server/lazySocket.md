@@ -5,16 +5,13 @@ interface FolderMods {
     onMessages: string;
     onDisconnect: string;
 }
-interface LazyClient {
-    id: number;
-}
 class LazySocket {
     constructor(port: number, root: string, paths: FolderMods = { onConnect:'./onConnect', onMessages: './onMessages', onDisconnect: './onDisconnect' }, logInfo: boolean = true, showDates: boolean = true, db: any = undefined);
     connect(): void;
     sendToAll(packet: string, data: any): void;
     sendToAllExceptSender(packet: string, socket: WebSocket.WebSocket, data: any): void;
     clientCount(): number;
-    getClient(socket: WebSocket.WebSocket): LazyClient;
+    getClient(socket: WebSocket.WebSocket): LazyClientSocket;
     getServer(): WebSocket.Server<WebSocket.WebSocket>;
     setDB(db: any): void;
     getData(label: string): any;
@@ -27,7 +24,7 @@ class LazySocket {
 
 A lazy socket implementation to handle websocket.
 All the logic lies inside three folders that you can choose.
-Functions are gonna be executed depending on the packet name given by a `LazyClient`.
+Functions are gonna be executed depending on the packet name given by a `LazyClientSocket`.
 
 Example:
 
@@ -53,7 +50,12 @@ socketServer.connect();
 `onConnect/connect.js`
 ```js
 // Executed whenever a client connect to the server.
-module.exports = (server, clientSocket, db, clientID) => {
+module.exports = (server, client, db) => {
+    /*
+    server: LazySocket
+    client: LazyClientSocket
+    db: any
+    */
     // Do something when a client connect to the server.
 };
 ```
@@ -62,7 +64,13 @@ module.exports = (server, clientSocket, db, clientID) => {
 // This packet name is: test_msg
 // If it was inside a folder called myFolder, then the
 // packet would be called: myFolder/test_msg
-module.exports = (server, clientSocket, data, db, clientID) => {
+module.exports = (server, client, data, db) => {
+    /*
+    server: LazySocket
+    client: LazyClientSocket
+    data: any
+    db: any
+    */
     // Send a packet from the server to all clients.
     server.sendToAll('message_for_all', {
         author: data.author,
@@ -73,7 +81,12 @@ module.exports = (server, clientSocket, data, db, clientID) => {
 `onDisconnect/disconnect.js`
 ```js
 // Executed whenever a client disconnect from the server.
-module.exports = (server, clientID, db) => {
+module.exports = (server, client, db) => {
+    /*
+    server: LazySocket
+    client: LazyClientSocket
+    db: any
+    */
     // Do something if a client disconnect from the server.
 };
 ```

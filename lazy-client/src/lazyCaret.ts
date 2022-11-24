@@ -1,7 +1,7 @@
 /**
  * A lazy way to handle caret and tabulation on textarea.
  */
-export class LazyCaret {
+export default class LazyCaret {
     /**
      * Set the caret position of the textarea.
      * @param {HTMLTextAreaElement} txtArea The textarea.

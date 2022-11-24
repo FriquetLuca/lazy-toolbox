@@ -7,7 +7,7 @@
  * @function toArray Convert some HTML content to an array of ChildNode.
  * @function toText Convert an array of ChildNode to string.
  */
-export class LazyView {
+export default class LazyView {
     /**
      * A div element for native DOM handling.
      */

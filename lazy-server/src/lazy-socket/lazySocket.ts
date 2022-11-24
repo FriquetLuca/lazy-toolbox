@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
-import {LazyModLoader} from '../lazyModLoader';
+import LazyClientSocket from './lazyClientSocket';
+import LazyModLoader from '../lazyModLoader';
 import { dateLogMS } from '@lazy-toolbox/portable';
-
 /**
  * The relative path of all three folders that will contain the modules needed for the socket logic to implement. 
  */
@@ -20,30 +20,27 @@ interface FolderMods {
     onDisconnect: string;
 }
 /**
- * A lazy client implementation.
- */
-interface LazyClient {
-    /**
-     * The client's id.
-     */
-    id: number;
-}
-/**
  * A lazy socket implementation to handle websocket.
- * @method connect Handle all the logic for client's connection.
+ * @method setDB Set a database to use.
+ * @method connect Handle all the logic for the client's connection.
  * @method sendToAll Send a message to every socket connected to the server.
  * @method sendToAllExceptSender Send a message to every socket connected to the server except a specific socket.
  * @method clientCount Get the number of client connected to the server.
- * @method getClient Get the client's datas.
+ * @method getClient Get the client's socket.
  * @method getServer Get the WebSocket server.
+ * @method getData Get a data shared across the socket communication.
+ * @method setData Set a data shared across the socket communication.
+ * @method deleteData Delete a data shared across the socket communication.
  * @function sendToClient Send a message to a specific socket.
  * @function closeClient Close a specific socket's connection.
  */
-export class LazySocket {
+export default class LazySocket {
     protected datas: {[label: string]: any} = {};
     protected serverSocket: WebSocket.Server<WebSocket.WebSocket>;
     protected id: number;
-    protected clients: any;
+    protected clients: {[id: string]: LazyClientSocket};
+    protected mapClients: Map<number, string>;
+    protected reconnectTimeout: {[id: string]: NodeJS.Timeout};
     protected log: (m:string) => void;
     protected errLog: (m:string) => void;
     protected onConnect: {[filePath: string]: any};
@@ -68,14 +65,16 @@ export class LazySocket {
         }
         this.id = 1;
         this.clients = {};
+        this.reconnectTimeout = {};
         this.serverSocket = new WebSocket.Server({ port: port });
         this.onConnect = new LazyModLoader(root, paths.onConnect).load();
         this.onMessages = new LazyModLoader(root, paths.onMessages).load();
         this.onDisconnect = new LazyModLoader(root, paths.onDisconnect).load();
         this.db = db;
+        this.mapClients = new Map();
     }
     /**
-     * Set a database to use/
+     * Set a database to use.
      * @param {any} db The database to use.
      */
     public setDB(db: any): void {
@@ -85,34 +84,50 @@ export class LazySocket {
      * Handle all the logic for the client's connection.
      */
     public connect(): void {
-        this.serverSocket.on('connection', ws => {
-            const _ID = this.id++;
-            this.log(`Client ${_ID} is now connected.`);
-            for(let connected in this.onConnect) {
-                this.onConnect[connected](this, ws, this.db, _ID);
+        this.serverSocket.on('connection', (ws, req) => {
+            let newClient: LazyClientSocket;
+            if(req.socket.remoteAddress && this.clients[req.socket.remoteAddress]) {
+                newClient = this.clients[req.socket.remoteAddress];
+                newClient.setNewSocket(ws);
+                newClient._connectionProcess(true);
+                clearTimeout(this.reconnectTimeout[newClient.IP]);
+                this.log(`Client ${newClient.ID} is reconnected.`);
+            } else {
+                newClient = new LazyClientSocket(ws, this.id++, <string>req.socket.remoteAddress, false);
+                this.clients[newClient.IP] = newClient;
+                this.mapClients.set(newClient.ID, newClient.IP);
+                this.log(`Client ${newClient.ID} is connected.`);
             }
-            ws.on('message', jsonData => {
+            for(let connected in this.onConnect) {
+                this.onConnect[connected](this, newClient, this.db);
+            }
+            newClient._connectionProcess(false);
+            ws.on('message', (jsonData) => {
                 const data = JSON.parse(jsonData.toString());
                 const _packet = data._packet;
                 delete data._packet;
                 this.log(`Client has sent us: ${JSON.stringify(data)}`);
                 if(this.onMessages[_packet]) {
-                    if(LazyModLoader.isClass(this.onMessages[_packet])) {
-                        this.errLog(`Packet ${_packet} failed. Class aren't supported for messages by SocketServer.`);
-                    } else if(LazyModLoader.isFunction(this.onMessages[_packet])) {
-                        this.onMessages[_packet](this, ws, data, this.db, _ID);
+                    if(LazyModLoader.isFunction(this.onMessages[_packet])) {
+                        this.onMessages[_packet](this, newClient, data, this.db);
+                    } else if(LazyModLoader.isClass(this.onMessages[_packet])) {
+                        new this.onMessages[_packet](this, newClient, data, this.db);
                     } else {
                         this.errLog(`Packet ${_packet} failed. Unknown message type.`);
                     }
                 } else {
-                    this.errLog(`Packet ${_packet} doesn't exist.`);
+                    this.log(`Packet ${_packet} doesn't exist.`);
                 }
             });
             ws.on('close', () => {
-                this.log(`Client ${_ID} has been disconnected. Still connected: ${this.clientCount()} clients.`);
-                for(let closed in this.onDisconnect) {
-                    this.onDisconnect[closed](this, _ID, this.db);
-                }
+                this.log(`Client ${newClient.ID} has been disconnected.`);
+                this.reconnectTimeout[newClient.IP] = setTimeout(() => {
+                    for(let closed in this.onDisconnect) {
+                        this.onDisconnect[closed](this, newClient, this.db);
+                    }
+                    delete this.reconnectTimeout[newClient.IP];
+                    delete this.clients[newClient.IP];
+                }, 10000);
             });
         });
     }
@@ -124,7 +139,9 @@ export class LazySocket {
     public sendToAll(packet: string, data: any): void {
         const toTxt = LazySocket.filter(packet, data);
         this.serverSocket.clients.forEach(client => {
-            client.send(toTxt);
+            if(client.readyState === WebSocket.OPEN) {
+                client.send(toTxt);
+            }
         });
     };
     /**
@@ -136,7 +153,7 @@ export class LazySocket {
     public sendToAllExceptSender(packet: string, socket: WebSocket.WebSocket, data: any): void {
         const toTxt = LazySocket.filter(packet, data);
         this.serverSocket.clients.forEach(client => {
-            if(socket !== client) {
+            if(socket !== client && client.readyState === WebSocket.OPEN) {
                 client.send(toTxt);
             }
         });
@@ -149,13 +166,12 @@ export class LazySocket {
         return this.serverSocket.clients.size;
     }
     /**
-     * Get the client's datas.
-     * @param {WebSocket.WebSocket} socket The socket of a client.
-     * @returns {LazyClient} The client's data.
+     * Get the client's socket.
+     * @param {number} socketID The socket id of a client.
+     * @returns {WebSocket.WebSocket} The client's socket.
      */
-    public getClient(socket: WebSocket.WebSocket): LazyClient {
-        const val: any = socket;
-        return this.clients[val];
+    public getClient(socketID: number): LazyClientSocket | undefined {
+        return this.clients[<string>this.mapClients.get(socketID)];
     }
     /**
      * Get the WebSocket server.
@@ -204,13 +220,17 @@ export class LazySocket {
      * @param {any} data The data to send.
      */
     public static sendToClient(packet: string, socket: WebSocket.WebSocket, data: any): void {
-        socket.send(LazySocket.filter(packet, data));
+        if(socket.readyState === WebSocket.OPEN) {
+            socket.send(LazySocket.filter(packet, data));
+        }
     }
     /**
      * Close a specific socket's connection.
      * @param {WebSocket.WebSocket} socket The socket of a client.
      */
     public static closeClient(socket: WebSocket.WebSocket): void {
-        socket.close();
+        if(socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
+            socket.close();
+        }
     }
 }

@@ -1,5 +1,11 @@
 ## [Updates](#updates)
 
+### v1.4.2 - Socket deeper
+
+New modifications were introduced:
+- Changed `LazyClient` interface to `LazyClientSocket` class for a more robust client handling.
+- Handle unexpected client disconnection.
+
 ### v1.4.1 - Lazy release
 
 New modifications were introduced:

@@ -21,6 +21,7 @@ Lazy Toolbox is made of multiples parts, you can find the source of those parts 
 	    - [LazyClient](#lazyClient)
 	    - [LazyDoc](#lazyDoc)
 	    - [LazyHtNetwork](#lazyHtNetwork)
+	    - [LazySchedule](#lazySchedule)
 	    - [LazyView](#lazyView)
 	    - [LazyTheme](#lazyTheme)
 	- [Portable](#portable)
@@ -31,13 +32,14 @@ Lazy Toolbox is made of multiples parts, you can find the source of those parts 
 	    - [LazyMapper](#lazyMapper)
 	    - [LazyMath](#lazyMath)
 	- [Server](#server)
-	    - [LazyModLoader](#lazyModLoader)
-	    - [LazyFS](#lazyFS)
-	    - [LazyWatcher](#lazyWatcher)
-	    - [LazyNetList](#lazyNetList)
+	    - [LazyClientSocket](#lazyClientSocket)
 	    - [LazyEncapProcess](#lazyEncapProcess)
+	    - [LazyFS](#lazyFS)
+	    - [LazyModLoader](#lazyModLoader)
+	    - [LazyNetList](#lazyNetList)
 	    - [LazyRouter](#lazyRouter)
 	    - [LazySocket](#lazySocket)
+	    - [LazyWatcher](#lazyWatcher)
 
 ## [Installation (NPM)](#install-npm)
 
@@ -111,9 +113,14 @@ LazyCaret.tabulation(textArea, false, 2);
 ```ts
 class LazyClient {
     constructor(host: string, port: number);
-    registerJSONSender(fns: { (f:(packet: string, obj: any) => any): void }[]): void;
-    registerJSONReciever(fns: {[packet:string]: (obj: any, websocket: WebSocket) => void}): void;
-    sendJSON(packet: string, obj: any): void;
+    send(packet: string, obj: any): void.
+    sender(f: { (f:(packet: string, obj: any) => any): void }): void;
+    senders(...fns: { (f:(packet: string, obj: any) => any): void }[]): void;
+    hook(packet: string, fn: (obj: any, websocket: WebSocket) => void): void;
+    hooks(...hooking: {packet: string, fn: (obj: any, websocket: WebSocket) => void}[]): void;
+    hookObject(fns: {[packet:string]: (obj: any, websocket: WebSocket) => void}): void;
+    start(): void;
+    disconnect(): void;
 }
 ```
 
@@ -126,26 +133,24 @@ Example:
 const { LazyClient } = require('@lazy-toolbox/client');
 // Create our client handler, listening to the host at a specific port.
 const socketClient = new LazyClient('localhost', 6060);
-// Register an array of all sender functions.
-socketClient.registerJSONSender([
-    (sender) => {
-        const someTextArea = document.querySelector('.someClass');
-        someDiv.addEventListener('keyup', (e) => {
-            e.preventDefault();
-            // Send a packet called newPacket and some value to the server.
-            // This method is given to us by the LazyClient itself
-            // when registering all our sender.
-            sender('newPacket', {
-                prop: "some value",
-                prop2: 1010
-            });
+// Register a sender functions.
+socketClient.sender((sender) => {
+    const someTextArea = document.querySelector('.someClass');
+    someDiv.addEventListener('keyup', (e) => {
+        e.preventDefault();
+        // Send a packet called newPacket and some value to the server.
+        // This method is given to us by the LazyClient itself
+        // when registering all our sender.
+        sender('newPacket', {
+            prop: "some value",
+            prop2: 1010
         });
-    }
-]);
+    });
+});
 // Register a packet as key and a function as value.
 // Whenever the sever send a packet contained in the keys,
 // it will trigger the function associated with it.
-socketClient.registerJSONReciever({
+socketClient.hookObject({
     // Create a receiver that will execute a function everytime
     // the server send a packet called message.
     'message': (data) => {
@@ -156,7 +161,7 @@ socketClient.registerJSONReciever({
     'uwu': () => { console.log("owo"); }
 });
 // Send a packet called newPacket to the server with a bunch of values.
-socketClient.sendJSON('newPacket', {
+socketClient.send('newPacket', {
     prop: "some value",
     prop2: 1010
 });
@@ -257,6 +262,36 @@ LazyHtNetwork.post('http://somewhere.com/somethingToPost/', {
 LazyHtNetwork.getJSON('http://somewhere.com/jsonFileToGet/', (json) => {
     console.log(JSON.stringify(json)); // The json we got.
 });
+```
+
+#### [LazySchedule](#lazySchedule)
+```ts
+class LazySchedule {
+    constructor(callback: (tries?: number) => void, timerCalc: (tries: number) => number, maxTries: number = 1);
+    start(): void;
+    stop(): void;
+    reset(): void;
+}
+```
+
+A lazy way to create a smart setInterval that handle a number of tries and can be paused.
+
+```js
+const { LazySchedule } = require('@lazy-toolbox/client');
+// Create a schedule to execute
+const schedule = new LazySchedule(
+    () => {
+        console.log("Callback !");
+    },
+    (tries) => {
+        if(tries > 5) {
+            return 1000; // 1s wait
+        }
+        return 200; // 0.2s wait
+    },
+    25 // Max 25 tries
+);
+schedule.start(); // Start the schedule.
 ```
 
 #### [LazyTheme](#lazyTheme)
@@ -621,6 +656,31 @@ console.log(LazyMath.combinationArrayNRNO([7, 6, 3, 4], 2));
 
 
 ### [Server](#server)
+#### [LazyClientSocket](#lazyClientSocket)
+```ts
+class LazyClientSocket {
+    get IsReconnected(): boolean;
+    get ID(): number;
+    get IP(): string;
+    get Socket(): WebSocket.WebSocket;
+    setNewSocket(socket: WebSocket.WebSocket): void;
+    setData(label: string, data: any): void;
+    getData(label: string): any;
+    removeData(label: string): void;
+}
+```
+
+Offer a way to handle a client for a `LazySocket`.
+
+Example:
+```js
+// Executed whenever a client connect to the server.
+module.exports = (server, client, db) => {
+    client.setData('myData', 125);
+    console.log(client.getData('myData'));
+    client.removeData('myData');
+};
+```
 #### [LazyEncapProcess](#lazyEncapProcess)
 ```ts
 class LazyEncapProcess {
@@ -807,6 +867,8 @@ class LazyRouter {
     start(): void;
     // New on version: 1.1.2
     setDB(db: any): void;
+    // New on version: 1.4.2
+    getFastify(): any;
 }
 ```
 
@@ -866,16 +928,13 @@ interface FolderMods {
     onMessages: string;
     onDisconnect: string;
 }
-interface LazyClient {
-    id: number;
-}
 class LazySocket {
     constructor(port: number, root: string, paths: FolderMods = { onConnect:'./onConnect', onMessages: './onMessages', onDisconnect: './onDisconnect' }, logInfo: boolean = true, showDates: boolean = true, db: any = undefined);
     connect(): void;
     sendToAll(packet: string, data: any): void;
     sendToAllExceptSender(packet: string, socket: WebSocket.WebSocket, data: any): void;
     clientCount(): number;
-    getClient(socket: WebSocket.WebSocket): LazyClient;
+    getClient(socket: WebSocket.WebSocket): LazyClientSocket;
     getServer(): WebSocket.Server<WebSocket.WebSocket>;
     setDB(db: any): void;
     getData(label: string): any;
@@ -888,7 +947,7 @@ class LazySocket {
 
 A lazy socket implementation to handle websocket.
 All the logic lies inside three folders that you can choose.
-Functions are gonna be executed depending on the packet name given by a `LazyClient`.
+Functions are gonna be executed depending on the packet name given by a `LazyClientSocket`.
 
 Example:
 
@@ -914,7 +973,12 @@ socketServer.connect();
 `onConnect/connect.js`
 ```js
 // Executed whenever a client connect to the server.
-module.exports = (server, clientSocket, db, clientID) => {
+module.exports = (server, client, db) => {
+    /*
+    server: LazySocket
+    client: LazyClientSocket
+    db: any
+    */
     // Do something when a client connect to the server.
 };
 ```
@@ -923,7 +987,13 @@ module.exports = (server, clientSocket, db, clientID) => {
 // This packet name is: test_msg
 // If it was inside a folder called myFolder, then the
 // packet would be called: myFolder/test_msg
-module.exports = (server, clientSocket, data, db, clientID) => {
+module.exports = (server, client, data, db) => {
+    /*
+    server: LazySocket
+    client: LazyClientSocket
+    data: any
+    db: any
+    */
     // Send a packet from the server to all clients.
     server.sendToAll('message_for_all', {
         author: data.author,
@@ -934,7 +1004,12 @@ module.exports = (server, clientSocket, data, db, clientID) => {
 `onDisconnect/disconnect.js`
 ```js
 // Executed whenever a client disconnect from the server.
-module.exports = (server, clientID, db) => {
+module.exports = (server, client, db) => {
+    /*
+    server: LazySocket
+    client: LazyClientSocket
+    db: any
+    */
     // Do something if a client disconnect from the server.
 };
 ```

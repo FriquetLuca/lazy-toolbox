@@ -11,6 +11,8 @@ class LazyRouter {
     start(): void;
     // New on version: 1.1.2
     setDB(db: any): void;
+    // New on version: 1.4.2
+    getFastify(): any;
 }
 ```
 
