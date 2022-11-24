@@ -3,13 +3,17 @@
 ### v1.4.2 - Socket deeper
 
 New modifications were introduced:
+- Add `noError` method in `LazySocket`.
 - Changed `LazyClient` interface to `LazyClientSocket` class for a more robust client handling.
 - Handle unexpected client disconnection.
 
 ### v1.4.1 - Lazy release
 
+Stable version.
+
 New modifications were introduced:
 - Add `clientID` in parameters for `onMessages`, `onConnect` and `onDisconnect` modules.
+
 
 ### v1.3.9 - LazySocket Sharing
 

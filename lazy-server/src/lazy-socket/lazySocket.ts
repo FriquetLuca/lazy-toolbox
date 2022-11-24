@@ -74,7 +74,13 @@ export default class LazySocket {
         this.mapClients = new Map();
     }
     /**
-     * Set a database to use.
+     * Remove error handling on sockets.
+     */
+    public noError(): void {
+        this.errLog = () => {};
+    }
+    /**
+     * Set a database to use/
      * @param {any} db The database to use.
      */
     public setDB(db: any): void {

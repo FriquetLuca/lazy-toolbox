@@ -8,6 +8,7 @@ interface FolderMods {
 class LazySocket {
     constructor(port: number, root: string, paths: FolderMods = { onConnect:'./onConnect', onMessages: './onMessages', onDisconnect: './onDisconnect' }, logInfo: boolean = true, showDates: boolean = true, db: any = undefined);
     connect(): void;
+    noError(): void;
     sendToAll(packet: string, data: any): void;
     sendToAllExceptSender(packet: string, socket: WebSocket.WebSocket, data: any): void;
     clientCount(): number;
