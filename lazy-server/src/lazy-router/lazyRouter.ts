@@ -1,4 +1,6 @@
 import Fastify from 'fastify';
+import fastifySession from '@fastify/session';
+import fastifyCookie from '@fastify/cookie';
 import path from 'path';
 import fs from "fs";
 import { parse } from 'node-html-parser';
@@ -76,6 +78,23 @@ export class LazyRouter {
             list: true
         });
     }
+    /**
+     * Initialize the setup to use sessions.
+     * @param {string} secretKey A secret with minimum length of 32 characters
+     * @param {boolean} isSecure Set to true if you use HTTPS.
+     * @param {number} expirationTime The expiration time of the session. By default, it's set to 24 minutes.
+     */
+    public async initializeSession(secretKey: string = 'a secret with minimum length of 32 characters', isSecure: boolean = false, expirationTime: number = 24 * 60 * 1000): Promise<void> {
+        await this.fastify.register(require('fastify-formbody'));
+        await this.fastify.register(fastifyCookie);
+        await this.fastify.register(fastifySession, {
+            cookieName: 'sessionId',
+            secret: secretKey,
+            cookie: { secure: isSecure },
+            expires: expirationTime
+        });
+    }
+    
     /**
      * Refresh all views in case of any modification.
      */

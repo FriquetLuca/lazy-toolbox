@@ -21,6 +21,8 @@ class LazyRouter {
     async loadStaticRoutes(route: string, staticDirectory: string): 
     // New on version: 1.4.7
     async reloadViews(): Promise<void>;
+    // New on version: 1.4.10
+    async initializeSession(secretKey: string = 'a secret with minimum length of 32 characters', isSecure: boolean = false, expirationTime: number = 24 * 60 * 1000): Promise<void>;
 }
 ```
 
@@ -56,6 +58,10 @@ const setupRouter = async () => {
     // It's the equivalent of :
     // await this.loadStaticRoutes('/assets/', './public/assets');
     await newRouter.loadAssets();
+    // Initialize the session for users.
+    // Default value aren't that good, you should think about
+    // setting it up a bit.
+    await newRouter.initializeSession();
     // Load all custom routes modules inside the routes folder
     await newRouter.registerPaths('./routes', '../public/views');
     // Registered routes:

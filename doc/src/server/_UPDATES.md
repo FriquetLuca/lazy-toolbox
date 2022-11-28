@@ -1,5 +1,10 @@
 ## [Updates](#updates)
 
+### v1.4.10 - Session
+
+New content were added:
+- Add `initializeSession` in `LazyRouter`.
+
 ### v1.4.9 - Loading views on routes
 
 New content were added:
