@@ -28,7 +28,7 @@ npm i @lazy-toolbox/portable
 
 ## [Updates](#updates)
 
-### v0.0.1 - Lazy Mapping
+### v0.0.2 - Lazy Mapping
 
 New content was added:
 - Add `LazyMapper` class for data filtering.

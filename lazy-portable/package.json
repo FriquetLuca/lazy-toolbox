@@ -1,6 +1,6 @@
 {
   "name": "@lazy-toolbox/portable",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "files": [
     "wrapper.mjs",
@@ -29,7 +29,7 @@
     "doc": "node ../doc/generate.js",
     "build": "(rmdir /q /s dist && tsc) || tsc",
     "gitPush": "cd .. && git add . && git commit && git push -u origin master && cd lazy-portable",
-    "publish": "npm run doc && npm run new && npm publish"
+    "new": "npm run doc && npm run build && npm publish"
   },
   "homepage": "https://github.com/FriquetLuca/lazy-toolbox",
   "bugs": {

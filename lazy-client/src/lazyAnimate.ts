@@ -1,4 +1,4 @@
-import { LazySlideContent } from "lazySlideContent";
+import { LazySlideContent } from "./lazySlideContent";
 /**
  * A way to inject some animation into elements.
  */

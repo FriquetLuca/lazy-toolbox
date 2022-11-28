@@ -85,12 +85,12 @@ module.exports = (route, fastify, router) => {
             request: request,
             reply: reply,
             // Some datas to inject, isn't mendatory
-            datas = {
+            datas: {
                 'replaceUseless': 'My awesome title.'
             },
             // A template to make
-            templates: = {
-                'feedDiv' (i)=> {
+            templates: {
+                'feedDiv': (i) => {
                     const user = dummyUsers[i];
                     return {
                         'username': user.name,

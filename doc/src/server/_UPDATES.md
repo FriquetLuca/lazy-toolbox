@@ -1,6 +1,6 @@
 ## [Updates](#updates)
 
-### v1.4.7 - Loading views on routes
+### v1.4.9 - Loading views on routes
 
 New content were added:
 - Add `reloadViews` in `LazyRouter`.

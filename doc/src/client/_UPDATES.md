@@ -1,6 +1,6 @@
 ## [Updates](#updates)
 
-### [v0.0.6 - Happy animate](#se-vo-o-o)
+### [v0.0.7 - Happy animate](#se-vo-o-o)
 
 New content were added:
 - Add `LazyAnimate` class.

@@ -1,6 +1,6 @@
 {
   "name": "lazy-toolbox",
-  "version": "1.4.7",
+  "version": "1.4.9",
   "description": "",
   "files": [
     "wrapper.mjs",

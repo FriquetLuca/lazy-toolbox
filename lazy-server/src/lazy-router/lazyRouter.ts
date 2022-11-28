@@ -109,7 +109,7 @@ export class LazyRouter {
         }
         return undefined;
     }
-    protected injector(document: any, datas: {[propertyName: string]: string} = {}, templates: {[name: string]: {(i: number, count: number): {[label: string]: string}}}, reloadRoutes: boolean = false): void {
+    protected injector(document: any, datas: {[propertyName: string]: string} = {}, templates: {[name: string]: {(i: number, count: number): {[label: string]: string}}}, overrideTemplateCount: { [templateName: string]: number}, reloadRoutes: boolean = false): void {
         while(true) {
             // Get an insert that is not a property
             const currentInsert = document.querySelector('insert:not([property])');
@@ -122,12 +122,19 @@ export class LazyRouter {
                 if(templateViewPath) {
                     const templateContent = parse(this.getView(templateViewPath, reloadRoutes) ?? "");
                     // Inject missing insert views / datas to the template
-                    this.injector(templateContent, datas, templates, reloadRoutes);
-                    const templateCount: number = Math.max(Number(currentInsert.getAttribute('count')), 0);
+                    this.injector(templateContent, datas, templates, overrideTemplateCount, reloadRoutes);
+                    // overrideTemplateCount
+                    const overrideCount = overrideTemplateCount[templatePath];
+                    let templateCount: number;
+                    if(overrideCount) {
+                        templateCount = Math.max(overrideCount, 0);
+                    } else {
+                        templateCount = Math.max(Number(currentInsert.getAttribute('count')), 0);
+                    }
                     const templateData = templates[templatePath];
                     let templateResult = '';
                     for(let i = 0; i < templateCount; i++) {
-                        const templateCopy = Object.assign({}, templateContent);
+                        const templateCopy = parse(templateContent.toString());
                         const currentDatas = templateData(i, templateCount);
                         for(let data in currentDatas) {
                             const currentData = currentDatas[data];
@@ -157,9 +164,9 @@ export class LazyRouter {
      * @param {boolean} reloadRoutes If true, it will get the current state of the HTML page otherwise it's gonna give the state it was when the server started. When false, views are retrieved much faster making the server faster too.
      * @returns {string} A string representing the HTML content of the page.
      */
-    public view(provided: {viewPath:string, request:any, reply:any, datas?: {[propertyName: string]: string}, templates?: {[name: string]: {(i: number, count: number): {[label: string]: string}}} }, reloadRoutes: boolean = false): string {
+    public view(provided: {viewPath:string, request:any, reply:any, datas?: {[propertyName: string]: string}, templates?: {[name: string]: {(i: number, count: number): {[label: string]: string}}}, overrideTemplateCount?: { [templateName: string]: number} }, reloadRoutes: boolean = false): string {
         const document = parse(this.getView(provided.viewPath) ?? "");
-        this.injector(document, provided.datas ?? {}, provided.templates ?? {}, reloadRoutes);
+        this.injector(document, provided.datas ?? {}, provided.templates ?? {}, provided.overrideTemplateCount ?? {}, reloadRoutes);
         return document.toString();
     }
     /**

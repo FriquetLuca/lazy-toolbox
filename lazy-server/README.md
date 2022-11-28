@@ -32,7 +32,7 @@ npm i lazy-toolbox
 
 ## [Updates](#updates)
 
-### v1.4.7 - Loading views on routes
+### v1.4.9 - Loading views on routes
 
 New content were added:
 - Add `reloadViews` in `LazyRouter`.
@@ -369,12 +369,12 @@ module.exports = (route, fastify, router) => {
             request: request,
             reply: reply,
             // Some datas to inject, isn't mendatory
-            datas = {
+            datas: {
                 'replaceUseless': 'My awesome title.'
             },
             // A template to make
-            templates: = {
-                'feedDiv' (i)=> {
+            templates: {
+                'feedDiv': (i) => {
                     const user = dummyUsers[i];
                     return {
                         'username': user.name,

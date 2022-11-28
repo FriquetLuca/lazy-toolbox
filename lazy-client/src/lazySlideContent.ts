@@ -1,4 +1,4 @@
-import { LazyAnimate } from "lazyAnimate";
+import { LazyAnimate } from "./lazyAnimate";
 /**
  * Insert a smooth sliding effect in a `HTMLDetailsElement`. This `HTMLDetailsElement` should contain a `<summary>` element and a `<content>` element to be valid for the animation.
  * `shr_duration`: Shrinking duration. By default it's set to `200` ms.
