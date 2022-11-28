@@ -1,6 +1,12 @@
 ## [Updates](#updates)
 
-### [v0.0.1 - Socket frenzy](#se-vo-o-o)
+### [v0.0.6 - Happy animate](#se-vo-o-o)
+
+New content were added:
+- Add `LazyAnimate` class.
+- Add `LazySlideContent` class.
+
+### [v0.0.4 - Socket frenzy](#se-vo-o-o)
 
 New content were added:
 - Add `LazySchedule` class.

@@ -1,9 +1,20 @@
 ## [Updates](#updates)
 
-### v1.4.2 - Socket deeper
+### v1.4.7 - Loading views on routes
+
+New content were added:
+- Add `reloadViews` in `LazyRouter`.
+- Add `view` in `LazyRouter`.
 
 New modifications were introduced:
+- Changed parameters of all routes to `(route: string, fastify: any, router: LazyRouter)` so the routes can access the router directly instead of being blind.
+
+### v1.4.6 - Socket deeper
+
+New content were added:
 - Add `noError` method in `LazySocket`.
+
+New modifications were introduced:
 - Changed `LazyClient` interface to `LazyClientSocket` class for a more robust client handling.
 - Handle unexpected client disconnection.
 

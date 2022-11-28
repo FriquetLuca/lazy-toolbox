@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
-import LazyClientSocket from './lazyClientSocket';
-import LazyModLoader from '../lazyModLoader';
+import {LazyClientSocket} from './lazyClientSocket';
+import {LazyModLoader} from '../lazyModLoader';
 import { dateLogMS } from '@lazy-toolbox/portable';
 /**
  * The relative path of all three folders that will contain the modules needed for the socket logic to implement. 
@@ -34,7 +34,7 @@ interface FolderMods {
  * @function sendToClient Send a message to a specific socket.
  * @function closeClient Close a specific socket's connection.
  */
-export default class LazySocket {
+export class LazySocket {
     protected datas: {[label: string]: any} = {};
     protected serverSocket: WebSocket.Server<WebSocket.WebSocket>;
     protected id: number;
@@ -86,20 +86,23 @@ export default class LazySocket {
     public setDB(db: any): void {
         this.db = db;
     }
+    private remoteAddress(socket: any) {
+        return `${socket.remoteAddress}:${socket.remotePort}`;
+    }
     /**
      * Handle all the logic for the client's connection.
      */
     public connect(): void {
         this.serverSocket.on('connection', (ws, req) => {
             let newClient: LazyClientSocket;
-            if(req.socket.remoteAddress && this.clients[req.socket.remoteAddress]) {
-                newClient = this.clients[req.socket.remoteAddress];
+            if(req.socket.remoteAddress && this.clients[this.remoteAddress(req.socket)]) {
+                newClient = this.clients[this.remoteAddress(req.socket)];
                 newClient.setNewSocket(ws);
                 newClient._connectionProcess(true);
                 clearTimeout(this.reconnectTimeout[newClient.IP]);
                 this.log(`Client ${newClient.ID} is reconnected.`);
             } else {
-                newClient = new LazyClientSocket(ws, this.id++, <string>req.socket.remoteAddress, false);
+                newClient = new LazyClientSocket(ws, this.id++, this.remoteAddress(req.socket), false);
                 this.clients[newClient.IP] = newClient;
                 this.mapClients.set(newClient.ID, newClient.IP);
                 this.log(`Client ${newClient.ID} is connected.`);
@@ -127,10 +130,10 @@ export default class LazySocket {
             });
             ws.on('close', () => {
                 this.log(`Client ${newClient.ID} has been disconnected.`);
+                for(let closed in this.onDisconnect) {
+                    this.onDisconnect[closed](this, newClient, this.db);
+                }
                 this.reconnectTimeout[newClient.IP] = setTimeout(() => {
-                    for(let closed in this.onDisconnect) {
-                        this.onDisconnect[closed](this, newClient, this.db);
-                    }
                     delete this.reconnectTimeout[newClient.IP];
                     delete this.clients[newClient.IP];
                 }, 10000);

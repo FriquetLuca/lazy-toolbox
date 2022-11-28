@@ -1,6 +1,6 @@
 {
   "name": "lazy-toolbox",
-  "version": "1.4.2",
+  "version": "1.4.7",
   "description": "",
   "files": [
     "wrapper.mjs",
@@ -30,12 +30,10 @@
     "sockets"
   ],
   "scripts": {
-    "skip": "echo \"Skipping delete dist folder...\"",
     "doc": "node ../doc/generate.js",
-    "delDist": "rmdir /q /s dist",
-    "build": "(rmdir /q /s dist || tsc) && tsc",
-    "gitPushAll": "cd .. && git add . && git commit && git push -u origin master && cd lazy-server",
-    "publishAll": "npm run doc && npm run build && npm run gitPushAll && npm publish"
+    "build": "(rmdir /q /s dist && tsc) || tsc",
+    "gitPush": "cd .. && git add . && git commit && git push -u origin master && cd lazy-server",
+    "new": "npm run doc && npm run build && npm publish"
   },
   "homepage": "https://github.com/FriquetLuca/lazy-toolbox",
   "bugs": {
@@ -57,6 +55,7 @@
     "@lazy-toolbox/portable": "^0.0.0",
     "fastify": "^4.9.2",
     "node": "^14.21.0",
+    "node-html-parser": "^6.1.4",
     "ws": "^8.10.0"
   }
 }

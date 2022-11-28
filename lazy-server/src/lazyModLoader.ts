@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import LazyFS from './lazy-fs/lazyFS';
+import {LazyFS} from './lazy-fs/lazyFS';
 /**
  * A module loader to load modules inside a directory.
  * @method load Loads all modules and return them.
@@ -10,7 +10,7 @@ import LazyFS from './lazy-fs/lazyFS';
  * @function isObject Check if the module is an object.
  * @function isScalar Check if the module is the simpliest value possible.
  */
-export default class LazyModLoader {
+export class LazyModLoader {
     private root: string;
     private moduleFolder: string;
     private loadedMessages: string[];

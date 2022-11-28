@@ -1,6 +1,6 @@
 {
   "name": "@lazy-toolbox/client",
-  "version": "0.0.1",
+  "version": "0.0.6",
   "description": "",
   "files": [
     "wrapper.mjs",
@@ -33,12 +33,10 @@
     "post"
   ],
   "scripts": {
-    "skip": "echo \"Skipping delete dist folder...\"",
     "doc": "node ../doc/generate.js",
-    "delDist": "rmdir /q /s dist",
-    "gitPushAll": "cd .. && git add . && git commit && git push -u origin master && cd lazy-client",
-    "build": "(npm run delDist || npm run skip) && tsc",
-    "publishAll": "npm run doc && npm run build && npm run gitPushAll && npm publish"
+    "build": "(rmdir /q /s dist && tsc) || tsc",
+    "gitPush": "cd .. && git add . && git commit && git push -u origin master && cd lazy-client",
+    "new": "npm run doc && npm run build && npm publish"
   },
   "homepage": "https://github.com/FriquetLuca/lazy-toolbox",
   "bugs": {

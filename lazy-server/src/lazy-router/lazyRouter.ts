@@ -1,8 +1,9 @@
 import Fastify from 'fastify';
 import path from 'path';
 import fs from "fs";
-import LazyModLoader from '../lazyModLoader';
-import LazyFS from 'lazy-fs/lazyFS';
+import { parse } from 'node-html-parser';
+import {LazyModLoader} from '../lazyModLoader';
+import {LazyFS} from '../lazy-fs/lazyFS';
 /**
  * A lazy routing setup for lazy people.
  * @method loadAssets Load all assets static routes.
@@ -10,13 +11,15 @@ import LazyFS from 'lazy-fs/lazyFS';
  * @method start Start listening to the port.
  * @method loadStaticRoutes Create all routes from a folder and get an access to all files from it.
  */
-export default class LazyRouter {
+export class LazyRouter {
     protected fastify: any;
     protected host: string;
     protected port: number;
     protected root: string;
     protected assetDir: string;
     protected db: any;
+    protected viewDir: string = "";
+    protected views: { [filePath: string]: string;} = {};
     /**
      * Create a new router to handle routes.
      * @param host The host name.
@@ -34,6 +37,18 @@ export default class LazyRouter {
         this.root = root;
         this.assetDir = assetDir;
         this.db = db;
+    }
+    /**
+     * Get pre-loaded views.
+     */
+    public get Views(): { [filePath: string]: string; } {
+        return this.views;
+    }
+    /**
+     * Get the database.
+     */
+    public get DB(): any {
+        return this.db;
     }
     /**
      * Set a database to use.
@@ -62,13 +77,11 @@ export default class LazyRouter {
         });
     }
     /**
-     * Register all routes based on the directory hierarchy for routes functions.
-     * @param {string} routesFolder The path to the folder where all routes are located.
-     * @param {string} viewsFolder The path to the folder where all views are located.
+     * Refresh all views in case of any modification.
      */
-    public async registerPaths(routesFolder: string, viewsFolder: string = "public/views/"): Promise<void> {
-        await this.fastify.register(async (fastify: any, options: any): Promise<void> => {
-            const viewPath = path.join(this.root, viewsFolder);
+    public async reloadViews(): Promise<void> {
+        if(this.viewDir.length > 0) {
+            const viewPath = path.join(this.root, this.viewDir);
             const views: { [filePath: string]: string;} = {};
             const viewFiles: string[] = [];
             if(fs.existsSync(viewPath)) {
@@ -82,9 +95,85 @@ export default class LazyRouter {
                 const file = await LazyFS.readFile(viewFile);
                 views[fileName] = file.toString();
             }
+            this.views = views;
+        }
+    }
+    protected getView(viewPath: string, reloadRoutes: boolean = false): string | undefined {
+        if(reloadRoutes) {
+            return this.views[viewPath];
+        } else {
+            const filePath = path.join(this.root, this.viewDir, `${viewPath}.html`);
+            if(fs.existsSync(filePath)) { // File exist
+                return fs.readFileSync(filePath).toString();
+            }
+        }
+        return undefined;
+    }
+    protected injector(document: any, datas: {[propertyName: string]: string} = {}, templates: {[name: string]: {(i: number, count: number): {[label: string]: string}}}, reloadRoutes: boolean = false): void {
+        while(true) {
+            // Get an insert that is not a property
+            const currentInsert = document.querySelector('insert:not([property])');
+            if(currentInsert === null) { // There's no more insert left. Job's done !
+                break;
+            }
+            const templatePath: string | undefined = currentInsert.getAttribute('template');
+            if(templatePath) {
+                const templateViewPath: string | undefined = currentInsert.getAttribute('view');
+                if(templateViewPath) {
+                    const templateContent = parse(this.getView(templateViewPath, reloadRoutes) ?? "");
+                    // Inject missing insert views / datas to the template
+                    this.injector(templateContent, datas, templates, reloadRoutes);
+                    const templateCount: number = Math.max(Number(currentInsert.getAttribute('count')), 0);
+                    const templateData = templates[templatePath];
+                    let templateResult = '';
+                    for(let i = 0; i < templateCount; i++) {
+                        const templateCopy = Object.assign({}, templateContent);
+                        const currentDatas = templateData(i, templateCount);
+                        for(let data in currentDatas) {
+                            const currentData = currentDatas[data];
+                            const replaceProp = templateCopy.querySelectorAll(`insert[property="${data}"]`);
+                            for(let rProp of replaceProp) {
+                                rProp.replaceWith(currentData ?? "");
+                            }
+                        }
+                        templateResult = `${templateResult}${templateCopy.toString()}`;
+                    }
+                    currentInsert.replaceWith(templateResult);
+                    continue;
+                }
+            }
+            const viewPath: string | undefined = currentInsert.getAttribute('view');
+            if(viewPath) { // It's a view
+                currentInsert.replaceWith(this.getView(viewPath, reloadRoutes) ?? "");
+                continue;
+            }
+            // Should be a data since it wasn't anything else
+            currentInsert.replaceWith(datas[currentInsert.getAttribute('data') ?? ""] ?? "");
+        }
+    }
+    /**
+     * Get the string representation of a specific view. It will load the view and modify any given datas.
+     * @param {{viewPath:string, request:any, reply:any, datas?: {[propertyName: string]: string}, templates?: {[name: string]: {(i: number, count: number): {[label: string]: string}}} }} provided The datas provided.
+     * @param {boolean} reloadRoutes If true, it will get the current state of the HTML page otherwise it's gonna give the state it was when the server started. When false, views are retrieved much faster making the server faster too.
+     * @returns {string} A string representing the HTML content of the page.
+     */
+    public view(provided: {viewPath:string, request:any, reply:any, datas?: {[propertyName: string]: string}, templates?: {[name: string]: {(i: number, count: number): {[label: string]: string}}} }, reloadRoutes: boolean = false): string {
+        const document = parse(this.getView(provided.viewPath) ?? "");
+        this.injector(document, provided.datas ?? {}, provided.templates ?? {}, reloadRoutes);
+        return document.toString();
+    }
+    /**
+     * Register all routes based on the directory hierarchy for routes functions.
+     * @param {string} routesFolder The path to the folder where all routes are located.
+     * @param {string} viewsFolder The path to the folder where all views are located.
+     */
+    public async registerPaths(routesFolder: string, viewsFolder: string = "public/views/"): Promise<void> {
+        this.viewDir = viewsFolder;
+        await this.fastify.register(async (fastify: any, options: any): Promise<void> => {
+            await this.reloadViews();
             const routes: { [filePath: string]: any; } = new LazyModLoader(this.root, routesFolder).load();
             for(let route in routes) {
-                routes[route](`/${route}`, fastify, views, this.db);
+                routes[route](`/${route}`, fastify, this, this.db);
             }
         });
     }

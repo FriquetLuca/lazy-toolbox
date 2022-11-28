@@ -1,4 +1,4 @@
-import LazySchedule from 'lazySchedule';
+import {LazySchedule} from './lazySchedule';
 /**
  * A lazy socket client to setup a websocket communication.
  * @method send Send a packet with datas to the server.
@@ -10,7 +10,7 @@ import LazySchedule from 'lazySchedule';
  * @method start Start listening to the server.
  * @method disconnect Disconnect this client.
  */
-export default class LazyClient {
+export class LazyClient {
     private socketURL: string;
     private timer: LazySchedule = new LazySchedule(() => {
         this.disconnect();
@@ -94,6 +94,8 @@ export default class LazyClient {
      * Disconnect this client.
      */
     public disconnect(): void {
+        this.ws.onopen = function(){};
+        this.ws.onmessage = function(){};
         this.ws.onclose = function(){};
         this.ws.close();
     }

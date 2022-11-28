@@ -12,13 +12,14 @@ Made to create a webpage as fast as possible. Explore more, focus more on develo
 - [Updates](#updates)
 - [Documentation](#documentation)
 	- [Client](#client)
+	    - [LazyAnimate](#lazyAnimate)
 	    - [LazyCaret](#lazyCaret)
 	    - [LazyClient](#lazyClient)
 	    - [LazyDoc](#lazyDoc)
 	    - [LazyHtNetwork](#lazyHtNetwork)
 	    - [LazySchedule](#lazySchedule)
-	    - [LazyView](#lazyView)
 	    - [LazyTheme](#lazyTheme)
+	    - [LazyView](#lazyView)
 
 ## [Installation (NPM)](#install-npm)
 
@@ -29,7 +30,13 @@ npm i @lazy-toolbox/client
 
 ## [Updates](#updates)
 
-### [v0.0.1 - Socket frenzy](#se-vo-o-o)
+### [v0.0.6 - Happy animate](#se-vo-o-o)
+
+New content were added:
+- Add `LazyAnimate` class.
+- Add `LazySlideContent` class.
+
+### [v0.0.4 - Socket frenzy](#se-vo-o-o)
 
 New content were added:
 - Add `LazySchedule` class.
@@ -44,6 +51,30 @@ New modification were introduced:
 This part explain all tools with examples if it's needed.
 
 ### [Client](#client)
+#### [LazyAnimate](#lazyAnimate)
+```ts
+class LazyAnimate {
+    static loadDefault(): void;
+    static details(...detailsElements: HTMLDetailsElement[]): void;
+}
+```
+
+A lazy way to animate some content.
+
+Example:
+
+`main.js`
+```js
+const { LazyAnimate } = require('@lazy-toolbox/client');
+LazyAnimate.loadDefault();
+```
+`index.html`
+```html
+<details animated shr_duration="300" shr_ease="ease-out" exp_duration="300" exp_ease="ease-out">
+    <summary>A dummy title.</summary>
+    <content>Some inner content that will have a smooth transition now.</content>
+</details>
+```
 #### [LazyCaret](#lazyCaret)
 ```ts
 class LazyCaret {

@@ -4,7 +4,7 @@
  * @function postJSON Post a stringify JSON to an URL.
  * @function getJSON Get a stringify JSON from an URL.
  */
-export default class LazyHtNetwork {
+export class LazyHtNetwork {
     /**
      * Post data the same way an HTML form does.
      * @param {string} path The URL where we post datas.

@@ -35,7 +35,7 @@ interface HTMLTag {
 /**
  * A lazy way to write document.something.
  */
-export default class LazyDoc {
+export class LazyDoc {
     /**
      * A lazy way to create HTML element.
      * @param {HTMLTag} element The element to create.

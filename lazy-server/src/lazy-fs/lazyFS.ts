@@ -8,7 +8,7 @@ const fsp = util.promisify(fs.readFile);
  * @function getAllFilesInDir Get all files inside a directory.
  * @function getAllDirsInDir Get all directories inside a directory.
  */
-export default class LazyFS {
+export class LazyFS {
     /**
      * Get everything inside a directory.
      * @param {string} p The path of the root folder.

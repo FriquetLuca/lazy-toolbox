@@ -3,7 +3,7 @@ const { spawn } = require('node:child_process');
 /**
  * A lazy way to encapsulate a node process.
  */
-export default class LazyEncapProcess {
+export class LazyEncapProcess {
     private root: string;
     private nodeType: string | string[];
     private processPath: string;

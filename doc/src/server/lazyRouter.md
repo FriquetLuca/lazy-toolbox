@@ -3,16 +3,24 @@
 class LazyRouter {
     // Last update at version: 1.1.2
     constructor(host: string, port: number, root: string, assetDir: string, db: any = undefined);
-    async loadAssets(): Promise<void>;
-    // Last update at version: 1.1.1
-    async registerPaths(routesFolder: string): Promise<void>;
-    // New on version: 1.1.1
-    async loadStaticRoutes(route: string, staticDirectory: string): Promise<void>
+    // New on version: 1.4.7
+    get Views(): { [filePath: string]: string; };
+    // New on version: 1.4.7
+    get DB(): any;Promise<void>
     start(): void;
     // New on version: 1.1.2
     setDB(db: any): void;
     // New on version: 1.4.2
     getFastify(): any;
+    // New on version: 1.4.7
+    view(provided: {viewPath:string, request:any, reply:any, datas?: {[propertyName: string]: string}, templates?: {[name: string]: {(i: number, count: number): {[label: string]: string}}} }, reloadRoutes: boolean = false): string;
+    async loadAssets(): Promise<void>;
+    // Last update at version: 1.1.1
+    async registerPaths(routesFolder: string): Promise<void>;
+    // New on version: 1.1.1
+    async loadStaticRoutes(route: string, staticDirectory: string): 
+    // New on version: 1.4.7
+    async reloadViews(): Promise<void>;
 }
 ```
 
@@ -26,6 +34,9 @@ Example:
     - public
         - assets
             - img.png
+        - views
+            - index.html
+            - dummy.html
     - routes
         - customRoute.js
     - app.js
@@ -46,8 +57,9 @@ const setupRouter = async () => {
     // await this.loadStaticRoutes('/assets/', './public/assets');
     await newRouter.loadAssets();
     // Load all custom routes modules inside the routes folder
-    await newRouter.registerPaths('./routes');
+    await newRouter.registerPaths('./routes', '../public/views');
     // Registered routes:
+    // localhost:3000/assets/img.png
     // localhost:3000/customRoute
     newRouter.start();
 }
@@ -57,10 +69,66 @@ setupRouter();
 `routes/customRoute.js`:
 ```js
 // Get the folder relative path as route
-module.exports = (route, fastify, db) => {
+module.exports = (route, fastify, router) => {
     // A simple implementation for lazyness incarned.
     fastify.get(route, async (request, reply) => {
-        // Setup your fastify route.
+        const dummyUsers = [
+            { name: "John", age: 28 },
+            { name: "Elena", age: 31 },
+            { name: "Arthur", age: 66 },
+            { name: "Sophie", age: 17 },
+            { name: "Peter", age: 19 }
+        ];
+        // The config of the view
+        const config = {
+            viewPath: 'index', // public/views/index.html
+            request: request,
+            reply: reply,
+            // Some datas to inject, isn't mendatory
+            datas = {
+                'replaceUseless': 'My awesome title.'
+            },
+            // A template to make
+            templates: = {
+                'feedDiv' (i)=> {
+                    const user = dummyUsers[i];
+                    return {
+                        'username': user.name,
+                        'age': user.age
+                    };
+                }
+            }
+        };
+        // Load the view
+        const currentView = router.view(config);
+        // Just send the document
+        return provided.reply.type('text/html').send(currentView);
     });
 }
+```
+`public/views/index.html`:
+```html
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dummy page</title>
+    </head>
+    <body>
+        <h1><insert data="replaceUseless">Useless Title</insert></h1>
+        <div>
+            <p>Something ...</p>
+            <insert view="dummy"></insert>
+            <p>Another something else ...</p>
+        </div>
+    </body>
+</html>
+```
+`public/views/dummy.html`:
+```html
+<div>
+    <p>Something else ...</p>
+    <p>...</p>
+</div>
 ```

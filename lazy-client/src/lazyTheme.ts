@@ -6,7 +6,7 @@
  * @method setTheme Set the current theme on the page.
  * @method useTheme Use a theme that exist on the page otherwise it will use the current theme.
  */
-export default class LazyTheme {
+export class LazyTheme {
     private defaultTheme: number;
     private themes: string[];
     private elements: string[];

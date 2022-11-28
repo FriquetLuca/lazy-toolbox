@@ -10,10 +10,10 @@ import WebSocket from 'ws';
  * @method getData Get some datas of the client.
  * @method removeData Remove some client's data.
  */
-export default class LazyClientSocket {
+export class LazyClientSocket {
     private id: number;
     private ip: string;
-    private socket: WebSocket.WebSocket;
+    private sockets: WebSocket.WebSocket[];
     private datas: {[label: string]: any};
     private reconnect: boolean;
     /**
@@ -27,7 +27,7 @@ export default class LazyClientSocket {
         this.id = id;
         this.ip = ip;
         this.datas = {};
-        this.socket = socket;
+        this.sockets = [socket];
         this.reconnect = reconnect;
     }
     /**
@@ -51,15 +51,20 @@ export default class LazyClientSocket {
     /**
      * Get the client's socket.
      */
-    public get Socket(): WebSocket.WebSocket {
-        return this.socket;
+    public get Sockets(): WebSocket.WebSocket[] {
+        return this.sockets;
     }
     /**
      * Set the new socket of the client.
      * @param {WebSocket.WebSocket} socket The new socket to assign.
      */
     public setNewSocket(socket: WebSocket.WebSocket): void {
-        this.socket = socket;
+        this.sockets.push(socket);
+        socket.addListener('close', () => {
+            this.sockets = this.sockets.filter((e) => {
+                e !== socket
+            });
+        });
     }
     /**
      * Set some datas for the client.

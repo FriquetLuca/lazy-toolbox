@@ -3,7 +3,7 @@ const interfaces = os.networkInterfaces();
 /**
  * A lazy way to access some network interfaces.
  */
-export default class LazyNetList {
+export class LazyNetList {
     /**
      * Get all internal IP v4.
      * @returns {string[]} An array of all internal IP v4.

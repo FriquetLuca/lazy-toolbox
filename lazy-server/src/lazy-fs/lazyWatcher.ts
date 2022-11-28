@@ -1,5 +1,5 @@
 import fs from "fs";
-import LazyFS from "./lazyFS";
+import {LazyFS} from "./lazyFS";
 /**
  * The data from an event happening to a file.
  * @interface FileEvent
@@ -21,7 +21,7 @@ interface FileEvent {
  * @method checkFileChanges Get the last event that happened to all files since the last time we checked with this function.
  * @method watchFiles A watching function to check the changes in the files. It takes as argument a function to execute
  */
-export default class LazyWatcher {
+export class LazyWatcher {
     private isRunning: boolean;
     private isActive: boolean;
     private tOut: number;

@@ -4,7 +4,7 @@
  * @method stop Stop the schedule. If the schedule had to be triggered in 30ms, when you'll start the schedule again, the schedule would be executed after those remaining 30ms.
  * @method reset Reset the schedule as if it has never started to begin with.
  */
-export default class LazySchedule {
+export class LazySchedule {
     private callback: (tries?: number) => void;
     private timerCalc: (tries: number) => number;
     private tries: number;
