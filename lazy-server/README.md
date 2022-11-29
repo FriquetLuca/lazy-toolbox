@@ -1,8 +1,8 @@
-![Lazy Toolbox](/doc/img/logo.png)
-
 # Lazy Toolbox - Server
 
 > A NodeJS toolbox made for a lazy development on server part.
+
+![Lazy Toolbox](/doc/img/logo.png)
 
 Find the full project on [GitHub - Lazy Toolbox](https://github.com/FriquetLuca/lazy-toolbox).
 
@@ -31,6 +31,11 @@ npm i lazy-toolbox
 ```
 
 ## [Updates](#updates)
+
+### v1.4.10 - Session
+
+New content were added:
+- Add `initializeSession` in `LazyRouter`.
 
 ### v1.4.9 - Loading views on routes
 
@@ -305,6 +310,8 @@ class LazyRouter {
     async loadStaticRoutes(route: string, staticDirectory: string): 
     // New on version: 1.4.7
     async reloadViews(): Promise<void>;
+    // New on version: 1.4.10
+    async initializeSession(secretKey: string = 'a secret with minimum length of 32 characters', isSecure: boolean = false, expirationTime: number = 24 * 60 * 1000): Promise<void>;
 }
 ```
 
@@ -340,6 +347,10 @@ const setupRouter = async () => {
     // It's the equivalent of :
     // await this.loadStaticRoutes('/assets/', './public/assets');
     await newRouter.loadAssets();
+    // Initialize the session for users.
+    // Default value aren't that good, you should think about
+    // setting it up a bit.
+    await newRouter.initializeSession();
     // Load all custom routes modules inside the routes folder
     await newRouter.registerPaths('./routes', '../public/views');
     // Registered routes:

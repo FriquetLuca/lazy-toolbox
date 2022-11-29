@@ -8,10 +8,6 @@
  */
 interface HTMLTag {
     /**
-     * The HTML element tag name.
-     */
-    tag: string;
-    /**
      * The id of the HTML element.
      */
     id?: string;
@@ -23,6 +19,10 @@ interface HTMLTag {
      * The childs of the HTML element.
      */
     childs?: HTMLElement[];
+    /**
+     * The inner HTML of the element.
+     */
+    innerHTML?: string;
     /**
      * The attributes of the HTML element.
      */
@@ -37,31 +37,38 @@ interface HTMLTag {
  */
 export class LazyDoc {
     /**
-     * A lazy way to create HTML element.
-     * @param {HTMLTag} element The element to create.
-     * @returns {HTMLElement} The HTML element created.
+     * Creates an instance of the element for the specified tag.
+     * @param {string} tagName The name of an element.
+     * @param {HTMLTag} element The content of the element.
      */
-    public static newTag(element: HTMLTag): HTMLElement {
-        const eventSection = document.createElement(element.tag);
-        if(element.id) {
-            eventSection.setAttribute('id', element.id);
-        }
-        if(element.class) {
-            element.class.forEach(c => eventSection.classList.add(c));
-        }
-        if(element.attributes) {
-            for(const att in element.attributes) {
-                eventSection.setAttribute(att, element.attributes[att]);
+    public static newTag<K extends keyof HTMLElementTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementTagNameMap[K];
+    public static newTag<K extends keyof HTMLElementDeprecatedTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementDeprecatedTagNameMap[K];
+    public static newTag(tagName: string, element?: HTMLTag): HTMLElement {
+        const eventSection = document.createElement(tagName);
+        if(element) {
+            if(element.id) {
+                eventSection.setAttribute('id', element.id);
             }
-        }
-        if(element.childs) {
-            for(const child of element.childs) {
-                eventSection.appendChild(child);
+            if(element.class) {
+                element.class.forEach(c => eventSection.classList.add(c));
             }
-        }
-        if(element.eventListeners) {
-            for(const evt in element.eventListeners) {
-                eventSection.addEventListener(evt, element.eventListeners[evt]);
+            if(element.attributes) {
+                for(const att in element.attributes) {
+                    eventSection.setAttribute(att, element.attributes[att]);
+                }
+            }
+            if(element.innerHTML) {
+                eventSection.innerHTML = element.innerHTML;
+            }
+            if(element.childs) {
+                for(const child of element.childs) {
+                    eventSection.appendChild(child);
+                }
+            }
+            if(element.eventListeners) {
+                for(const evt in element.eventListeners) {
+                    eventSection.addEventListener(evt, element.eventListeners[evt]);
+                }
             }
         }
         return eventSection;

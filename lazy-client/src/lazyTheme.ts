@@ -34,6 +34,7 @@ export class LazyTheme {
     public setNextTheme(): void {
         this.defaultTheme++;
         this.toggleTheme();
+        this.setTheme();
     }
     /**
      * Change the theme to the previous one available in the list.
@@ -41,6 +42,7 @@ export class LazyTheme {
     public setPreviousTheme(): void {
         this.defaultTheme--;
         this.toggleTheme();
+        this.setTheme();
     }
     /**
      * Set the current theme on the page.

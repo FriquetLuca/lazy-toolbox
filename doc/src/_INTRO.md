@@ -1,8 +1,8 @@
-![Lazy Toolbox](/doc/img/logo.png)
-
 # Lazy Toolbox
 
 > A NodeJS toolbox made for a lazy development of websites or even applications.
+
+![Lazy Toolbox](/doc/img/logo.png)
 
 The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-toolbox).
 

@@ -1,6 +1,4 @@
 import Fastify from 'fastify';
-import fastifySession from '@fastify/session';
-import fastifyCookie from '@fastify/cookie';
 import path from 'path';
 import fs from "fs";
 import { parse } from 'node-html-parser';
@@ -8,10 +6,17 @@ import {LazyModLoader} from '../lazyModLoader';
 import {LazyFS} from '../lazy-fs/lazyFS';
 /**
  * A lazy routing setup for lazy people.
+ * @get Views Get pre-loaded views.
+ * @get DB Get the database.
+ * @method getFastify Get fastify server instance.
+ * @method setDB Set a database to use.
+ * @method initializeSession Initialize the session's setup to use sessions later.
  * @method loadAssets Load all assets static routes.
  * @method registerPaths Register all routes based on the directory hierarchy for routes functions.
  * @method start Start listening to the port.
  * @method loadStaticRoutes Create all routes from a folder and get an access to all files from it.
+ * @method reloadViews Refresh all views in case of any modification.
+ * @method view Get the string representation of a specific view. It will load the view and modify any given datas.
  */
 export class LazyRouter {
     protected fastify: any;
@@ -79,22 +84,21 @@ export class LazyRouter {
         });
     }
     /**
-     * Initialize the setup to use sessions.
+     * Initialize the session's setup to use sessions later.
      * @param {string} secretKey A secret with minimum length of 32 characters
      * @param {boolean} isSecure Set to true if you use HTTPS.
      * @param {number} expirationTime The expiration time of the session. By default, it's set to 24 minutes.
      */
     public async initializeSession(secretKey: string = 'a secret with minimum length of 32 characters', isSecure: boolean = false, expirationTime: number = 24 * 60 * 1000): Promise<void> {
-        await this.fastify.register(require('fastify-formbody'));
-        await this.fastify.register(fastifyCookie);
-        await this.fastify.register(fastifySession, {
+        await this.fastify.register(require('@fastify/formbody'));
+        await this.fastify.register(require('@fastify/cookie'));
+        await this.fastify.register(require('@fastify/session'), {
             cookieName: 'sessionId',
             secret: secretKey,
             cookie: { secure: isSecure },
             expires: expirationTime
         });
     }
-    
     /**
      * Refresh all views in case of any modification.
      */

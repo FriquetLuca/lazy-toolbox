@@ -5,13 +5,16 @@ interface HTMLTag {
     tag: string;
     id?: string;
     class?: string[];
-    // New on version: 1.1.0
     childs?: HTMLElement[];
+    // New on version: 0.0.7
+    innerHTML?: string;
     attributes?: {[name: string]: string};
     eventListeners?: {[name: string]: (e: Event)=>void};
 }
 class LazyDoc {
-    static newTag(element: HTMLTag): HTMLElement;
+    static newTag(tagName: string, element?: HTMLTag): HTMLElement;
+    static newTag<K extends keyof HTMLElementTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementTagNameMap[K];
+    static newTag<K extends keyof HTMLElementDeprecatedTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementDeprecatedTagNameMap[K];
 }
 ```
 

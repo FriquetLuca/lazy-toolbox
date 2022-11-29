@@ -1,8 +1,8 @@
-![Lazy Toolbox](/doc/img/logo.png)
-
 # Lazy Toolbox
 
 > A NodeJS toolbox made for a lazy development of websites or even applications.
+
+![Lazy Toolbox](/doc/img/logo.png)
 
 The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-toolbox).
 
@@ -199,13 +199,16 @@ interface HTMLTag {
     tag: string;
     id?: string;
     class?: string[];
-    // New on version: 1.1.0
     childs?: HTMLElement[];
+    // New on version: 0.0.7
+    innerHTML?: string;
     attributes?: {[name: string]: string};
     eventListeners?: {[name: string]: (e: Event)=>void};
 }
 class LazyDoc {
-    static newTag(element: HTMLTag): HTMLElement;
+    static newTag(tagName: string, element?: HTMLTag): HTMLElement;
+    static newTag<K extends keyof HTMLElementTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementTagNameMap[K];
+    static newTag<K extends keyof HTMLElementDeprecatedTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementDeprecatedTagNameMap[K];
 }
 ```
 
@@ -902,6 +905,8 @@ class LazyRouter {
     async loadStaticRoutes(route: string, staticDirectory: string): 
     // New on version: 1.4.7
     async reloadViews(): Promise<void>;
+    // New on version: 1.4.10
+    async initializeSession(secretKey: string = 'a secret with minimum length of 32 characters', isSecure: boolean = false, expirationTime: number = 24 * 60 * 1000): Promise<void>;
 }
 ```
 
@@ -937,6 +942,10 @@ const setupRouter = async () => {
     // It's the equivalent of :
     // await this.loadStaticRoutes('/assets/', './public/assets');
     await newRouter.loadAssets();
+    // Initialize the session for users.
+    // Default value aren't that good, you should think about
+    // setting it up a bit.
+    await newRouter.initializeSession();
     // Load all custom routes modules inside the routes folder
     await newRouter.registerPaths('./routes', '../public/views');
     // Registered routes:

@@ -1,5 +1,13 @@
 ## [Updates](#updates)
 
+### [v0.0.8 - Document handler](#se-vo-o-o)
+
+New content were added:
+- Add `innerHTML` to `HTMLTag` interface.
+
+New modification were introduced:
+- Changed `newTag` function from `LazyDoc` to handle multi-type for the returned value.
+
 ### [v0.0.7 - Happy animate](#se-vo-o-o)
 
 New content were added:

@@ -1,6 +1,6 @@
 {
   "name": "lazy-toolbox",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "description": "",
   "files": [
     "wrapper.mjs",
@@ -53,11 +53,11 @@
   },
   "dependencies": {
     "@fastify/cookie": "^8.3.0",
+    "@fastify/formbody": "^7.3.0",
     "@fastify/session": "^10.0.2",
     "@fastify/static": "^6.5.0",
     "@lazy-toolbox/portable": "^0.0.0",
     "fastify": "^4.9.2",
-    "fastify-formbody": "^5.3.0",
     "node": "^14.21.0",
     "node-html-parser": "^6.1.4",
     "ws": "^8.10.0"

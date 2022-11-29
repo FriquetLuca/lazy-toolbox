@@ -1,8 +1,8 @@
-![Lazy Toolbox](/doc/img/logo.png)
-
 # Lazy Toolbox - Client
 
 > A NodeJS toolbox made for a lazy development anywhere you need on your webpage.
+
+![Lazy Toolbox](/doc/img/logo.png)
 
 Made to create a webpage as fast as possible. Explore more, focus more on developing features.
 
@@ -29,6 +29,14 @@ npm i @lazy-toolbox/client
 ```
 
 ## [Updates](#updates)
+
+### [v0.0.8 - Document handler](#se-vo-o-o)
+
+New content were added:
+- Add `innerHTML` to `HTMLTag` interface.
+
+New modification were introduced:
+- Changed `newTag` function from `LazyDoc` to handle multi-type for the returned value.
 
 ### [v0.0.7 - Happy animate](#se-vo-o-o)
 
@@ -186,13 +194,16 @@ interface HTMLTag {
     tag: string;
     id?: string;
     class?: string[];
-    // New on version: 1.1.0
     childs?: HTMLElement[];
+    // New on version: 0.0.7
+    innerHTML?: string;
     attributes?: {[name: string]: string};
     eventListeners?: {[name: string]: (e: Event)=>void};
 }
 class LazyDoc {
-    static newTag(element: HTMLTag): HTMLElement;
+    static newTag(tagName: string, element?: HTMLTag): HTMLElement;
+    static newTag<K extends keyof HTMLElementTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementTagNameMap[K];
+    static newTag<K extends keyof HTMLElementDeprecatedTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementDeprecatedTagNameMap[K];
 }
 ```
 

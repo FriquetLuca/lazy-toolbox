@@ -1,8 +1,8 @@
-![Lazy Toolbox](/doc/img/logo.png)
-
 # Lazy Toolbox - Portable
 
 > A NodeJS toolbox made for a lazy development anywhere you need.
+
+![Lazy Toolbox](/doc/img/logo.png)
 
 Made to handle a bunch of cases that have to be handle on either a server or a client part.
 
