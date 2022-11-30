@@ -6,10 +6,13 @@
 
 The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-toolbox).
 
-Lazy Toolbox is made of multiples parts, you can find the source of those parts over here:
+Lazy Toolbox is made of multiples parts, you can find the sources of those parts over here:
 - [Server](https://github.com/FriquetLuca/lazy-toolbox/tree/master/lazy-server)
+    - [MySQL](https://github.com/FriquetLuca/lazy-toolbox/tree/master/lazy-mysql)
 - [Client](https://github.com/FriquetLuca/lazy-toolbox/tree/master/lazy-client)
 - [Portable](https://github.com/FriquetLuca/lazy-toolbox/tree/master/lazy-portable)
+
+**Note**: You should note that this package is subject to changes, sometimes even subject to repacking. It's made alongside another project, so some features are potentially not ideal as of right now. Lazy Toolbox should be safe from any savage repacking when version 2 will come out.
 
 ## Index
 
@@ -48,10 +51,11 @@ Lazy Toolbox is made of multiples parts, you can find the source of those parts 
 The project is divided in three different part that could need some dependances:
 - Client
 
-    The client part need to be repack with something like `webpack`.
+    The client should be repacked with anything `webpack` like.
 - Server
 
-    The server dependances are `fastify`, `ws` and `node`.
+    The server part is an implementation of `fastify`, `node`, `node-html-parser` and `ws`.
+    There's also subpart for the server, like the database communication.
 - Portable
 
     It doesn't need any dependances, it can be used on either a webpage or a server.
