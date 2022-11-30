@@ -18,7 +18,6 @@
   },
   "include": ["src/**/*"],
   "exclude": [
-    "dev-tools/**/*",
     "node_modules/**/*",
     "bower_components/**/*",
     "jspm_packages/**/*",

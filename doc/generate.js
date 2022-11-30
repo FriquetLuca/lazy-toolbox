@@ -2,6 +2,12 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 const fsp = util.promisify(fs.readFile);
+const sources = [
+    {path:'client', title:'Client', anchor:'client', dist: 'lazy-client'},
+    {path:'portable', title:'Portable', anchor:'portable', dist: 'lazy-portable'},
+    {path:'server', title:'Server', anchor:'server', dist: 'lazy-server'},
+    {path:'mysql', title:'MySql', anchor:'mysql', dist: 'lazy-mysql'}
+];
 if(typeof String.prototype.replaceAll === "undefined") {
     String.prototype.replaceAll = function(match, replace) {
        return this.replace(new RegExp(match, 'g'), () => replace);
@@ -9,15 +15,6 @@ if(typeof String.prototype.replaceAll === "undefined") {
 }
 const readSource = async (sourcePath) => {
     return await fsp(path.join(__dirname, './src/', sourcePath));
-};
-const readServer = async (serverPath) => {
-    return await readSource(`./server/${serverPath}`);
-};
-const readPortable = async (portablePath) => {
-    return await readSource(`./portable/${portablePath}`);
-};
-const readClient = async (clientPath) => {
-    return await readSource(`./client/${clientPath}`);
 };
 const getAllInDir = (p, a = []) => {
     if(fs.statSync(p).isDirectory()) {
@@ -30,7 +27,6 @@ const getAllFilesInDir = (p) => {
     return getAllInDir(p)
         .filter((unknownPath) => !fs.lstatSync(unknownPath).isDirectory());
 }
-
 const docMaker = async (getPath) => {
     let docResult = '';
     const allFiles = getAllFilesInDir(path.join(__dirname, getPath));
@@ -43,80 +39,47 @@ const docMaker = async (getPath) => {
     }
     return docResult;
 };
-
 const createFullDoc = async () => {
-    const _INDEX = async () => {
+    const _INDEX = async (sources) => {
         const _index = await readSource('_INDEX.md');
-        const _clientIndex = await readClient('_INDEX.md');
-        const _portableIndex = await readPortable('_INDEX.md');
-        const _serverIndex = await readServer('_INDEX.md');
-        return `${_index}\n\t${_clientIndex.toString().replaceAll('\n', '\n\t')}\n\t${_portableIndex.toString().replaceAll('\n', '\n\t')}\n\t${_serverIndex.toString().replaceAll('\n', '\n\t')}\n`;
+        let result = _index.toString();
+        for(let source of sources) {
+            const _currentIndex = await readSource(`${source.path}/_INDEX.md`);
+            result = `${result}\n\t${_currentIndex.toString().replaceAll('\n', '\n\t')}`;
+        }
+        return result;
     };
-    const _DOC = async () => {
+    const _DOC = async (sources) => {
         const _doc = await readSource('_DOC.md');
-        const _clientDoc = await docMaker('./src/client/');
-        const _portableDoc = await docMaker('./src/portable/');
-        const _serverDoc = await docMaker('./src/server/');
-        return `\n${_doc}\n### [Client](#client)\n${_clientDoc}\n### [Portable](#portable)\n${_portableDoc}\n### [Server](#server)\n${_serverDoc}`;
+        let result = _doc.toString();
+        for(let source of sources) {
+            const fetchDoc = await docMaker(`./src/${source.path}/`);
+            result = `${result}\n### [${source.title}](#${source.anchor})\n${fetchDoc}`;
+        }
+        return result;
     }
     const _intro = await readSource('_INTRO.md');
-    const _index = await _INDEX();
+    const _index = await _INDEX(sources);
     const _install = await readSource('_INSTALL.md');
     const _updates = await readSource('_UPDATES.md');
-    const _doc = await _DOC();
+    const _doc = await _DOC(sources);
     return `${_intro}\n${_index}\n${_install}\n${_updates}\n${_doc}`;
 };
-const createServerDoc = async () => {
+const createPackageDoc = async (docFolderName, title, anchor) => {
     const _INDEX = async () => {
-        const _index = await readSource('_INDEX.md');
-        const _serverIndex = await readServer('_INDEX.md');
-        return `${_index}\n\t${_serverIndex.toString().replaceAll('\n', '\n\t')}\n`;
+        const _index = await fsp(path.join(__dirname, './src/_INDEX.md'));
+        const _currentIndex = await fsp(path.join(__dirname, `./src/${docFolderName}/_INDEX.md`));
+        return `${_index}\n\t${_currentIndex.toString().replaceAll('\n', '\n\t')}\n`;
     };
     const _DOC = async () => {
-        const _doc = await readSource('_DOC.md');
-        const _serverDoc = await docMaker('./src/server/');
-        return `\n${_doc}\n### [Server](#server)\n${_serverDoc}`;
+        const _doc = await fsp(path.join(__dirname, './src/_DOC.md'));
+        const _currentDoc = await docMaker(`./src/${docFolderName}/`);
+        return `\n${_doc}\n### [${title}](#${anchor})\n${_currentDoc}\n`;
     }
-    const _intro = await readServer('_INTRO.md');
+    const _intro = await fsp(path.join(__dirname, `./src/${docFolderName}/_INTRO.md`));
     const _index = await _INDEX();
-    const _install = await readServer('_INSTALL.md');
-    const _updates = await readServer('_UPDATES.md');
-    const _doc = await _DOC();
-    return `${_intro}\n${_index}\n${_install}\n${_updates}\n${_doc}`;
-};
-const createPortableDoc = async () => {
-    const _INDEX = async () => {
-        const _index = await readSource('_INDEX.md');
-        const _portableIndex = await readPortable('_INDEX.md');
-        return `${_index}\n\t${_portableIndex.toString().replaceAll('\n', '\n\t')}\n`;
-    };
-    const _DOC = async () => {
-        const _doc = await readSource('_DOC.md');
-        const _portableDoc = await docMaker('./src/portable/');
-        return `\n${_doc}\n### [Portable](#portable)\n${_portableDoc}\n`;
-    }
-    const _intro = await readPortable('_INTRO.md');
-    const _index = await _INDEX();
-    const _install = await readPortable('_INSTALL.md');
-    const _updates = await readPortable('_UPDATES.md');
-    const _doc = await _DOC();
-    return `${_intro}\n${_index}\n${_install}\n${_updates}\n${_doc}`;
-};
-const createClientDoc = async () => {
-    const _INDEX = async () => {
-        const _index = await readSource('_INDEX.md');
-        const _clientIndex = await readClient('_INDEX.md');
-        return `${_index}\n\t${_clientIndex.toString().replaceAll('\n', '\n\t')}\n`;
-    };
-    const _DOC = async () => {
-        const _doc = await readSource('_DOC.md');
-        const _clientDoc = await docMaker('./src/client/');
-        return `\n${_doc}\n### [Client](#client)\n${_clientDoc}\n`;
-    }
-    const _intro = await readClient('_INTRO.md');
-    const _index = await _INDEX();
-    const _install = await readClient('_INSTALL.md');
-    const _updates = await readClient('_UPDATES.md');
+    const _install = await fsp(path.join(__dirname, `./src/${docFolderName}/_INSTALL.md`));
+    const _updates = await fsp(path.join(__dirname, `./src/${docFolderName}/_UPDATES.md`));
     const _doc = await _DOC();
     return `${_intro}\n${_index}\n${_install}\n${_updates}\n${_doc}`;
 };
@@ -127,13 +90,10 @@ const makeDocumentation = async () => {
     };
     const _doc = await createFullDoc();
     fs.writeFile(path.join(_ROOT, 'README.md'), _doc, cb);
-    const _docServ = await createServerDoc();
-    fs.writeFile(path.join(_ROOT, 'lazy-server/README.md'), _docServ, cb);
-    const _docPort = await createPortableDoc();
-    fs.writeFile(path.join(_ROOT, 'lazy-portable/README.md'), _docPort, cb);
-    const _docCli = await createClientDoc();
-    fs.writeFile(path.join(_ROOT, 'lazy-client/README.md'), _docCli, cb);
-
+    for(let source of sources) {
+        const _docPack = await createPackageDoc(source.path, source.title, source.anchor);
+        fs.writeFile(path.join(_ROOT, source.dist, './README.md'), _docPack, cb);
+    }
 };
 
 makeDocumentation();

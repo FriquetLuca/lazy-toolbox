@@ -1,0 +1,54 @@
+{
+  "name": "@lazy-toolbox/mysql",
+  "version": "0.0.0",
+  "description": "",
+  "files": [
+    "wrapper.mjs",
+    "dist/**/*"
+  ],
+  "main": "./dist/index.js",
+  "exports": {
+    "import": "./wrapper.mjs",
+    "require": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "types": "./dist/index.d.ts",
+  "keywords": [
+    "lazy",
+    "toolbox",
+    "server",
+    "network",
+    "networks",
+    "database",
+    "db",
+    "sql",
+    "mysql",
+    "query",
+    "data"
+  ],
+  "scripts": {
+    "doc": "node ../doc/generate.js",
+    "build": "(rmdir /q /s dist && tsc) || tsc",
+    "gitPush": "cd .. && git add . && git commit && git push -u origin master && cd lazy-portable",
+    "new": "npm run doc && npm run build && npm publish"
+  },
+  "homepage": "https://github.com/FriquetLuca/lazy-toolbox",
+  "bugs": {
+    "url": "https://github.com/FriquetLuca/lazy-toolbox/issues"
+  },
+  "author": "Friquet Luca",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FriquetLuca/lazy-toolbox.git"
+  },
+  "devDependencies": {
+    "@types/mysql": "^2.15.21",
+    "@types/node": "^18.11.9",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "mysql": "^2.18.1",
+    "node": "^14.21.0"
+  }
+}

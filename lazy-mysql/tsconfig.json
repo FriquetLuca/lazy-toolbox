@@ -4,12 +4,8 @@
     "esModuleInterop": true,
     "target": "es6",
     "moduleResolution": "node",
-    "lib": ["es6", "dom", "dom.iterable", "es2017"],
-    //"sourceMap": true,
-    // Tells TypeScript to read JS files, as
-    // normally they are ignored as source files
+    "lib": ["es6", "es2017"],
     "allowJs": true,
-    // Generate d.ts files
     "declaration": true,
     "outDir": "./dist",
     "declarationMap": true,
