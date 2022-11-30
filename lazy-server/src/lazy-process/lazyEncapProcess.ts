@@ -1,5 +1,5 @@
 import { dateLogMS, getType } from '@lazy-toolbox/portable';
-const { spawn } = require('node:child_process');
+import { spawn } from 'node:child_process';
 /**
  * A lazy way to encapsulate a node process.
  */

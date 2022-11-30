@@ -1,18 +1,5 @@
 /**
  * Add some lazy math that should have been available at first on JS.
- * @function modulo Compute the remainder of a / b. a % b IS NOT modulo in JS for some reason.
- * @function frac Get the leftover to obtain an integer less or equal to n.
- * @function saturate Clamp a value between 0 and 1.
- * @function sum Sum of a function over a range of value.
- * @function product Product of a function over a range of value.
- * @function isPrime A primary test that will return true if the number is prime. Since JS use floating point arithmetic on number, the number is floored before the test.
- * @function step Return 1 if x is gequal to n, otherwise n.
- * @function lerp
- * @function unlerp
- * @function binomialCoefficient
- * @function derivative
- * @function antiDerivative
- * @function integral
 */
 export class LazyMath {
     /**

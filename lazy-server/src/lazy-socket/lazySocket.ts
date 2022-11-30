@@ -5,7 +5,7 @@ import { dateLogMS } from '@lazy-toolbox/portable';
 /**
  * The relative path of all three folders that will contain the modules needed for the socket logic to implement. 
  */
-interface FolderMods {
+export interface FolderMods {
     /**
      * The relative path of all modules functions that will be called when a client connect on the server.
      */

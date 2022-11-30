@@ -6,7 +6,7 @@ import {LazyFS} from "./lazyFS";
  * @member {string} file The path of the file.
  * @member {string} eventType The type of event that happened. It can be either: `created`, `modified` or `deleted`.
  */
-interface FileEvent {
+export interface FileEvent {
     /**
      * The path of the file.
      */

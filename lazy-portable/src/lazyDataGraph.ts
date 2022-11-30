@@ -1,7 +1,7 @@
 /**
  * Representation of a point on a graph.
  */
-interface GraphPoint {
+export interface GraphPoint {
     /**
      * The value of the point.
      */

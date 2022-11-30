@@ -7,12 +7,12 @@ import fs from "fs";
 import { parse } from 'node-html-parser';
 import {LazyModLoader} from '../lazyModLoader';
 import {LazyFS} from '../lazy-fs/lazyFS';
-type Server = http.Server<typeof http.IncomingMessage, typeof http.ServerResponse> | https.Server<typeof http.IncomingMessage, typeof http.ServerResponse> | http2.Http2Server | http2.Http2SecureServer;
-type Request = http.IncomingMessage;
-type Reply = http.ServerResponse<http.IncomingMessage>;
-type Logger = FastifyBaseLogger;
-type TypeProvider = FastifyTypeProviderDefault;
-type FastifyServerInstance = FastifyInstance<Server, Request, Reply, Logger, TypeProvider> & PromiseLike<FastifyInstance<Server, Request, Reply, Logger, TypeProvider>>;
+export type Server = http.Server<typeof http.IncomingMessage, typeof http.ServerResponse> | https.Server<typeof http.IncomingMessage, typeof http.ServerResponse> | http2.Http2Server | http2.Http2SecureServer;
+export type Request = http.IncomingMessage;
+export type Reply = http.ServerResponse<http.IncomingMessage>;
+export type Logger = FastifyBaseLogger;
+export type TypeProvider = FastifyTypeProviderDefault;
+export type FastifyServerInstance = FastifyInstance<Server, Request, Reply, Logger, TypeProvider> & PromiseLike<FastifyInstance<Server, Request, Reply, Logger, TypeProvider>>;
 
 const HTTPContent: {[label: string]: string} = {
     "application/xml": "application/xml",

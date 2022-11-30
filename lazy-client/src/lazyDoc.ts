@@ -6,7 +6,7 @@
  * @member {{[name: string]: string} | undefined} attributes The attributes of the HTML element.
  * @member {{[name: string]: (e: Event)=>void} | undefined} eventListeners The event listeners of the HTML element.
  */
-interface HTMLTag {
+export interface HTMLTag {
     /**
      * The id of the HTML element.
      */
