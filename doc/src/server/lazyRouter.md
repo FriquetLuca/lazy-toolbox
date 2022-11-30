@@ -23,6 +23,8 @@ class LazyRouter {
     async reloadViews(): Promise<void>;
     // New on version: 1.4.10
     async initializeSession(secretKey: string = 'a secret with minimum length of 32 characters', isSecure: boolean = false, expirationTime: number = 24 * 60 * 1000): Promise<void>;
+    // New on version: 1.4.11
+    static contentType(content: string = 'html'): string;
 }
 ```
 
@@ -74,6 +76,7 @@ setupRouter();
 ```
 `routes/customRoute.js`:
 ```js
+const { LazyRouter } = require('lazy-toolbox');
 // Get the folder relative path as route
 module.exports = (route, fastify, router) => {
     // A simple implementation for lazyness incarned.
@@ -108,7 +111,7 @@ module.exports = (route, fastify, router) => {
         // Load the view
         const currentView = router.view(config);
         // Just send the document
-        return provided.reply.type('text/html').send(currentView);
+        return reply.type(LazyRouter.contentType('html')).send(currentView);
     });
 }
 ```

@@ -1,9 +1,75 @@
-import Fastify from 'fastify';
+import * as http from 'http'
+import * as http2 from 'http2'
+import * as https from 'https'
+import Fastify, { FastifyBaseLogger, FastifyInstance, FastifyReply, FastifyRequest, FastifyTypeProvider, FastifyTypeProviderDefault, RawReplyDefaultExpression, RawRequestDefaultExpression } from 'fastify';
 import path from 'path';
 import fs from "fs";
 import { parse } from 'node-html-parser';
 import {LazyModLoader} from '../lazyModLoader';
 import {LazyFS} from '../lazy-fs/lazyFS';
+type Server = http.Server<typeof http.IncomingMessage, typeof http.ServerResponse> | https.Server<typeof http.IncomingMessage, typeof http.ServerResponse> | http2.Http2Server | http2.Http2SecureServer;
+type Request = http.IncomingMessage;
+type Reply = http.ServerResponse<http.IncomingMessage>;
+type Logger = FastifyBaseLogger;
+type TypeProvider = FastifyTypeProviderDefault;
+type FastifyServerInstance = FastifyInstance<Server, Request, Reply, Logger, TypeProvider> & PromiseLike<FastifyInstance<Server, Request, Reply, Logger, TypeProvider>>;
+
+const HTTPContent: {[label: string]: string} = {
+    "application/xml": "application/xml",
+    "audio/mpeg": "audio/mpeg",
+    "javascript": "application/javascript",
+    "js": "text/javascript",
+    "EDI-X12": "application/EDI-X12",
+    "EDIFACT": "application/EDIFACT",
+    "octet-stream": "application/octet-stream",
+    "ogg": "application/ogg",
+    "pdf": "application/pdf",
+    "xhtml+xml": "application/xhtml+xml",
+    "x-shockwave-flash": "application/x-shockwave-flash",
+    "json": "application/json",
+    "ld+json": "application/ld+json",
+    "zip": "application/zip",
+    "x-www-form-urlencoded": "application/x-www-form-urlencoded",
+    "x-ms-wma": "audio/x-ms-wma",
+    "vnd.rn-realaudio": "audio/vnd.rn-realaudio",
+    "x-wav": "audio/x-wav",
+    "gif": "image/gif",
+    "jpeg": "image/jpeg",
+    "png": "image/png",
+    "tiff": "image/tiff",
+    "vnd.microsoft.icon": "image/vnd.microsoft.icon",
+    "x-icon": "image/x-icon",
+    "vnd.djvu": "image/vnd.djvu",
+    "svg+xml": "image/svg+xml",
+    "mixed": "multipart/mixed",
+    "alternative": "multipart/alternative",
+    "related": "multipart/related",
+    "form-data": "multipart/form-data",
+    "css": "text/css",
+    "csv": "text/csv",
+    "html": "text/html",
+    "text": "text/plain",
+    "xml": "text/xml",
+    "mpeg": "video/mpeg",
+    "mp4": "video/mp4",
+    "quicktime": "video/quicktime",
+    "x-ms-wmv": "video/x-ms-wmv",
+    "x-msvideo": "video/x-msvideo",
+    "x-flv": "video/x-flv",
+    "webm": "video/webm",
+    "vnd.oasis.opendocument.text": "application/vnd.oasis.opendocument.text",
+    "vnd.oasis.opendocument.spreadsheet": "application/vnd.oasis.opendocument.spreadsheet",
+    "vnd.oasis.opendocument.presentation": "application/vnd.oasis.opendocument.presentation",
+    "vnd.oasis.opendocument.graphics": "application/vnd.oasis.opendocument.graphics",
+    "vnd.ms-excel": "application/vnd.ms-excel",
+    "vnd.openxmlformats-officedocument.spreadsheetml.sheet": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "vnd.ms-powerpoint": "application/vnd.ms-powerpoint",
+    "vnd.openxmlformats-officedocument.presentationml.presentation": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "msword": "application/msword",
+    "vnd.openxmlformats-officedocument.wordprocessingml.document": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "vnd.mozilla.xul+xml": "application/vnd.mozilla.xul+xml"
+};
+
 /**
  * A lazy routing setup for lazy people.
  * @get Views Get pre-loaded views.
@@ -19,7 +85,7 @@ import {LazyFS} from '../lazy-fs/lazyFS';
  * @method view Get the string representation of a specific view. It will load the view and modify any given datas.
  */
 export class LazyRouter {
-    protected fastify: any;
+    protected fastify: FastifyServerInstance;
     protected host: string;
     protected port: number;
     protected root: string;
@@ -187,7 +253,7 @@ export class LazyRouter {
      * @param {boolean} reloadRoutes If true, it will get the current state of the HTML page otherwise it's gonna give the state it was when the server started. When false, views are retrieved much faster making the server faster too.
      * @returns {string} A string representing the HTML content of the page.
      */
-    public view(provided: {viewPath:string, request:any, reply:any, datas?: {[propertyName: string]: string}, templates?: {[name: string]: {(i: number, count: number): {[label: string]: string}}}, overrideTemplateCount?: { [templateName: string]: number} }, reloadRoutes: boolean = false): string {
+    public view(provided: {viewPath:string, request: FastifyRequest, reply: FastifyReply, datas?: {[propertyName: string]: string}, templates?: {[name: string]: {(i: number, count: number): {[label: string]: string}}}, overrideTemplateCount?: { [templateName: string]: number} }, reloadRoutes: boolean = false): string {
         const document = parse(this.getView(provided.viewPath) ?? "");
         this.injector(document, provided.datas ?? {}, provided.templates ?? {}, provided.overrideTemplateCount ?? {}, reloadRoutes);
         return document.toString();
@@ -199,7 +265,7 @@ export class LazyRouter {
      */
     public async registerPaths(routesFolder: string, viewsFolder: string = "public/views/"): Promise<void> {
         this.viewDir = viewsFolder;
-        await this.fastify.register(async (fastify: any, options: any): Promise<void> => {
+        await this.fastify.register(async (fastify, options) => {
             await this.reloadViews();
             const routes: { [filePath: string]: any; } = new LazyModLoader(this.root, routesFolder).load();
             for(let route in routes) {
@@ -211,14 +277,26 @@ export class LazyRouter {
      * Get fastify server instance.
      * @returns {any} Fastify server instance..
      */
-    public getFastify(): any {
-        return this.fastify;
+    public getFastify(): FastifyServerInstance {
+        return this.fastify;        
+    }
+    /**
+     * Get the header name of a content type.
+     * @param {string} content Name of the content. By default, the content type is set to "html".
+     * @returns {string} The content type header. If the content type doesn't exist or is undefined, the function returns "text/plain".
+     */
+    public static contentType(content: string = 'html'): string {
+        return HTTPContent[content] ?? 'text/plain';
+        // reply
+        //     .code(config?.code ?? 200)
+        //     .header('Content-Type', HTTPContent[config?.type ?? 'html'] ?? 'text/html')
+        //     .send(content);
     }
     /**
      * Start listening to the port.
      */
     public start(): void {
-        this.fastify.listen({ port: this.port, host: this.host }, function (err: any, address: any) {
+        this.fastify.listen({ port: this.port, host: this.host }, function (err: Error | null) {
             if (err) {
                 console.error(err);
                 process.exit(1);

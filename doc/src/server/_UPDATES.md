@@ -1,9 +1,17 @@
 ## [Updates](#updates)
 
+### v1.4.11 - Route lazier
+
+New content were added:
+- Add `contentType` static method in `LazyRouter`.
+
+New modifications were introduced:
+- Implement a Fastify type for `LazyRouter`, making it no longer `any` type.
+
 ### v1.4.10 - Session
 
 New content were added:
-- Add `initializeSession` in `LazyRouter`.
+- Add `initializeSession` method in `LazyRouter`.
 
 ### v1.4.9 - Loading views on routes
 

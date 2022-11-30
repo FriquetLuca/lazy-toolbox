@@ -191,7 +191,6 @@ socketClient.send('newPacket', {
 
 ```ts
 interface HTMLTag {
-    tag: string;
     id?: string;
     class?: string[];
     childs?: HTMLElement[];
