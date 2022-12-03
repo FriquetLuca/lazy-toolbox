@@ -35,7 +35,7 @@ import { LazyText } from "./lazyText";
     fetch?: (i: number, c: string, t: string, isPatternEnd?: (i: number, c: string, t: string) => boolean, patternSet?: LazyPattern[]) => PatternFound
 }
 /**
- * A generic rule maker.
+ * A generic rule maker. It creates rules for LazyParsing.
  */
 export class LazyRule {
     /**

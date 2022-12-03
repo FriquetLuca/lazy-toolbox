@@ -64,18 +64,21 @@ export class LazyEncapProcess {
                 args = [...this.nodeType, this.processPath];
                 spawning = args.shift();
             } else {
-                spawning = this.nodeType;
+                spawning = <string>this.nodeType;
                 args = [this.processPath];
+            }
+            if(!spawning) {
+                return;
             }
             const newNode = spawn(spawning, args, {
                 cwd: this.root,
                 stdio: ['ipc'],
             });
-            newNode.stdout.on('data', (data: any) => {
+            newNode.stdout?.on('data', (data: any) => {
                 const stringData = `${data}`;
                 this.log(`Node output: ${stringData.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '')}`);
             });
-            newNode.stderr.on('data', (data: any) => {
+            newNode.stderr?.on('data', (data: any) => {
                 this.log(`Node error: ${data}`);
                 this.stop();
             });

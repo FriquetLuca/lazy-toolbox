@@ -1,11 +1,3 @@
-- LazyPortable doc
-    - LazyParsing
-    - LazyPattern
-    - LazyRule
-    - LazyText
-- LazyClient doc
-    - LazyEditorArea
-
 nwTask.ondragstart = drag;
 t.ondragover = allowDrop;
 t.ondrop = drop;

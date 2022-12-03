@@ -125,6 +125,12 @@ export class LazyParsing {
             lastIndex: i - 1
         };
     }
+    /**
+     * Convert the result of a pattern to a string representation.
+     * @param {PatternResult | PatternFound[]} content The parsed content.
+     * @param {boolean} spacing If true, the result will be written while taking into account the spacing of every elements.
+     * @returns {string} The stringified content of the pattern.
+     */
     public static toString(content: PatternResult | PatternFound[], spacing: boolean = false): string {
         return LazyParsing.extractString(getType(content) !== 'array' ? (<PatternResult>content).result : <PatternFound[]>content, spacing);
     }

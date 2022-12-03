@@ -54,47 +54,47 @@ export class LazyPattern {
     private isPattern: (i: number, c: string, t: string) => boolean;
     private isPatternEnd?: (i: number, c: string, t: string) => boolean;
     private fetch?: (i: number, c: string, t: string, isPatternEnd?: ((i: number, c: string, t: string) => boolean), patternSet?: LazyPattern[]) => PatternFound;
-   /**
+    /**
     * Create a pattern object with a bunch of parameters for full customisation.
     * @param {BasicRule} pattern 
     */
-   constructor(pattern: BasicRule)
-   {
-       this._name = pattern.name ?? "";
-       this.defaultValue = pattern.defaultValue;
-       this.isPattern = pattern.isPattern;
-       this.isPatternEnd = pattern.isPatternEnd;
-       this.fetch = pattern.fetch;
-   }
-   /**
+    constructor(pattern: BasicRule)
+    {
+        this._name = pattern.name ?? "";
+        this.defaultValue = pattern.defaultValue;
+        this.isPattern = pattern.isPattern;
+        this.isPatternEnd = pattern.isPatternEnd;
+        this.fetch = pattern.fetch;
+    }
+    /**
     * Get the name of the current pattern.
     */
-   public get name(): string {
-    return this._name;
-   }
-   /**
+    public get name(): string {
+        return this._name;
+    }
+    /**
     * Check if we found the pattern.
     * @param {number} i The actual index tested.
     * @param {string} c The actual character tested.
     * @param {string} t The actual text content parsed for special cases.
     * @returns True only if it match the pattern.
     */
-   isActualPattern(i: number, c: string, t: string): boolean
-   {
-       if(this.isPattern !== undefined && this.isPattern !== null)
-       {
-           return this.isPattern(i, c, t);
-       }
-       return false;
-   }
-   /**
+    public isActualPattern(i: number, c: string, t: string): boolean
+    {
+        if(this.isPattern !== undefined && this.isPattern !== null)
+        {
+            return this.isPattern(i, c, t);
+        }
+        return false;
+    }
+    /**
     * Check if the pattern ended, used to handle nesting.
     * @param {number} i The actual index tested.
     * @param {string} c The actual character tested.
     * @param {string} t The actual text content parsed for special cases.
     * @returns True only if it match the pattern.
     */
-    isEndPattern(i: number, c: string, t: string)
+    public isEndPattern(i: number, c: string, t: string): boolean
     {
         if(this.isPatternEnd !== undefined && this.isPatternEnd !== null)
         {
@@ -102,7 +102,7 @@ export class LazyPattern {
         }
         return false;
     }
-   /**
+    /**
     * Assign the new content matching the desired pattern then return the last index of the pattern.
     * @param {number} i The actual index tested.
     * @param {string} c The actual character tested.
@@ -111,7 +111,7 @@ export class LazyPattern {
     * @param {LazyPattern} actualPattern The actual pattern we're testing, used for referencing.
     * @returns An object containing the last index of the pattern and the content to fetch. Content is equal to the default value in case fetch isn't defined.
     */
-    fetchContent(i: number, c: string, t: string, patternSet: LazyPattern[], actualPattern: LazyPattern)
+    public fetchContent(i: number, c: string, t: string, patternSet: LazyPattern[], actualPattern: LazyPattern): PatternFound
     {
         if(this.fetch !== undefined && this.fetch !== null)
         {

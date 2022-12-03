@@ -16,8 +16,10 @@ Made to create a webpage as fast as possible. Explore more, focus more on develo
 	    - [LazyCaret](#lazyCaret)
 	    - [LazyClient](#lazyClient)
 	    - [LazyDoc](#lazyDoc)
+	    - [LazyFile](#lazyFile)
 	    - [LazyHtNetwork](#lazyHtNetwork)
 	    - [LazySchedule](#lazySchedule)
+	    - [LazyTabularTextArea](#lazyTabularTextArea)
 	    - [LazyTheme](#lazyTheme)
 	    - [LazyView](#lazyView)
 
@@ -29,6 +31,12 @@ npm i @lazy-toolbox/client
 ```
 
 ## [Updates](#updates)
+
+### [v0.0.9 - Basic support](#se-vo-o-o)
+
+New content were added:
+- Add `LazyTabularTextArea` class.
+- Add `LazyFile` class.
 
 ### [v0.0.8 - Document handler](#se-vo-o-o)
 
@@ -249,6 +257,24 @@ Same as creating the element:
 */
 ```
 
+#### [LazyFile](#lazyFile)
+
+```ts
+class LazyFile {
+    static saveAs(fileName: string, content: string = ""): void;
+}
+```
+
+An easy way to manage file from a browser.
+
+Example:
+
+```js
+const { LazyFile } = require('@lazy-toolbox/client');
+// Save a file with a specific content.
+LazyFile.saveAs('newFile.txt', 'This is some content for this file.');
+```
+
 #### [LazyHtNetwork](#lazyHtNetwork)
 
 ```ts
@@ -314,6 +340,24 @@ const schedule = new LazySchedule(
     25 // Max 25 tries
 );
 schedule.start(); // Start the schedule.
+```
+
+#### [LazyTabularTextArea](#lazyTabularTextArea)
+
+```ts
+class LazyTabularTextArea {
+    constructor(el: HTMLTextAreaElement, tabLength: number = 4);
+}
+```
+
+Add support for tabulation in a text area.
+
+Example:
+
+```js
+const { LazyTabularTextArea } = require('@lazy-toolbox/client');
+// Add support for tabulation on a text area.
+new LazyTabularTextArea(document.querySelector('.aTextArea'));
 ```
 
 #### [LazyTheme](#lazyTheme)

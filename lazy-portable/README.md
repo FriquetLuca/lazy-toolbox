@@ -18,6 +18,10 @@ Made to handle a bunch of cases that have to be handle on either a server or a c
 	    - [LazyDataGraph](#lazyDataGraph)
 	    - [LazyMapper](#lazyMapper)
 	    - [LazyMath](#lazyMath)
+	    - [LazyParsing](#lazyParsing)
+	    - [LazyPattern](#lazyPattern)
+	    - [LazyRule](#lazyRule)
+	    - [LazyText](#lazyText)
 
 ## [Installation (NPM)](#install-npm)
 
@@ -27,6 +31,14 @@ npm i @lazy-toolbox/portable
 ```
 
 ## [Updates](#updates)
+
+### v0.0.3 - Parsing fury
+
+New content was added:
+- Add `LazyParsing` class.
+- Add `LazyPattern` class.
+- Add `LazyRule` class.
+- Add `LazyText` class.
 
 ### v0.0.2 - Lazy Mapping
 
@@ -279,4 +291,114 @@ console.log(LazyMath.combinationArrayNRNO([7, 6, 3, 4], 2));
 */
 ```
 
+#### [LazyParsing](#lazyParsing)
+```ts
+interface PatternResult {
+    isPatternEnd: boolean;
+    result: PatternFound[];
+    lastIndex: number;
+}
+class LazyParsing {
+    constructor(...rules: BasicRule[]);
+    addRules(...rules: BasicRule[]): void;
+    removeRules(...rulesName: string[]): void;
+    parse(text: string): any[];
+    static createSet(...rules: BasicRule[]): LazyPattern[];
+    static parse(txtContent: string, patternSet: LazyPattern[], i: number = 0, endPattern: (i: number, c: string, t: string) => boolean = (i: number, c: string, t: string) => { return false; }): PatternResult;
+    static toString(content: PatternResult | PatternFound[], spacing: boolean = false): string;
+
+}
+```
+
+A more natural way to parse datas with custom rules set in specific testing order.
+
+Example:
+
+```js
+const { LazyParsing, LazyRule } = require('@lazy-toolbox/portable');
+const parsingRules = LazyParsing.createSet(LazyRule.number(), LazyRule.word());
+const parsedResult = LazyParsing.parse("This is 1 content we want to parse.", parsingRules); // Parse the content with our rules.
+console.log(LazyParsing.ToString(parsedResult, true)); // Show the result with spacing.
+```
+#### [LazyPattern](#lazyPattern)
+```ts
+interface PatternFound {
+    name?: string,
+    currentName?: string,
+    begin?: string,
+    end?: string,
+    nested?: boolean,
+    content?: any,
+    error?: boolean,
+    line?: number,
+    lineChar?: number,
+    lastIndex?: number
+}
+class LazyPattern {
+    constructor(pattern: BasicRule);
+    get name(): string;
+    isActualPattern(i: number, c: string, t: string): boolean;
+    isEndPattern(i: number, c: string, t: string): boolean;
+    fetchContent(i: number, c: string, t: string, patternSet: LazyPattern[], actualPattern: LazyPattern): PatternFound;
+}
+```
+
+LazyPattern is a generic class made to check for pattern while looking inside a string. It fetch it's inner value with the pattern founded and then return it's last index.
+#### [LazyRule](#lazyRule)
+```ts
+interface BasicRule {
+    name?: string,
+    defaultValue?: any,
+    begin?: string,
+    end?: string,
+    isPattern: (i: number, c: string, t: string) => boolean,
+    isPatternEnd?: (i: number, c: string, t: string) => boolean,
+    fetch?: (i: number, c: string, t: string, isPatternEnd?: (i: number, c: string, t: string) => boolean, patternSet?: LazyPattern[]) => PatternFound
+}
+class LazyRule {
+    static simpleChar(name: string, predicate: (c:string)=>boolean): BasicRule;
+    static simpleCharbox(name: string, begin: string, end: string): BasicRule;
+    static word(): BasicRule;
+    static number(comaOverDot: boolean = false): BasicRule;
+}
+```
+
+A generic rule maker. It creates rules for LazyParsing.
+
+Example:
+
+```js
+const { LazyParsing, LazyRule } = require('@lazy-toolbox/portable');
+const parsingRules = LazyParsing.createSet(LazyRule.number(), LazyRule.word());
+```
+#### [LazyText](#lazyText)
+```ts
+class LazyText {
+    static extract(content: string, index: number, nbrLetters: number): string;
+    static extractFromUntil(content: string, startIndex: number, predicate: (c: string, i: number, txt: string)=>boolean): { value: string; lastIndex: number; };
+    static countLines(content: string): number;
+    static countLinesChar(content: string, maxIndex: number): { lines: number; lineChar: number; };
+}
+```
+
+Shorthand static class for special string functions.
+
+Example:
+
+```js
+const { LazyText } = require('@lazy-toolbox/portable');
+const someContent = "Hello World.\nNice to meet you all.";
+console.log(LazyText.extract(someContent, 2, 3)); // "llo"
+console.log(LazyText.extractFromUntil(someContent, 2, (c, i, txt) => {
+    c === '/n'
+})); // "llo World."
+console.log(LazyText.countLines(someContent));// 2
+console.log(LazyText.countLinesChar(someContent));
+/*
+{
+    lines: 2
+    lineChar: 21
+}
+*/
+```
 

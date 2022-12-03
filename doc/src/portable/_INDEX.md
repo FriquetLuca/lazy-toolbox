@@ -5,3 +5,7 @@
     - [LazyDataGraph](#lazyDataGraph)
     - [LazyMapper](#lazyMapper)
     - [LazyMath](#lazyMath)
+    - [LazyParsing](#lazyParsing)
+    - [LazyPattern](#lazyPattern)
+    - [LazyRule](#lazyRule)
+    - [LazyText](#lazyText)

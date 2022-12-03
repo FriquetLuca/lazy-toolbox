@@ -1,5 +1,11 @@
 ## [Updates](#updates)
 
+### [v0.0.9 - Basic support](#se-vo-o-o)
+
+New content were added:
+- Add `LazyTabularTextArea` class.
+- Add `LazyFile` class.
+
 ### [v0.0.8 - Document handler](#se-vo-o-o)
 
 New content were added:

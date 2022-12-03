@@ -27,18 +27,8 @@ export class LazyText {
      * @param {number} nbrLetters The number of letters to extract.
      * @returns {string} Return a string of nbrLetters characters if there is that many from a starting point.
      */
-    static extract(content: string, index: number, nbrLetters: number): string
-    {
-        let result = '';
-        for(let i = index; i < content.length; i++)
-        {
-            if(i >= index + nbrLetters)
-            {
-                return result;
-            }
-            result = `${result}${content[i]}`;
-        }
-        return result;
+    public static extract(content: string, index: number, nbrLetters: number): string {
+        return content.substring(index, index + nbrLetters);
     }
     /**
      * Extract the content from a string starting at a specific index until the predicate is false.
@@ -47,7 +37,7 @@ export class LazyText {
      * @param {(c: string, i: number, txt: string)=>boolean} predicate A function to check if we include the character.
      * @returns {{lastIndex: number, value:string}} An object containing the substring made by following the predicate rule and the last index extracted.
      */
-    static extractFromUntil(content: string, startIndex: number, predicate: (c: string, i: number, txt: string)=>boolean):{ value: string; lastIndex: number; }
+    public static extractFromUntil(content: string, startIndex: number, predicate: (c: string, i: number, txt: string)=>boolean):{ value: string; lastIndex: number; }
     {
         let lastIndex = startIndex;
         for(let i = startIndex; content.length; i++)
@@ -58,13 +48,8 @@ export class LazyText {
             }
             lastIndex = i;
         }
-        let result = '';
-        for(let i = startIndex; i <= lastIndex; i++)
-        {
-            result = `${result}${content[i]}`;
-        }
         return {
-            value: result,
+            value: LazyText.extract(content, startIndex, lastIndex - startIndex),
             lastIndex: lastIndex
         };
     }
@@ -73,7 +58,7 @@ export class LazyText {
      * @param {string} content The string content from which we want to count the lines.
      * @returns {number} The number of lines contained in the string.
      */
-    static countLines(content: string): number
+    public static countLines(content: string): number
     {
         let line = 1;
         for(let i = 0; i < content.length; i++)
@@ -91,13 +76,14 @@ export class LazyText {
      * @param {number} maxIndex The last index we're going to look.
      * @returns {{lines: number; lineChar: number;}} An object containing the number of lines found and the character position of the last index in it's current line.
      */
-    static countLinesChar(content: string, maxIndex: number): { lines: number; lineChar: number; }
+    public static countLinesChar(content: string, maxIndex?: number): { lines: number; lineChar: number; }
     {
         let result = {
             lines: 1,
             lineChar: 0
         }
-        for(let i = 0; i <= maxIndex; i++)
+        const lastIndex = maxIndex ?? content.length - 1;
+        for(let i = 0; i <= lastIndex; i++)
         {
             result.lineChar++;
             if(content[i] === '\n')

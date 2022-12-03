@@ -1,4 +1,7 @@
 import { LazyCaret } from "./lazyCaret";
+/**
+ * Add support for tabulation in a text area.
+ */
 export class LazyTabularTextArea {
     private editor: HTMLTextAreaElement;
     private tabLength: number;
