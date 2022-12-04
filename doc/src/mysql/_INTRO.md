@@ -6,6 +6,7 @@
     <img  src="https://img.shields.io/badge/license-MIT-green">
     <img  src="https://img.shields.io/badge/typescript-v4.8.4-orange">
     <img  src="https://img.shields.io/badge/node-v14.21.0-yellow">
+    <img  src="https://img.shields.io/badge/mysql-v2.18.1-orange">
 </p>
 
 # Lazy Toolbox - MySQL

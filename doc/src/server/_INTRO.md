@@ -6,6 +6,9 @@
     <img  src="https://img.shields.io/badge/license-MIT-green">
     <img  src="https://img.shields.io/badge/typescript-v4.8.4-orange">
     <img  src="https://img.shields.io/badge/node-v14.21.0-yellow">
+    <img  src="https://img.shields.io/badge/fastify-v4.9.2-lightblue">
+    <img  src="https://img.shields.io/badge/ws-v8.10.0-blue">
+    <img  src="https://img.shields.io/badge/node--html--parser-v6.1.4-red">
 </p>
 
 # Lazy Toolbox - Server
