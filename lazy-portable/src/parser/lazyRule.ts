@@ -1,6 +1,6 @@
 import { LazyPattern, PatternFound } from "./lazyPattern";
 import { LazyParsing } from "./lazyParsing";
-import { LazyText } from "./lazyText";
+import { LazyText } from "../lazyText";
 /**
  * A basic rule to catch a pattern.
  */
@@ -39,12 +39,12 @@ import { LazyText } from "./lazyText";
  */
 export class LazyRule {
     /**
-     * A basic pattern to test and extract a character.
+     * A basic pattern to extract a specific character.
      * @param {string} name Name of the pattern.
-     * @param {(c:string)=>boolean} predicate The function to test the character.
+     * @param {(c:string) => boolean} predicate The function to test the character.
      * @returns {BasicRule} Return a char pattern.
      */
-    public static simpleChar(name: string, predicate: (c:string)=>boolean): BasicRule {
+    public static simpleChar(name: string, predicate: (c:string) => boolean): BasicRule {
         return {
             name: name,
             defaultValue: null,
@@ -67,8 +67,8 @@ export class LazyRule {
             defaultValue: begin,
             begin: begin,
             end: end,
-            isPattern: (i, c, txt) => { return c === begin; },
-            isPatternEnd: (i, c, txt) => { return c === end; },
+            isPattern: (i, c, txt) => { return txt.substring(i, i + begin.length) === begin; },
+            isPatternEnd: (i, c, txt) => { return txt.substring(i, i + begin.length) === begin; },
             fetch: (index, c, txt, endPattern, patternSet) => {
                 let p = LazyParsing.parse(txt, patternSet ?? [], index + 1, endPattern); // Let's look for nested pattern over here..
                 // We could filter patternSet if we wanted to get rid of some functions for this case or use whatever we want anyway.
@@ -100,37 +100,34 @@ export class LazyRule {
         };
     }
     /**
-     * A basic rule to extract words.
+     * A basic rule to extract words. Words can only be made with letters.
      * @returns {BasicRule} Return a word pattern.
      */
     public static word(): BasicRule
     {
         return {
-            name: 'Word',
+            name: 'word',
             defaultValue: '',
             isPattern: (i, c, txt) => { return LazyText.letters.includes(c); },
             fetch: (index, c, txt) => {
                 let result = {
-                    name: 'Word',
+                    name: 'word',
                     content: '',
                     lastIndex: index
                 };
-                for(let i = index; i < txt.length; i++)
-                {
-                    if(!LazyText.letters.includes(txt[i])) // Not a letter?
-                    {
-                        result.lastIndex = i - 1; // Since this index is something we shouldn't bother with, let him tested by something else
+                for(let i = index; i < txt.length; i++) {
+                    if(!LazyText.letters.includes(txt[i])) { // Not a letter?
                         break;
                     }
                     result.lastIndex = i; // Assign the last index
-                    result.content = `${result.content}${txt[i]}`;
                 }
+                result.content = txt.substring(index, result.lastIndex + 1);
                 return result;
             }
         };
     }
     /**
-     * A basic rule to extract numbers.
+     * A basic rule to extract numbers. The number can only be written in the form `125` or either `1.2123` if `comaOverDot = false` otherwise `1,2123`.
      * @param {boolean} comaOverDot If true, numbers must be written as "x,y" instead of "x.y".
      * @returns {BasicRule} A basic number pattern.
      */
@@ -138,7 +135,7 @@ export class LazyRule {
     {
         let dot = comaOverDot ? ',' : '.';
         return {
-            name: 'Number',
+            name: 'number',
             defaultValue: 0,
             isPattern: (i, c, txt) => {
                 let isDecimal = c === dot && LazyText.digits.includes(LazyText.extract(txt, i + 1, 1));
@@ -146,7 +143,7 @@ export class LazyRule {
             },
             fetch: (index, c, txt) => {
                 let result: { name: string, content: any, lastIndex: number } = {
-                    name: 'Number',
+                    name: 'number',
                     content: '',
                     lastIndex: index
                 };
@@ -179,5 +176,100 @@ export class LazyRule {
                 return result;
             }
         };
+    }
+    /**
+     * A basic rule to extract a variable name. The variable name must be composed of only letters and underscores.
+     * @returns 
+     */
+    public static variable(): BasicRule {
+        return {
+            name: 'variable',
+            defaultValue: '',
+            isPattern: (i: number, c: string, txt: string) => { 
+                return LazyText.letters.includes(c) || (c === '_'); // begin with _
+            },
+            fetch: (index: number, c: string, txt: string) => {
+                let result = {
+                    name: 'variable',
+                    content: '',
+                    lastIndex: index
+                };
+                for(let i = index; i < txt.length; i++)
+                {
+                    if(!LazyText.letters.includes(txt[i]) && txt[i] !== '_') // Not a letter and not underscore
+                    {
+                        result.lastIndex = i - 1; // Since this index is something we shouldn't bother with, let him tested by something else
+                        break;
+                    }
+                    result.lastIndex = i; // Assign the last index
+                }
+                result.content = txt.substring(index, result.lastIndex + 1);
+                return result;
+            }
+        };
+    }
+    /**
+     * A basic rule to extract keywords. They must begin by a letter or an underscore and can only contains letters or underscores.
+     * @param {string[]} keywordList A list of keywords.
+     * @returns {BasicRule} A basic keyword pattern.
+     */
+    public static keyword(keywordList: string[]): BasicRule {
+        return {
+            name: 'keyword',
+            defaultValue: '',
+            isPattern: (i: number, c: string, txt: string) => { 
+                const sizeLeft = txt.length - i;
+                for(let keyword of keywordList) {
+                    if(keyword.length <= sizeLeft) {
+                        const currentContent = txt.substring(i, i + keyword.length);
+                        if(currentContent === keyword) { // Probably keyword
+                            const currentNextIndex = i + keyword.length;
+                            if(!(currentNextIndex < txt.length && (LazyText.letters.includes(txt[currentNextIndex]) || txt[currentNextIndex] === '_'))) {
+                                // Definitly keyword
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            },
+            fetch: (index: number, c: string, txt: string) => {
+                let result = {
+                    name: 'keyword',
+                    content: '',
+                    lastIndex: index
+                };
+                const sizeLeft = txt.length - index;
+                for(let keyword of keywordList) {
+                    if(keyword.length <= sizeLeft) {
+                        const currentContent = txt.substring(index, index + keyword.length);
+                        if(currentContent === keyword) { // Probably keyword
+                            const currentNextIndex = index + keyword.length;
+                            if(!(currentNextIndex < txt.length && (LazyText.letters.includes(txt[currentNextIndex]) || txt[currentNextIndex] === '_'))) {
+                                // Definitly keyword
+                                result.content = currentContent;
+                                result.lastIndex = currentNextIndex - 1;
+                                return result;
+                            }
+                        }
+                    }
+                }
+                return result;
+            }
+        };
+    }
+    /**
+     * A basic pattern to extract any character without exception.
+     * @param {string} name Name of the rule.
+     */
+    public static any(name: string): BasicRule {
+        return {
+            name: name,
+            defaultValue: null,
+            isPattern: (i, c, txt) => { return true; },
+            fetch: (index, c, txt) => {
+                return { name: name, content: c, lastIndex: index };
+            }
+        }
     }
 }

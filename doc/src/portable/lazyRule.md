@@ -14,6 +14,9 @@ class LazyRule {
     static simpleCharbox(name: string, begin: string, end: string): BasicRule;
     static word(): BasicRule;
     static number(comaOverDot: boolean = false): BasicRule;
+    static variable(): BasicRule;
+    static keyword(keywordList: string[]): BasicRule;
+    static any(name: string): BasicRule;
 }
 ```
 

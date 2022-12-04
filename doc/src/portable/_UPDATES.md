@@ -1,5 +1,14 @@
 ## [Updates](#updates)
 
+### v0.0.5 - Parsing rules
+
+New content was added:
+- Add `variable`, `keyword` and `any` static functions to `LazyRule`.
+- Add `toStringDebug` static function to `LazyParsing`.
+
+New modifications were introduced:
+- Change the `parse` return value to a `PatternFound[]`. Previously, it was `any[]`.
+
 ### v0.0.3 - Parsing fury
 
 New content was added:

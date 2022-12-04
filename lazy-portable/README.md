@@ -32,6 +32,15 @@ npm i @lazy-toolbox/portable
 
 ## [Updates](#updates)
 
+### v0.0.5 - Parsing rules
+
+New content was added:
+- Add `variable`, `keyword` and `any` static functions to `LazyRule`.
+- Add `toStringDebug` static function to `LazyParsing`.
+
+New modifications were introduced:
+- Change the `parse` return value to a `PatternFound[]`. Previously, it was `any[]`.
+
 ### v0.0.3 - Parsing fury
 
 New content was added:
@@ -302,11 +311,11 @@ class LazyParsing {
     constructor(...rules: BasicRule[]);
     addRules(...rules: BasicRule[]): void;
     removeRules(...rulesName: string[]): void;
-    parse(text: string): any[];
+    parse(text: string): PatternFound[];
     static createSet(...rules: BasicRule[]): LazyPattern[];
     static parse(txtContent: string, patternSet: LazyPattern[], i: number = 0, endPattern: (i: number, c: string, t: string) => boolean = (i: number, c: string, t: string) => { return false; }): PatternResult;
     static toString(content: PatternResult | PatternFound[], spacing: boolean = false): string;
-
+    static toStringDebug(content: PatternResult | PatternFound[], spacing: boolean = false): string;
 }
 ```
 
@@ -316,9 +325,36 @@ Example:
 
 ```js
 const { LazyParsing, LazyRule } = require('@lazy-toolbox/portable');
-const parsingRules = LazyParsing.createSet(LazyRule.number(), LazyRule.word());
-const parsedResult = LazyParsing.parse("This is 1 content we want to parse.", parsingRules); // Parse the content with our rules.
-console.log(LazyParsing.ToString(parsedResult, true)); // Show the result with spacing.
+// Create some keywords
+const keywordList = [
+    "if",
+    "as"
+];
+// Create a bunch of rules for the parser
+const ruleSet = LazyParsing.createSet(
+    LazyRule.keyword(keywordList), // Should look first for keywords
+    // If not a keyword, check for a variable
+    LazyRule.variable(), // This order is to make sure we don't treat a keyword as variable
+    LazyRule.number() // Last case scenario for the parsing is to check for a number
+);
+// Create a string to parse
+const contentToParse = "select a content as aswell 100 _times if needed!";
+// Get the parsing result
+const parsedResult = LazyParsing.parse(contentToParse, ruleSet);
+// Debug your datas visually
+console.log(LazyParsing.toStringDebug(parsedResult, true));
+/* Result:
+    [variable]: select
+    [variable]: a
+    [variable]: content
+    [keyword]: as
+    [variable]: aswell
+    [number]: 100
+    [variable]: _times
+    [keyword]: if
+    [variable]: needed
+*/
+// Everything after this is up to you, it's your datas, handle them the way you want to.
 ```
 #### [LazyPattern](#lazyPattern)
 ```ts
@@ -360,6 +396,9 @@ class LazyRule {
     static simpleCharbox(name: string, begin: string, end: string): BasicRule;
     static word(): BasicRule;
     static number(comaOverDot: boolean = false): BasicRule;
+    static variable(): BasicRule;
+    static keyword(keywordList: string[]): BasicRule;
+    static any(name: string): BasicRule;
 }
 ```
 

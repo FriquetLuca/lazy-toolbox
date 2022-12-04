@@ -54,9 +54,9 @@ export class LazyParsing {
     /**
      * Convert a string to an object representation following specific rules.
      * @param {string} text The text to parse.
-     * @returns {any[]} The parsed content.
+     * @returns {PatternFound[]} The parsed content.
      */
-    public parse(text: string): any[] {
+    public parse(text: string): PatternFound[] {
         return LazyParsing.parse(text, LazyParsing.createSet(...this.rules)).result;
     }
     /**
@@ -98,7 +98,7 @@ export class LazyParsing {
                 {
                     let lineData = LazyText.countLinesChar(txtContent, i);
                     let fetchResult = patternSet[j].fetchContent(i, txtContent[i], txtContent, patternSet, patternSet[j]); // Execute something then return the fetched result
-                    if(fetchResult.lastIndex) {
+                    if(fetchResult.lastIndex !== undefined) {
                         i = fetchResult.lastIndex; // Assign the new index
                     } else {
                         throw new Error('Missing returned lastIndex in a fetch.');
@@ -134,16 +134,25 @@ export class LazyParsing {
     public static toString(content: PatternResult | PatternFound[], spacing: boolean = false): string {
         return LazyParsing.extractString(getType(content) !== 'array' ? (<PatternResult>content).result : <PatternFound[]>content, spacing);
     }
+    /**
+     * Convert the result of a pattern to a string representation with some datas represented.
+     * @param {PatternResult | PatternFound[]} content The parsed content.
+     * @param spacing If true, the result will be written while taking into account the spacing of every elements.
+     * @returns {string} The stringified content of the pattern.
+     */
+    public static toStringDebug(content: PatternResult | PatternFound[], spacing: boolean = false): string {
+        return LazyParsing.stringifyParse(getType(content) !== 'array' ? (<PatternResult>content).result : <PatternFound[]>content, spacing);
+    }
+    private static generateSpace(d: number): string {
+        let spacing = '';
+        for(let i = 0; i < d; i++) {
+            spacing = `${spacing}    `;
+        }
+        return spacing;
+    }
     private static extractString(nodes: PatternFound[], spacing: boolean = false, depth: number = 0)
     {
-        const generateSpace = (d: number) => {
-            let spacing = '';
-            for(let i = 0; i < d; i++) {
-                spacing = `${spacing}    `;
-            }
-            return spacing;
-        }
-        let space = spacing ? generateSpace(depth) : '';
+        let space = spacing ? LazyParsing.generateSpace(depth) : '';
         let lineReturn = spacing ? '\n' : '';
         let result = '';
         for(let i = 0; i < nodes.length; i++) {
@@ -156,6 +165,24 @@ export class LazyParsing {
             }
             else { // It's a string, ez pz let's write it with some spacing
                 result = `${result}${space}${nodes[i].content}${lineReturn}`;
+            }
+        }
+        return result;
+    }
+    private static stringifyParse(nodes: PatternFound[], spacing: boolean = false, depth: number = 0) {
+        let space = spacing ? LazyParsing.generateSpace(depth) : '';
+        let lineReturn = spacing ? '\n' : '';
+        let result = '';
+        for(let i = 0; i < nodes.length; i++) {
+            if(nodes[i].nested) { // This node is a sub element (an array if nothing goes wrong)
+                result = `${result}[${nodes[i].name}][Nested]: ${space}${nodes[i].begin}${lineReturn}`;
+                if(!nodes[i].error)
+                {
+                    result = `${result}${LazyParsing.stringifyParse(nodes[i].content, spacing, depth + 1)}${lineReturn}${space}${nodes[i].end}${lineReturn}`;
+                }
+            }
+            else { // It's a string, ez pz let's write it with some spacing
+                result = `${result}[${nodes[i].name}]: ${space}${nodes[i].content}${lineReturn}`;
             }
         }
         return result;
