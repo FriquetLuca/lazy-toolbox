@@ -1,7 +1,7 @@
-import { LazyText } from "./lazyText";
+import { LazyText } from "../lazyText";
 import { LazyPattern, PatternFound } from "./lazyPattern";
 import { BasicRule } from "./lazyRule";
-import { getType } from "./lazyTypeof";
+import { getType } from "../lazyTypeof";
 /**
  * A representation of the result of a pattern.
  */
