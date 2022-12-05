@@ -68,9 +68,9 @@ export class LazyRule {
             begin: begin,
             end: end,
             isPattern: (i, c, txt) => { return txt.substring(i, i + begin.length) === begin; },
-            isPatternEnd: (i, c, txt) => { return txt.substring(i, i + begin.length) === begin; },
+            isPatternEnd: (i, c, txt) => { return txt.substring(i, i + end.length) === end; },
             fetch: (index, c, txt, endPattern, patternSet) => {
-                let p = LazyParsing.parse(txt, patternSet ?? [], index + 1, endPattern); // Let's look for nested pattern over here..
+                let p = LazyParsing.parse(txt, patternSet ?? [], index + begin.length, endPattern); // Let's look for nested pattern over here..
                 // We could filter patternSet if we wanted to get rid of some functions for this case or use whatever we want anyway.
                 if(p.isPatternEnd) // It's the end of our pattern
                 {
@@ -81,7 +81,7 @@ export class LazyRule {
                         nested: true,
                         begin: begin,
                         end: end,
-                        lastIndex: p.lastIndex
+                        lastIndex: p.lastIndex + end.length - 1
                     }; // Return what we got
                 }
                 else // Something went wrong with brackets (user input) since it was never closed.

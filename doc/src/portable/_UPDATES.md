@@ -1,5 +1,11 @@
 ## [Updates](#updates)
 
+### v0.0.10 - Charbox failing
+
+New modifications were introduced:
+- Correction of `simpleCharbox` from `LazyRule` not using it's end pattern and the spacing.
+- Patch `LazyParser` spacing.
+
 ### v0.0.5 - Parsing rules
 
 New content was added:

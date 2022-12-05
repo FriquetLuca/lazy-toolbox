@@ -175,14 +175,14 @@ export class LazyParsing {
         let result = '';
         for(let i = 0; i < nodes.length; i++) {
             if(nodes[i].nested) { // This node is a sub element (an array if nothing goes wrong)
-                result = `${result}[${nodes[i].name}][Nested]: ${space}${nodes[i].begin}${lineReturn}`;
+                result = `${result}${space}[${nodes[i].name}][Nested]: ${nodes[i].begin}${lineReturn}`;
                 if(!nodes[i].error)
                 {
-                    result = `${result}${LazyParsing.stringifyParse(nodes[i].content, spacing, depth + 1)}${lineReturn}${space}${nodes[i].end}${lineReturn}`;
+                    result = `${result}${LazyParsing.stringifyParse(nodes[i].content, spacing, depth + 1)}${space}${nodes[i].end}${lineReturn}`;
                 }
             }
             else { // It's a string, ez pz let's write it with some spacing
-                result = `${result}[${nodes[i].name}]: ${space}${nodes[i].content}${lineReturn}`;
+                result = `${result}${space}[${nodes[i].name}]: ${nodes[i].content}${lineReturn}`;
             }
         }
         return result;
