@@ -11,12 +11,14 @@ interface BasicRule {
 }
 class LazyRule {
     static simpleChar(name: string, predicate: (c:string)=>boolean): BasicRule;
-    static simpleCharbox(name: string, begin: string, end: string): BasicRule;
+    static simpleKeys(name: string, ...extractStrings: string[]): BasicRule;
+    static simpleCharbox(name: string, begin: string, end: string, overridePatternSet?: LazyPattern[], overrideIsPatternEnd?: (i: number, c: string, txt: string) => boolean): BasicRule;
     static word(): BasicRule;
-    static number(comaOverDot: boolean = false): BasicRule;
+    static number(comaOverDot: boolean = false, exp: boolean = false): BasicRule;
     static variable(): BasicRule;
-    static keyword(keywordList: string[]): BasicRule;
+    static keyword(...keywordList: string[]): BasicRule;
     static any(name: string): BasicRule;
+    static parseString(name: string, between: string): BasicRule;
 }
 ```
 

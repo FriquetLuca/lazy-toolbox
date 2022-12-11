@@ -55,22 +55,64 @@ export class LazyRule {
         };
     }
     /**
+     * A basic pattern to extract a specific string.
+     * @param {string} name Name of the pattern.
+     * @param {string} extractString The function to test the string.
+     * @returns {BasicRule} Return a char pattern.
+     */
+    public static simpleKeys(name: string, ...extractStrings: string[]): BasicRule {
+        return {
+            name: name,
+            defaultValue: null,
+            isPattern: (i, c, txt) => {
+                for(let extracted of extractStrings) {
+                    if(txt.substring(i, i + extracted.length) === extracted) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            fetch: (index, c, txt) => {
+                let result = {
+                    name: name,
+                    content: '',
+                    lastIndex: index
+                };
+                for(let extracted of extractStrings) {
+                    if(txt.substring(index, index + extracted.length) === extracted) {
+                        result.content = txt.substring(index, index + extracted.length);
+                        result.lastIndex = index + extracted.length - 1;
+                        break;
+                    }
+                }
+                return result;
+            }
+        };
+    }
+    /**
      * A basic charbox that will contain the nested in-between string content.
      * @param {string} name The name of the charbox.
      * @param {string} begin The string that begin the charbox.
      * @param {string} end The string that end the charbox.
+     * @param {LazyPattern[] | undefined} overridePatternSet An override to use new rules inside the charbox.
+     * @param {(i: number, c: string, txt: string) => boolean | undefined} overrideIsPatternEnd An override to use a new end pattern to handle special cases.
      * @returns {BasicRule} Return a charbox pattern.
      */
-    public static simpleCharbox(name: string, begin: string, end: string): BasicRule {
+    public static simpleCharbox(name: string, begin: string, end: string, overridePatternSet?: LazyPattern[], overrideIsPatternEnd?: (i: number, c: string, txt: string) => boolean): BasicRule {
         return {
             name: name,
             defaultValue: begin,
             begin: begin,
             end: end,
             isPattern: (i, c, txt) => { return txt.substring(i, i + begin.length) === begin; },
-            isPatternEnd: (i, c, txt) => { return txt.substring(i, i + end.length) === end; },
+            isPatternEnd: (i, c, txt) => {
+                if(overrideIsPatternEnd) {
+                    return overrideIsPatternEnd(i, c, txt);
+                }
+                return txt.substring(i, i + end.length) === end;
+            },
             fetch: (index, c, txt, endPattern, patternSet) => {
-                const p = LazyParsing.parse(txt, patternSet ?? [], index + begin.length, endPattern); // Let's look for nested pattern over here..
+                const p = LazyParsing.parse(txt, overridePatternSet ? (overridePatternSet.length == 0 ? (patternSet ?? []) : overridePatternSet) : (patternSet ?? []), index + begin.length, overrideIsPatternEnd ?? endPattern); // Let's look for nested pattern over here..
                 // We could filter patternSet if we wanted to get rid of some functions for this case or use whatever we want anyway.
                 if(p.isPatternEnd) // It's the end of our pattern
                 {
@@ -131,7 +173,7 @@ export class LazyRule {
      * @param {boolean} comaOverDot If true, numbers must be written as "x,y" instead of "x.y".
      * @returns {BasicRule} A basic number pattern.
      */
-    public static number(comaOverDot: boolean = false): BasicRule
+    public static number(comaOverDot: boolean = false, exp: boolean = false): BasicRule
     {
         let dot = comaOverDot ? ',' : '.';
         return {
@@ -142,16 +184,31 @@ export class LazyRule {
                 return LazyText.digits.includes(c) || isDecimal;
             },
             fetch: (index, c, txt) => {
-                const result: { name: string, content: any, lastIndex: number } = {
+                const result = {
                     name: 'number',
                     content: '',
                     lastIndex: index
                 };
                 let alreadyDecimal = false;
+                let isExp = false;
                 for(let i = index; i < txt.length; i++)
                 {
                     if(!LazyText.digits.includes(txt[i])) // Not a digit?
                     {
+                        if(txt[i] === 'e' && exp && !isExp) {
+                            isExp = true;
+                            if(
+                                // e+D || e-D || eD
+                                (i + 2 < txt.length && (txt[i + 1] === '+' || txt[i + 1] === '-') && LazyText.digits.includes(txt[i + 2]))
+                                || (i + 1 < txt.length && LazyText.digits.includes(txt[i + 1]))
+                            ) {
+                                result.content = `${result.content}${txt[i]}${txt[i + 1]}`;
+                                result.lastIndex = ++i; // Assign the last index
+                                continue;
+                            } else { // Is not an exponent ! => e?
+                                break;
+                            }
+                        }
                         if(!alreadyDecimal && txt[i] === dot) // It's decimal number
                         {
                             alreadyDecimal = true; // We defined it as decimal to skip problems in case of multiple decimal marks
@@ -172,7 +229,7 @@ export class LazyRule {
                     result.lastIndex = i; // Assign the last index
                     result.content = `${result.content}${txt[i]}`;
                 }
-                result.content = Number(result.content); // Type hack
+                result.content = result.content; // Type hack
                 return result;
             }
         };
@@ -213,7 +270,7 @@ export class LazyRule {
      * @param {string[]} keywordList A list of keywords.
      * @returns {BasicRule} A basic keyword pattern.
      */
-    public static keyword(keywordList: string[]): BasicRule {
+    public static keyword(...keywordList: string[]): BasicRule {
         return {
             name: 'keyword',
             defaultValue: '',
@@ -266,25 +323,25 @@ export class LazyRule {
         return {
             name: name,
             defaultValue: null,
-            isPattern: (i, c, txt) => { return true; },
+            isPattern: (i, c, txt) => true,
             fetch: (index, c, txt) => {
                 return { name: name, content: c, lastIndex: index };
             }
         }
     }
     /**
-     * A basic pattern to extract a string like syntax. It will work the same as c/c++/c#/js/java/... string.
+     * A basic pattern to extract a string like syntax. It will work the same as c/c++/c#/js/java/... string. So whatever is your `between` value, if it's "\\myStringValue", it will be escaped.
      * @param {string} name Name of the rule.
      * @param {string} between The string container. If between = '"', then it will parse a string the same way js does.
      */
-    public static parseString(name: string, between: string) {
+    public static parseString(name: string, between: string): BasicRule {
         return {
             name: name,
             defaultValue: '',
-            isPattern: (i: number, c: string, txt: string) => { return txt.substring(i, i + between.length) === between; },
+            isPattern: (i: number, c: string, txt: string) => txt.substring(i, i + between.length) === between,
             fetch: (index: number, c: string, txt: string) => {
                 const result = {
-                    name: 'string',
+                    name: name,
                     content: '',
                     error: false,
                     lastIndex: index
@@ -292,14 +349,8 @@ export class LazyRule {
                 let isOut = false;
                 for(let i = index + between.length; i < txt.length; i++) {
                     if(txt[i] === "\\") { // is anti-slash
-                        if(i + 1 < txt.length && txt[i + 1] === "\\") {
-                            i++;
-                            continue; // Skip next iteration
-                        }
-                        break;
-                    } else if(txt.substring(i, i + between.length + 1) === `\\${between}`) {
-                        // It's an escaped between
                         i++;
+                        result.lastIndex = i; // Assign the last index
                         continue; // Skip next iteration
                     } else if(txt.substring(i, i + between.length) === between) {
                         isOut = true;
