@@ -59,7 +59,7 @@ export class LazyCaret {
      */
     public static tabulation(txtArea: HTMLTextAreaElement, antiTab: boolean = false, tabLength: number = 4): void {
         let newCaretPosition;
-        let caretPos = LazyCaret.getCaretPosition(txtArea);
+        const caretPos = LazyCaret.getCaretPosition(txtArea);
         const carretContent = txtArea.value.substring(0, caretPos);
         let move = 0;
         if(antiTab)

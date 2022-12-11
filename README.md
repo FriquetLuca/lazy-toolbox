@@ -995,7 +995,7 @@ LazyFS.deleteDirectory(__dirname);
 
 ```ts
 class LazyModLoader {
-    constructor(root: string, moduleFolder: string = "./");
+    constructor(root: string, moduleFolder: string = "./", ...extensions: string[]);
     load(): {[filePath: string]: any};
     static isClass(v: any): boolean;
     static isFunction(v: any): boolean;

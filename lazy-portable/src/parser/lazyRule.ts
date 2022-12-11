@@ -70,7 +70,7 @@ export class LazyRule {
             isPattern: (i, c, txt) => { return txt.substring(i, i + begin.length) === begin; },
             isPatternEnd: (i, c, txt) => { return txt.substring(i, i + end.length) === end; },
             fetch: (index, c, txt, endPattern, patternSet) => {
-                let p = LazyParsing.parse(txt, patternSet ?? [], index + begin.length, endPattern); // Let's look for nested pattern over here..
+                const p = LazyParsing.parse(txt, patternSet ?? [], index + begin.length, endPattern); // Let's look for nested pattern over here..
                 // We could filter patternSet if we wanted to get rid of some functions for this case or use whatever we want anyway.
                 if(p.isPatternEnd) // It's the end of our pattern
                 {
@@ -110,7 +110,7 @@ export class LazyRule {
             defaultValue: '',
             isPattern: (i, c, txt) => { return LazyText.letters.includes(c); },
             fetch: (index, c, txt) => {
-                let result = {
+                const result = {
                     name: 'word',
                     content: '',
                     lastIndex: index
@@ -138,11 +138,11 @@ export class LazyRule {
             name: 'number',
             defaultValue: 0,
             isPattern: (i, c, txt) => {
-                let isDecimal = c === dot && LazyText.digits.includes(LazyText.extract(txt, i + 1, 1));
+                const isDecimal = c === dot && LazyText.digits.includes(LazyText.extract(txt, i + 1, 1));
                 return LazyText.digits.includes(c) || isDecimal;
             },
             fetch: (index, c, txt) => {
-                let result: { name: string, content: any, lastIndex: number } = {
+                const result: { name: string, content: any, lastIndex: number } = {
                     name: 'number',
                     content: '',
                     lastIndex: index
@@ -189,7 +189,7 @@ export class LazyRule {
                 return LazyText.letters.includes(c) || (c === '_'); // begin with _
             },
             fetch: (index: number, c: string, txt: string) => {
-                let result = {
+                const result = {
                     name: 'variable',
                     content: '',
                     lastIndex: index
@@ -219,7 +219,7 @@ export class LazyRule {
             defaultValue: '',
             isPattern: (i: number, c: string, txt: string) => { 
                 const sizeLeft = txt.length - i;
-                for(let keyword of keywordList) {
+                for(const keyword of keywordList) {
                     if(keyword.length <= sizeLeft) {
                         const currentContent = txt.substring(i, i + keyword.length);
                         if(currentContent === keyword) { // Probably keyword
@@ -234,7 +234,7 @@ export class LazyRule {
                 return false;
             },
             fetch: (index: number, c: string, txt: string) => {
-                let result = {
+                const result = {
                     name: 'keyword',
                     content: '',
                     lastIndex: index
@@ -271,5 +271,51 @@ export class LazyRule {
                 return { name: name, content: c, lastIndex: index };
             }
         }
+    }
+    /**
+     * A basic pattern to extract a string like syntax. It will work the same as c/c++/c#/js/java/... string.
+     * @param {string} name Name of the rule.
+     * @param {string} between The string container. If between = '"', then it will parse a string the same way js does.
+     */
+    public static parseString(name: string, between: string) {
+        return {
+            name: name,
+            defaultValue: '',
+            isPattern: (i: number, c: string, txt: string) => { return txt.substring(i, i + between.length) === between; },
+            fetch: (index: number, c: string, txt: string) => {
+                const result = {
+                    name: 'string',
+                    content: '',
+                    error: false,
+                    lastIndex: index
+                };
+                let isOut = false;
+                for(let i = index + between.length; i < txt.length; i++) {
+                    if(txt[i] === "\\") { // is anti-slash
+                        if(i + 1 < txt.length && txt[i + 1] === "\\") {
+                            i++;
+                            continue; // Skip next iteration
+                        }
+                        break;
+                    } else if(txt.substring(i, i + between.length + 1) === `\\${between}`) {
+                        // It's an escaped between
+                        i++;
+                        continue; // Skip next iteration
+                    } else if(txt.substring(i, i + between.length) === between) {
+                        isOut = true;
+                        break;
+                    }
+                    result.lastIndex = i; // Assign the last index
+                }
+                if(isOut) {
+                    result.content = txt.substring(index + between.length, result.lastIndex + 1);
+                    result.lastIndex = result.lastIndex + between.length;
+                } else {
+                    result.error = true;
+                    result.lastIndex = index + between.length;
+                }
+                return result;
+            }
+        };
     }
 }

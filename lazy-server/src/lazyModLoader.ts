@@ -18,16 +18,20 @@ export class LazyModLoader {
      * Load every module found inside a specific folder.
      * @param {string} root The root of the project.
      * @param {string} moduleFolder The path from the root of the project to the folder where all modules to load are.
+     * @param {string[]} extensions All supported extentions for the loader. If none are specified, by default, it's gonna select only js, ts, mjs and mts files.
      */
-    constructor(root: string, moduleFolder: string = "./") {
+    constructor(root: string, moduleFolder: string = "./", ...extensions: string[]) {
         this.root = root;
         this.moduleFolder = moduleFolder;
         this.loadedMessages = [];
         const modPath = path.join(this.root, moduleFolder);
+        if(extensions.length == 0) {
+            extensions = ['.js', '.ts', '.mjs', '.mts'];
+        }
         if(fs.existsSync(modPath)) {
             LazyFS.getAllFilesInDir(modPath)
             .forEach(file => {
-                if(path.extname(file) === '.js' || path.extname(file) === '.mjs') {
+                if(extensions.includes(path.extname(file))) {
                     this.loadedMessages.push(file);
                 }
             });

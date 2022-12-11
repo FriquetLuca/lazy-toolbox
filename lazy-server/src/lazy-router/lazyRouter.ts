@@ -214,18 +214,13 @@ export class LazyRouter {
                     this.injector(templateContent, datas, templates, overrideTemplateCount, reloadRoutes);
                     // overrideTemplateCount
                     const overrideCount = overrideTemplateCount[templatePath];
-                    let templateCount: number;
-                    if(overrideCount) {
-                        templateCount = Math.max(overrideCount, 0);
-                    } else {
-                        templateCount = Math.max(Number(currentInsert.getAttribute('count')), 0);
-                    }
+                    const templateCount = overrideCount ? Math.max(overrideCount, 0) : Math.max(Number(currentInsert.getAttribute('count')), 0);
                     const templateData = templates[templatePath];
                     let templateResult = '';
                     for(let i = 0; i < templateCount; i++) {
                         const templateCopy = parse(templateContent.toString());
                         const currentDatas = templateData(i, templateCount);
-                        for(let data in currentDatas) {
+                        for(const data in currentDatas) {
                             const currentData = currentDatas[data];
                             const replaceProp = templateCopy.querySelectorAll(`insert[property="${data}"]`);
                             for(let rProp of replaceProp) {

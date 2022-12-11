@@ -68,7 +68,7 @@ export class LazyClient {
      * @param {{packet: string, fn: (obj: any, websocket: WebSocket) => void}[]} hooking An array of object containing the packet's name and a function to execute when the packet is triggered.
      */
     public hooks(...hooking: {packet: string, fn: (obj: any, websocket: WebSocket) => void}[]): void {
-        for(let hook of hooking) {
+        for(const hook of hooking) {
             this.hook(hook.packet, hook.fn);
         }
     }
@@ -77,7 +77,7 @@ export class LazyClient {
      * @param {{[packet:string]: (obj: any, websocket: WebSocket) => void}} fns An object containing all the packet's name with it's own associated function.
      */
     public hookObject(fns: {[packet:string]: (obj: any, websocket: WebSocket) => void}): void {
-        for(let fn in fns) {
+        for(const fn in fns) {
             this.hook(fn, fns[fn]);
         }
     }
@@ -132,7 +132,7 @@ export class LazyClient {
     protected receive() {
         this.ws.onmessage = async e => {
             const msg = LazyClient.filterPacket(e.data.toString());
-            for(let fn of this.fnr[msg.packet]) {
+            for(const fn of this.fnr[msg.packet]) {
                 fn(msg.datas, this.ws);
             }
         };

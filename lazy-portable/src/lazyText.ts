@@ -78,7 +78,7 @@ export class LazyText {
      */
     public static countLinesChar(content: string, maxIndex?: number): { lines: number; lineChar: number; }
     {
-        let result = {
+        const result = {
             lines: 1,
             lineChar: 0
         }

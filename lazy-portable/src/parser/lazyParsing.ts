@@ -43,7 +43,7 @@ export class LazyParsing {
      * @param {string[]} rulesName The name of the rules to remove from the parser.
      */
     public removeRules(...rulesName: string[]): void {
-        for(let ruleName of rulesName) {
+        for(const ruleName of rulesName) {
             for(let i = this.rules.length - 1; i >= 0; i--) {
                 if(this.rules[i].name && this.rules[i].name === ruleName) {
                     delete this.rules[i];
@@ -65,8 +65,8 @@ export class LazyParsing {
      * @returns {LazyPattern[]} An array of all patterns.
      */
     public static createSet(...rules: BasicRule[]): LazyPattern[] {
-        let result = [];
-        for(let pattern of rules) {
+        const result: LazyPattern[] = [];
+        for(const pattern of rules) {
             result.push(new LazyPattern(pattern));
         }
         return result;
@@ -81,7 +81,7 @@ export class LazyParsing {
     */
     public static parse(txtContent: string, patternSet: LazyPattern[], i: number = 0, endPattern: (i: number, c: string, t: string) => boolean = (i: number, c: string, t: string) => { return false; }): PatternResult
     {
-        let subdivided: PatternFound[] = []; // A result called subdivided since it's the input subdivided in multiple pieces.
+        const subdivided: PatternFound[] = []; // A result called subdivided since it's the input subdivided in multiple pieces.
         for(; i < txtContent.length; i++) // Let's navigate the input
         {
             if(endPattern(i, txtContent[i], txtContent)) // We're in a nested pattern that just ended
@@ -96,8 +96,8 @@ export class LazyParsing {
             {
                 if(patternSet[j].isActualPattern(i, txtContent[i], txtContent)) // It's the pattern, let's execute something
                 {
-                    let lineData = LazyText.countLinesChar(txtContent, i);
-                    let fetchResult = patternSet[j].fetchContent(i, txtContent[i], txtContent, patternSet, patternSet[j]); // Execute something then return the fetched result
+                    const lineData = LazyText.countLinesChar(txtContent, i);
+                    const fetchResult = patternSet[j].fetchContent(i, txtContent[i], txtContent, patternSet, patternSet[j]); // Execute something then return the fetched result
                     if(fetchResult.lastIndex !== undefined) {
                         i = fetchResult.lastIndex; // Assign the new index
                     } else {
@@ -152,8 +152,8 @@ export class LazyParsing {
     }
     private static extractString(nodes: PatternFound[], spacing: boolean = false, depth: number = 0)
     {
-        let space = spacing ? LazyParsing.generateSpace(depth) : '';
-        let lineReturn = spacing ? '\n' : '';
+        const space = spacing ? LazyParsing.generateSpace(depth) : '';
+        const lineReturn = spacing ? '\n' : '';
         let result = '';
         for(let i = 0; i < nodes.length; i++) {
             if(nodes[i].nested) { // This node is a sub element (an array if nothing goes wrong)
@@ -170,8 +170,8 @@ export class LazyParsing {
         return result;
     }
     private static stringifyParse(nodes: PatternFound[], spacing: boolean = false, depth: number = 0) {
-        let space = spacing ? LazyParsing.generateSpace(depth) : '';
-        let lineReturn = spacing ? '\n' : '';
+        const space = spacing ? LazyParsing.generateSpace(depth) : '';
+        const lineReturn = spacing ? '\n' : '';
         let result = '';
         for(let i = 0; i < nodes.length; i++) {
             if(nodes[i].nested) { // This node is a sub element (an array if nothing goes wrong)

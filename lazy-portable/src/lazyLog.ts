@@ -6,7 +6,7 @@
  * @returns {string} The string with the time displayed.
  */
 export function dateLogMS(msg: any): string {
-    let actualTime = new Date(Date.now());
+    const actualTime = new Date(Date.now());
     let hours = `${actualTime.getHours()}`;
     hours = hours.length == 1 ? `0${hours}` : hours;
     let min = `${actualTime.getMinutes()}`;
@@ -25,7 +25,7 @@ export function dateLogMS(msg: any): string {
  * @returns {string} The string with the time displayed.
  */
 export function dateLog(msg: any): string {
-    let actualTime = new Date(Date.now());
+    const actualTime = new Date(Date.now());
     let hours = `${actualTime.getHours()}`;
     hours = hours.length == 1 ? `0${hours}` : hours;
     let min = `${actualTime.getMinutes()}`;

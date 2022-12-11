@@ -48,7 +48,7 @@ export class LazyTheme {
      * Set the current theme on the page.
      */
     public setTheme(): void {
-        let useTheme = this.themes[this.defaultTheme];
+        const useTheme = this.themes[this.defaultTheme];
         for(const element of this.elements) {
             this.setNewTheme(element, useTheme);
         }
@@ -78,7 +78,7 @@ export class LazyTheme {
      * @param newTheme 
      */
     private setNewTheme(elementQuery: string, newTheme: string): void {
-        let elements = document.querySelectorAll(elementQuery);
+        const elements = document.querySelectorAll(elementQuery);
         for(const e of elements)
         {
             for(const t of this.themes)

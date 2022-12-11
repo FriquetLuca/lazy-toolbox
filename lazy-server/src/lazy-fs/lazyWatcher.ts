@@ -152,7 +152,7 @@ export class LazyWatcher {
             if(changes.length > 0) {
                 this.isRunning = true;
                 const fetchChanges: FileEvent[] = [];
-                for(let event of changes) {
+                for(const event of changes) {
                     if(!this.isExcludedPath(event.file) && !this.isExcludedType(event.eventType)) {
                         fetchChanges.push(event);
                     }

@@ -43,6 +43,11 @@ npm i lazy-toolbox
 
 ## [Updates](#updates)
 
+### v1.4.12 - TS Loader
+
+New modifications were introduced:
+- Changes the behaviour of `LazyModLoader` by adding a `extensions` property on the constructor to override the default supported extensions. By default it's now `.js`, `.ts`, `.mjs` and `.mts` (previously it was `.js` and `.mjs`).
+
 ### v1.4.11 - Route lazier
 
 New content were added:
@@ -226,7 +231,7 @@ LazyFS.deleteDirectory(__dirname);
 
 ```ts
 class LazyModLoader {
-    constructor(root: string, moduleFolder: string = "./");
+    constructor(root: string, moduleFolder: string = "./", ...extensions: string[]);
     load(): {[filePath: string]: any};
     static isClass(v: any): boolean;
     static isFunction(v: any): boolean;
