@@ -2,7 +2,14 @@ lazy-client/dist
 lazy-portable/dist
 lazy-server/dist
 lazy-mysql/dist
+lazy-cli/bin
 lazy-client/node_modules
+lazy-cli/node_modules
 lazy-portable/node_modules
 lazy-server/node_modules
 lazy-mysql/node_modules
+lazy-client/package-lock.json
+lazy-cli/package-lock.json
+lazy-portable/package-lock.json
+lazy-server/package-lock.json
+lazy-mysql/package-lock.json

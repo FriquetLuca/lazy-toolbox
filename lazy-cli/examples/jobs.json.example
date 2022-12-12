@@ -1,0 +1,14 @@
+{
+    "languages": [ "english", "french" ],
+    "jobs": [
+        {
+            "template": "The formal template to use.",
+            "jobPlace": "Company name",
+            "jobName": "The job position",
+            "recipient": "The recipient of your formal letter",
+            "canLearn": [
+                "Unknown Framework Name"
+            ]
+        }
+    ]
+}

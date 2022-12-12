@@ -1,0 +1,10 @@
+{
+    "firstName": "Your first name",
+    "lastName": "Your last name",
+    "street": "Your street name",
+    "streetNumber": "Your street number",
+    "city": "Your city name",
+    "zipCode": "Your zip code",
+    "phoneNumber": "Your phone number",
+    "emailAddress": "Your email address"
+}

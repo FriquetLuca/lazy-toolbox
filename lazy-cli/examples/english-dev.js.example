@@ -1,0 +1,37 @@
+module.exports = (job) => {
+    const canLearnSentence = (canLearn) => {
+        if(canLearn.length > 0) {
+            let result = `\n\nI'm motivate to learn ${canLearn[0]}`;
+            for(let i = 1; i < canLearn.length - 1; i++) {
+                result = `${result}, ${canLearn[i]}`;
+            }
+            if(canLearn.length == 1) {
+                return result;
+            }
+            return `${result} ${'and'} ${canLearn[canLearn.length - 1]} to be ready as soon as possible for the job.`;
+        }
+        return '';
+    };
+    const result =  {
+        position: typeof job.jobName === "string" ? job.jobName : job.jobName["english"],
+        subject: "",
+        recipient: job.recipient ?? "Madam, Sir",
+        coreLetter: "",
+        footerLetter: "",
+        signature: "Sincerely"
+    };
+    result.subject = `Subject: Application to the position of ${result.position}.`;
+    result.footerLetter = `I am at your entire disposal for any further information and would like to assure you, ${result.recipient} of my respectful consideration.`;
+    result.coreLetter = `Currently looking for an internship or a job, I am strongly interested in the ${typeof job.jobName === "string" ? job.jobName : job.jobName["french"]} position you are offering within your company.
+
+Passionate and hard-working, I wish to learn more about the business in a professional setting and at the same time offer you my abilities, enthusiasm and dynamism in the field. After having taken the time to carefully study your company's profile and its particular field of activity, I am convinced that I will be able to contribute to ${job.jobPlace} and learn a lot.
+    
+My career in computer development started 14 years ago and has given me a solid experience in programming. I learned C# during my studies and at TechoFutur Tic followed by a few diverses web technologies at BeCode.
+
+In love with mathematics and programming, I've learned the art of abstraction, object-oriented and various ways of writing code.
+
+${canLearnSentence(job.canLearn ?? [])}
+
+I think I can be a great asset with my adaptability and ease of learning new technology.`;
+    return result;
+};

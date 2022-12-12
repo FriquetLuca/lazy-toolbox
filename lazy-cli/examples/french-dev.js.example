@@ -1,0 +1,37 @@
+module.exports = (job) => {
+    const canLearnSentence = (canLearn) => {
+        if(canLearn.length > 0) {
+            let result = `\n\nJe suis motivé d'apprendre ${canLearn[0]}`;
+            for(let i = 1; i < canLearn.length - 1; i++) {
+                result = `${result}, ${canLearn[i]}`;
+            }
+            if(canLearn.length == 1) {
+                return result;
+            }
+            return `${result} ${'et'} ${canLearn[canLearn.length - 1]} pour être prêt aussi vite que possible pour le travail.`;
+        }
+        return '';
+    };
+    const result =  {
+        position: typeof job.jobName === "string" ? job.jobName : job.jobName["french"],
+        subject: "",
+        recipient: job.recipient ?? "Madame, Monsieur",
+        coreLetter: "",
+        footerLetter: "",
+        signature: "Sincèrement"
+    };
+    result.subject = `Objet: Candidature au poste de ${result.position}.`;
+    result.footerLetter = `Je me tiens à votre entière disposition pour tout renseignement complémentaire et vous prie de bien vouloir agréer, ${result.recipient}, l'assurance de ma respectueuse considération.`;
+    result.coreLetter = `
+Actuellement à la recherche d'un stage ou d'un emploi, je suis fortement intéressé par le poste de ${typeof job.jobName === "string" ? job.jobName : job.jobName["french"]} que vous proposez au sein de votre entreprise.\n
+
+Passionné et travailleur, je désire apprendre d'avantage sur le métier dans un cadre professionnel et vous offrir par la même occasion mes capacités, mon enthousiasme et mon dynamisme dans le domaine. Après avoir pris le temps d'étudier attentivement le profil de votre société ainsi que son domaine d'activité particulière, je suis convaincu que je serais capable d'apporter ma contribution à ${job.jobPlace} ainsi que d'y apprendre énormément.
+
+Mon parcours dans le développement informatique a commencé il y a déjà 14 ans et m'a permis d'obtenir une solide expérience en programmation. J'ai appris le C# lors de mes études et à TechoFutur Tic suivis des diverses technologies du web à BeCode.\n\n
+Amoureux des mathématiques et de la programmation, j'ai appris l'art de l'abstraction, de l'orienté objet et des diverses façon de pouvoir écrire du code.\n
+
+${canLearnSentence(job.canLearn ?? [])}
+
+Je pense pouvoir être un atout de choix avec mes capacités d'adaptation et ma facilité d'apprentissage des nouvelles technologies.`;
+    return result;
+};

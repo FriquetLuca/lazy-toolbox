@@ -1,0 +1,22 @@
+{
+  "name": "@lazy-toolbox/lazy-cli",
+  "version": "0.0.1",
+  "description": "A command interface to make some lazy template or execute some special functions.",
+  "main": "bin/index.js",
+  "bin": {
+    "lazy-cli": "./bin/index.js"
+  },
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^9.4.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.13"
+  }
+}
