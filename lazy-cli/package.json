@@ -1,6 +1,6 @@
 {
   "name": "@lazy-toolbox/lazy-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A command interface to make some lazy template or execute some special functions.",
   "main": "bin/index.js",
   "bin": {

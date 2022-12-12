@@ -2,6 +2,13 @@
 
 > A full portable CLI that can be fully modded with injected modules.
 
+The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-toolbox/tree/master/lazy-cli).
+
+You can install the Lazy-CLI with:
+```bash
+npm i @lazy-toolbox/lazy-cli -g
+```
+
 ## Commands
 
 ### template
