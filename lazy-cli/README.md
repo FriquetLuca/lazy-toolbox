@@ -1,3 +1,9 @@
+<p align="center">
+    <img src="https://img.shields.io/badge/license-MIT-green">
+    <img src="https://img.shields.io/badge/typescript-v4.8.4-red">
+    <img src="https://img.shields.io/badge/commander-v9.4.1-orange">
+    <img src="https://img.shields.io/badge/uuid-v9.0.0-yellow">
+</p>
 # Lazy-CLI
 
 > A full portable CLI that can be fully modded with injected modules.
