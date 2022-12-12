@@ -96,7 +96,7 @@ Generate formal letter in a directory containing a `jobs.json` file:
 ```bash
 lazy-cli letter formal
 ```
-`jobs.json`:[Example is here](/examples/jobs.json.example)
+`jobs.json`: [Example is here](/examples/jobs.json.example)
 
 ### module
 
