@@ -13,7 +13,7 @@ The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-too
 
 You can install the Lazy-CLI with:
 ```bash
-npm i @lazy-toolbox/lazy-cli -g
+npm install -g @lazy-toolbox/lazy-cli
 ```
 
 ## Commands
