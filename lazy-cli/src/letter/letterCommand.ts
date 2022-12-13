@@ -19,12 +19,12 @@ export const getLetter = (program: Command) => {
                         if(path.extname(registerTemplate) === '.js') {
                             const newFormalTemplate = fs.readFileSync(registerTemplate);
                             fs.writeFileSync(path.join(__dirname, `/templates/formal/${options.register}`), newFormalTemplate);
-                            console.log("The new template has been successfuly added to your collection.");
+                            console.log(`The template ${options.register} has been successfuly added to your collection.`);
                         } else {
-                            console.log("The specified template isn't a javascript module.");
+                            console.log(`The template ${options.register} isn't a javascript module.`);
                         }
                     } else {
-                        console.log("The specified template doesn't exist.");
+                        console.log(`The template ${options.register} doesn't exist.`);
                     }
                 } else {
                     const newJobPath = path.join(cwd(), `jobs.json`);

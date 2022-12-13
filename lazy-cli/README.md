@@ -11,14 +11,52 @@
 
 The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-toolbox/tree/master/lazy-cli).
 
-You can install the Lazy-CLI with:
+You can install the `lazy-cli` with:
 ```bash
 npm install -g @lazy-toolbox/lazy-cli
 ```
 
-## Commands
+## Index
+- [Setup Guide](#setupGuide)
+    - [Setup letter](#setupLetter)
+- [Commands](#commands)
+    - [template](#template)
+    - [register](#register)
+    - [registered](#registered)
+    - [letter](#letter)
+        - [Register a template.](#registerTemplate)
+        - [Use a template](#templateUse)
+    - [module](#module)
 
-### template
+## [Setup Guide](#setupGuide)
+
+> This will guide you through the full installation of `lazy-cli`.
+
+### [Setup letter](#setupLetter)
+
+**It's mendatory to have `latexmk` installed on your machine for `letter` command to work, otherwise you can go [here](https://mg.readthedocs.io/latexmk.html) to see the installation procedure.**
+
+To start of, you should create your own profile for the cli.
+Create a `profile.json` file like [this](https://github.com/FriquetLuca/lazy-toolbox/blob/master/lazy-cli/examples/profile.json.example) in any directory you want.
+Next, open your terminal, navigate into this directory and enter the command:
+```bash
+lazy-cli register profile.json
+```
+Now that you've registered a profile data, you can safely delete the `profile.json` file you made (don't worry, a copy is safe in the cli database).
+
+The last step will be to create your own formal letter template.
+To create a formal letter template, all you need is to create a `.js` file with the specific sementic `language-template.js` then register your template.
+You can take a look at the [`english-dev.js`](https://github.com/FriquetLuca/lazy-toolbox/blob/master/lazy-cli/examples/english-dev.js.example) example to see the structure of a formal letter template.
+You can register it with:
+```bash
+lazy-cli letter formal -r english-dev.js
+```
+
+It's important to note that the template name will be important. As such, the `english-dev` in `english-dev.js` means that for every job using the `template="dev"` generated with the `english` language will use this template.
+
+## [Commands](#commands)
+
+### [template](#template)
 
 Create a default pre-existing template.
 
@@ -39,7 +77,7 @@ Example:
 lazy-cli template html Index -o
 ```
 
-### register
+### [register](#register)
 
 Register a `.json` data to `lazy-cli` or remove it if it's specified.
 
@@ -51,14 +89,14 @@ register <fileJSON> [-r | --remove] [-o | --override]
 - `[-o | --override]` is to override a registered `.json`.
 
 Example:
-`profile.json`: [Example is here](/examples/profile.json.example)
+`profile.json`: [Example is here](https://github.com/FriquetLuca/lazy-toolbox/blob/master/lazy-cli/examples/profile.json.example)
 ```bash
 lazy-cli register profile.json
 lazy-cli register profile.json -o
 lazy-cli register profile.json -r
 ```
 
-### registered
+### [registered](#registered)
 
 Get the list of all registered JSON files.
 
@@ -73,7 +111,7 @@ lazy-cli registered
 lazy-cli registered -s myJSONFile.json
 ```
 
-### letter
+### [letter](#letter)
 
 Create a letter depending on custom templates modules.
 **Requirement:** You need to have `latexmk` installed to use this command and must have registered a profile in a `profile.json` file.
@@ -85,20 +123,31 @@ letter <letterTemplate> [-r | --register <modName>]
 - `[-r | --register <modName>]` register a new formal letter template.
 
 Example:
-#### Register a template.
+#### [Register a template.](#registerTemplate)
+
 ```bash
 lazy-cli letter formal -r english-dev.js
 ```
 `english-dev.js`: [Example is here](/examples/english-dev.js.example)
 
-#### Use a template
-Generate formal letter in a directory containing a `jobs.json` file:
+#### [Use a template](#templateUse)
+
+All jobs are represented as:
+```ts
+interface Job {
+    jobName: string | {[label:string]:string},
+    jobPlace: string,
+    template: string,
+    recipient?: string | {[label:string]:string},
+    canLearn?: string[]
+}
+```
+making it more versatile for customization. You can generate formal letter in a directory containing a [`jobs.json`](https://github.com/FriquetLuca/lazy-toolbox/blob/master/lazy-cli/examples/jobs.json.example) file:
 ```bash
 lazy-cli letter formal
 ```
-`jobs.json`: [Example is here](/examples/jobs.json.example)
 
-### module
+### [module](#module)
 
 Add a custom command from a `.js` file.
 

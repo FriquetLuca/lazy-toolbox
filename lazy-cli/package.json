@@ -1,6 +1,6 @@
 {
   "name": "@lazy-toolbox/lazy-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A command interface to make some lazy template or execute some special functions.",
   "main": "bin/index.js",
   "bin": {
@@ -9,9 +9,20 @@
   "scripts": {
     "build": "npx tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "lazy",
+    "toolbox",
+    "cli",
+    "letter",
+    "latex",
+    "LaTeX",
+    "formal",
+    "module",
+    "template",
+    "database"
+  ],
+  "author": "Friquet Luca",
+  "license": "MIT",
   "dependencies": {
     "commander": "^9.4.1",
     "uuid": "^9.0.0"
@@ -19,5 +30,13 @@
   "devDependencies": {
     "@types/node": "^18.11.13",
     "typescript": "^4.8.4"
+  },
+  "homepage": "https://github.com/FriquetLuca/lazy-toolbox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FriquetLuca/lazy-toolbox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FriquetLuca/lazy-toolbox/issues"
   }
 }

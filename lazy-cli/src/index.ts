@@ -9,6 +9,7 @@ import { register } from './register/registerCommand';
 import { registered } from './register/registeredCommand';
 import { modules } from './modules/modulesCommand';
 import { registerCommands } from './modules/runCommands';
+import { tools } from "./toolbox/projectCommand";
 
 const config = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')).toString());
 const program = new Command();
@@ -25,6 +26,8 @@ register(program);
 registered(program);
 // formal letter
 getLetter(program);
+// toolbox
+tools(program);
 // Modules
 modules(program);
 

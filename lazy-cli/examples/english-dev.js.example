@@ -12,10 +12,12 @@ module.exports = (job) => {
         }
         return '';
     };
+    job.recipient = job.recipient ?? "Madam, Sir"; // ensure we have a recipient
+
     const result =  {
         position: typeof job.jobName === "string" ? job.jobName : job.jobName["english"],
         subject: "",
-        recipient: job.recipient ?? "Madam, Sir",
+        recipient: typeof job.recipient === "string" ? job.recipient : job.recipient["english"],
         coreLetter: "",
         footerLetter: "",
         signature: "Sincerely"

@@ -10,7 +10,10 @@ export const formal = (profile: Profile, job: Job, language: string) => {
         coreLetter: string;
         footerLetter: string;
         signature: string;
-    } = require(path.join(__dirname, `/formal/${language.toLowerCase()}-${job.template}.js`))(job);
+    } | undefined = require(path.join(__dirname, `/formal/${language.toLowerCase()}-${job.template}.js`))(job);
+    if(letterContent === undefined) {
+        return undefined;
+    }
 return {
     path: `${job.jobPlace.toLowerCase().replace(' ', '_')}_${letterContent.position.toLowerCase().replace(' ', '_')}_${language}`,
     tex: `

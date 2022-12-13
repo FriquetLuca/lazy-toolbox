@@ -21,13 +21,13 @@ export const modules = (program: Command) => {
                 }
             } else {
                 const newSocketPath = path.join(cwd(), options.add);
+                const modName = path.basename(options.add);
                 if(fs.existsSync(newSocketPath)) {
-                    let modName = path.basename(options.add);
                     const dest = path.join(modFolder, `${modName.substring(0, modName.length - path.extname(modName).length)}.js`);
                     fs.writeFileSync(dest, fs.readFileSync(newSocketPath).toString());
                     require(dest)(program);
                 } else {
-                    console.log("The specified module doesn't exist.");
+                    console.log(`The module ${modName} doesn't exist.`);
                 }
             }
         });

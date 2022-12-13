@@ -18,11 +18,15 @@ export interface Job {
     jobName: string | {[label:string]:string},
     jobPlace: string,
     template: string,
-    recipient?: string,
+    recipient?: string | {[label:string]:string},
     canLearn?: string[]
 };
 const newFormalLetter = (profile: Profile, tempPath: string, job: Job, language: string) => {
     const content = formal(profile, job, language);
+    if(content === undefined) {
+        console.log(`The ${language} version of ${job.template} template doesn't exist. You should make it if you need it.`);
+        return;
+    }
     // Create temp .tex file
     fs.writeFileSync(`${path.join(tempPath, content.path)}.tex`, content.tex);
     // Create .txt
