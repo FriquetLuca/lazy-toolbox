@@ -152,10 +152,11 @@ lazy-cli letter formal
 Add a custom command from a `.js` file.
 
 ```bash
-module [-a | --add <modulePath>] [-l | --list]
+module [-a | --add <modulePath>] [-r | --remove <modulePath>] [-l | --list]
 ```
-- `[-a | --add <modulePath>]` is the module path.
-- `-l` is to list all modules.
+- `[-a | --add <modulePath>]` add a new module.
+- `[-r | --remove <modulePath>]` remove an existing module.
+- `[-l | --list]` list all installed modules.
 
 A command module is a function taking the `commander` program and have the structure:
 ```bash

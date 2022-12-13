@@ -7,7 +7,8 @@ export const modules = (program: Command) => {
     program
         .command('module')
         .description('Module command.')
-        .argument('-a, --add <modulePath>', 'Add a new command module.')
+        .option('-a, --add <modulePath>', 'Add a new command module.')
+        .option('-r, --remove <modulePath>', 'Remove a command module.')
         .option('-l, --list', 'Show all modules.')
         .action((options) => {
             const modFolder = path.join(__dirname, "/mods");
@@ -20,14 +21,25 @@ export const modules = (program: Command) => {
                     console.log(path.relative(__dirname, currentMod));
                 }
             } else {
-                const newSocketPath = path.join(cwd(), options.add);
-                const modName = path.basename(options.add);
-                if(fs.existsSync(newSocketPath)) {
-                    const dest = path.join(modFolder, `${modName.substring(0, modName.length - path.extname(modName).length)}.js`);
-                    fs.writeFileSync(dest, fs.readFileSync(newSocketPath).toString());
-                    require(dest)(program);
+                if(options.add) {
+                    const newSocketPath = path.join(cwd(), options.add);
+                    const modName = path.basename(options.add);
+                    if(fs.existsSync(newSocketPath)) {
+                        const dest = path.join(modFolder, `${modName.substring(0, modName.length - path.extname(modName).length)}.js`);
+                        fs.writeFileSync(dest, fs.readFileSync(newSocketPath).toString());
+                        require(dest)(program);
+                    } else {
+                        console.log(`The module ${modName} doesn't exist.`);
+                    }
                 } else {
-                    console.log(`The module ${modName} doesn't exist.`);
+                    const modName = path.basename(options.remove);
+                    const dest = path.join(modFolder, `${modName.substring(0, modName.length - path.extname(modName).length)}.js`);
+                    if(fs.existsSync(dest)) {
+                        fs.rmSync(dest);
+                        console.log(`The module ${modName} has been removed successfuly.`);
+                    } else {
+                        console.log(`The module ${modName} doesn't exist.`);
+                    }
                 }
             }
         });
