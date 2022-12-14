@@ -1,0 +1,29 @@
+{
+    "languages": [ "english", "french" ],
+    "jobs": [
+        {
+            "template": "The template to use",
+            "jobPlace": "Company name",
+            "jobName": "The job position",
+            "recipient": "The recipient of your formal letter",
+            "canLearn": [
+                "Unknown Framework Name"
+            ]
+        },
+        {
+            "template": "The template to use",
+            "jobPlace": "Company name",
+            "jobName": {
+                "english": "The job position",
+                "french": "La position du job"
+            },
+            "recipient": {
+                "english": "The recipient of your formal letter",
+                "french": "Le destinataire de la lettre de motivation"
+            },
+            "canLearn": [
+                "Unknown Framework Name"
+            ]
+        }
+    ]
+}

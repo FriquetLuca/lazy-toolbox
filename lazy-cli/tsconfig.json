@@ -11,9 +11,6 @@
   },
   "include": ["src/**/*"],
   "exclude": [
-    "node_modules/**/*",
-    "bower_components/**/*",
-    "jspm_packages/**/*",
-    "wrapper.mjs"
+    "node_modules/**/*"
   ]
 }

@@ -1,8 +1,10 @@
 <p align="center">
+    <img src="/doc/img/logo.png" alt="logo" height="500" width="500">
+</p>
+<p align="center">
     <img src="https://img.shields.io/badge/license-MIT-green">
     <img src="https://img.shields.io/badge/typescript-v4.8.4-red">
     <img src="https://img.shields.io/badge/commander-v9.4.1-orange">
-    <img src="https://img.shields.io/badge/uuid-v9.0.0-yellow">
 </p>
 
 # Lazy-CLI
@@ -10,170 +12,116 @@
 > A full portable CLI that can be fully modded with injected modules.
 
 The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-toolbox/tree/master/lazy-cli).
+You can find some mods on this [link](https://github.com/FriquetLuca/lazy-toolbox/tree/master/lazy-mods).
 
 You can install the `lazy-cli` with:
 ```bash
 npm install -g @lazy-toolbox/lazy-cli
 ```
 
+Or update it ?
+```bash
+npm i -g @lazy-toolbox/lazy-cli@latest
+```
+
 ## Index
-- [Setup Guide](#setupGuide)
-    - [Setup letter](#setupLetter)
+- [Updates](#updates)
+- [Roadmap](#roadmap)
+- [Modules](#modules)
 - [Commands](#commands)
-    - [template](#template)
-    - [register](#register)
-    - [registered](#registered)
-    - [letter](#letter)
-        - [Register a template.](#registerTemplate)
-        - [Use a template](#templateUse)
-    - [module](#module)
+    - [mod](#mod)
+    - [fdb](#fdb)
 
-## [Setup Guide](#setupGuide)
+## [Updates](#updates)
 
-> This will guide you through the full installation of `lazy-cli`.
+### 0.2.0
+Remade from the ground and tested in various ways, it's now adapted for full modding injection with a better database handling and a lot of error removal.
+There shouldn't be any more updates.
 
-### [Setup letter](#setupLetter)
+### 0.1.0
+Starting from `v0.1.0`, the `lazy-cli` will be as simple as possible, containing only required tools for new mods.
 
-**It's mendatory to have `latexmk` installed on your machine for `letter` command to work, otherwise you can go [here](https://mg.readthedocs.io/latexmk.html) to see the installation procedure.**
+## [Modules](#modules)
 
-To start of, you should create your own profile for the cli.
-Create a `profile.json` file like [this](https://github.com/FriquetLuca/lazy-toolbox/blob/master/lazy-cli/examples/profile.json.example) in any directory you want.
-Next, open your terminal, navigate into this directory and enter the command:
-```bash
-lazy-cli register profile.json
+To make a module, create a `.js` script containing the following structure:
+```js
+module.exports = (program, config) => {
+
+};
 ```
-Now that you've registered a profile data, you can safely delete the `profile.json` file you made (don't worry, a copy is safe in the cli database).
-
-The last step will be to create your own formal letter template.
-To create a formal letter template, all you need is to create a `.js` file with the specific sementic `language-template.js` then register your template.
-You can take a look at the [`english-dev.js`](https://github.com/FriquetLuca/lazy-toolbox/blob/master/lazy-cli/examples/english-dev.js.example) example to see the structure of a formal letter template.
-You can register it with:
-```bash
-lazy-cli letter formal -r english-dev.js
+The `program` parameter is of type `Commander` from [commander package](https://www.npmjs.com/package/commander). See it's documentation for more infos.
+The `config` parameter is of type `Config` and is structured as follow:
+```ts
+interface Config {
+    // The path from where the command was used
+    commandPath: string;
+    // The path from where the modules are saved
+    rootPath: string;
+    // The path from where all files from fdb are saved
+    dbPath: string;
+    // Get all fdb files and directories list from a fdb path and choose to write them as relative or not.
+    getAllDB: (pathSrc: string, relative: boolean) => string[];
+    // Get all fdb files list from a fdb path and choose to write them as relative or not.
+    getAllDBFiles: (pathSrc: string, relative: boolean) => string[];
+    // Get all fdb directories list from a fdb path and choose to write them as relative or not.
+    getAllDBDirs: (pathSrc: string, relative: boolean) => string[];
+    // Get the content of a fdb file if it exist, undefined otherwise.
+    getDBFile: (pathStr: string) => string | undefined;
+    // Set a new file in fdb at pathStr, taking a source file and can be overridden.
+    setDBFile: (source: string, pathStr: string, override: boolean) => void;
+    // Set a new directory in fdb at pathStr, taking a source file and can be overridden.
+    setDBDir: (source: string, pathStr: string, override: boolean) => void;
+    // Set a new directory or file in fdb at pathStr, taking a source file and can be overridden.
+    setDBAny: (source: string, pathStr: string, override: boolean) => void;
+    // Remove a file from fdb.
+    removeDBFile: (pathStr: string) => void;
+    // Remove a directory from fdb.
+    removeDBDir: (pathStr: string) => void;
+    // Remove a file or a directory from fdb.
+    removeDBAny: (pathStr: string) => void;
+}
 ```
 
-It's important to note that the template name will be important. As such, the `english-dev` in `english-dev.js` means that for every job using the `template="dev"` generated with the `english` language will use this template.
+All you have to do after that is add the module:
+```bash
+lazy-cli mod -a myNewMod.js
+```
+The module command will be available with:
+```bash
+lazy-cli <YOUR_COMMAND>
+```
 
 ## [Commands](#commands)
 
-### [template](#template)
+### [mod](#mod)
 
-Create a default pre-existing template.
-
-```bash
-template <templateName> <fileName> [-o | --override]
-```
-- `<templateName>` is the template to use. You can choose between either:
-    - `html`: Create an HTML template, the `fileName` will be set as the title.
-    - `lazy-view`: Create a default `.ts` route file for `lazy-toolbox` router: `LazyRouter`.
-    - `socket-connect`: Create a default `.ts` socket connection module for the `lazy-toolbox` socket: `LazySocket`.
-    - `socket-disconnect`: Create a default `.ts` socket disconnect module for the `lazy-toolbox` socket: `LazySocket`.
-    - `socket-message`: Create a default `.ts` socket message module for the `lazy-toolbox` socket: `LazySocket`.
-- `<fileName>` is the name of the file; it will be converted in lower case.
-- `[-o | --override]` override any existing file with the template.
-
-Example:
-```bash
-lazy-cli template html Index -o
-```
-
-### [register](#register)
-
-Register a `.json` data to `lazy-cli` or remove it if it's specified.
+Manage the CLI modules.
 
 ```bash
-register <fileJSON> [-r | --remove] [-o | --override]
-```
-- `<fileJSON>` is the `file.json` path to register.
-- `[-r | --remove]` is to remove a registered `.json`.
-- `[-o | --override]` is to override a registered `.json`.
-
-Example:
-`profile.json`: [Example is here](https://github.com/FriquetLuca/lazy-toolbox/blob/master/lazy-cli/examples/profile.json.example)
-```bash
-lazy-cli register profile.json
-lazy-cli register profile.json -o
-lazy-cli register profile.json -r
+mod [-a, --add <modulePath>] [-o, --override] [-r, --remove <modulePath>] [-l, --list] [-s, --show <dataPath>]
 ```
 
-### [registered](#registered)
+- `-a|--add <modulePath>`: Add a module into the CLI modules. The module must be a `.js` file.
+- `-o|--override`: In case the new module has the same name as another one, override it.
+- `-r|--remove <modulePath>`: Remove a module from the CLI modules.
+- `-s|--show <dataPath>`: Show the file content of the specified CLI module.
+- `-l|--list`: List all installed CLI modules.
 
-Get the list of all registered JSON files.
+Use the `@mod` to see the saved mod path.
+
+### [fdb](#fdb)
+
+Manage the CLI file database.
 
 ```bash
-registered [-s | --show <jsonFile>]
-```
-- `[-s | --show <jsonFile>]` show the specified registered JSON.
-
-Example:
-```bash
-lazy-cli registered
-lazy-cli registered -s myJSONFile.json
+fdb <currentPath> [-a, --add <dbFilePath>] [-o, --override] [-r, --remove] [-s, --show] [-l, --list]
 ```
 
-### [letter](#letter)
+- `<currentPath>`
+- `-a|--add <filePath>`: Insert a `<currentPath>` into the file database as `<dbFilePath>`.
+- `-o|--override`: In case the `<dbFilePath>` has the same name as an already existing one, override it.
+- `-r|--remove`: Remove the `<currentPath>`.
+- `-s|--show`: Show the content of the `<currentPath>` as a string on the console if it's a file.
+- `-l|--list`: Show a list of all directories and files inside the file database.
 
-Create a letter depending on custom templates modules.
-**Requirement:** You need to have `latexmk` installed to use this command and must have registered a profile in a `profile.json` file.
-
-```bash
-letter <letterTemplate> [-r | --register <modName>]
-```
-- `<letterTemplate>` is the template to use or to register (must be named `language-template.js` where language is the name of the language of the template and template is the template).
-- `[-r | --register <modName>]` register a new formal letter template.
-
-Example:
-#### [Register a template.](#registerTemplate)
-
-```bash
-lazy-cli letter formal -r english-dev.js
-```
-`english-dev.js`: [Example is here](/examples/english-dev.js.example)
-
-#### [Use a template](#templateUse)
-
-All jobs are represented as:
-```ts
-interface Job {
-    jobName: string | {[label:string]:string},
-    jobPlace: string,
-    template: string,
-    recipient?: string | {[label:string]:string},
-    canLearn?: string[]
-}
-```
-making it more versatile for customization. You can generate formal letter in a directory containing a [`jobs.json`](https://github.com/FriquetLuca/lazy-toolbox/blob/master/lazy-cli/examples/jobs.json.example) file:
-```bash
-lazy-cli letter formal
-```
-
-### [module](#module)
-
-Add a custom command from a `.js` file.
-
-```bash
-module [-a | --add <modulePath>] [-r | --remove <modulePath>] [-l | --list]
-```
-- `[-a | --add <modulePath>]` add a new module.
-- `[-r | --remove <modulePath>]` remove an existing module.
-- `[-l | --list]` list all installed modules.
-
-A command module is a function taking the `commander` program and have the structure:
-```bash
-module.exports = (program) => {
-    program.command('test')
-    .description('Test command.')
-    .argument('<argA>', 'Some test arg.')
-    .option('-l, --list', 'A -l option')
-    .action((argA, opts) => {
-
-    });
-};
-```
-More about `commander` [here](https://www.npmjs.com/package/commander).
-
-Example:
-```bash
-lazy-cli module -a myMod.js
-lazy-cli module -l
-```
+Use the `@fdb` to see the saved mod path.

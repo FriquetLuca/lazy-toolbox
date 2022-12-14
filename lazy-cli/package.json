@@ -1,7 +1,7 @@
 {
   "name": "@lazy-toolbox/lazy-cli",
-  "version": "0.0.4",
-  "description": "A command interface to make some lazy template or execute some special functions.",
+  "version": "0.2.0",
+  "description": "A lazy CLI you can mod easily.",
   "main": "bin/index.js",
   "bin": {
     "lazy-cli": "./bin/index.js"
@@ -13,19 +13,18 @@
     "lazy",
     "toolbox",
     "cli",
-    "letter",
-    "latex",
-    "LaTeX",
-    "formal",
     "module",
     "template",
-    "database"
+    "database",
+    "modular",
+    "inject",
+    "terminal",
+    "bash"
   ],
   "author": "Friquet Luca",
   "license": "MIT",
   "dependencies": {
-    "commander": "^9.4.1",
-    "uuid": "^9.0.0"
+    "commander": "^9.4.1"
   },
   "devDependencies": {
     "@types/node": "^18.11.13",

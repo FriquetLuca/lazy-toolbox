@@ -7,20 +7,11 @@ export const getAllInDir = (p: string, a: string[] = []): string[] => {
     }
     return a;
 };
+export const getAllDirsInDir = (p: string): string[] => {
+    return getAllInDir(p)
+        .filter((unknownPath: string) => fs.lstatSync(unknownPath).isDirectory());
+};
 export const getAllFilesInDir = (p: string): string[] => {
     return getAllInDir(p)
         .filter((unknownPath: string) => !fs.lstatSync(unknownPath).isDirectory());
-};
-export const deleteDirectory = (directoryPath: string) => {
-    if (fs.existsSync(directoryPath)) {
-        fs.readdirSync(directoryPath).forEach((file, index) => {
-            const curPath = path.join(directoryPath, file);
-            if (fs.lstatSync(curPath).isDirectory()) { 
-                deleteDirectory(curPath); // recursion
-            } else {
-                fs.unlinkSync(curPath); // Delete
-            }
-        });
-        fs.rmdirSync(directoryPath);
-    }
 };

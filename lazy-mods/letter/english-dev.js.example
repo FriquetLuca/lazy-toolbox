@@ -1,4 +1,7 @@
 module.exports = (job) => {
+    if(!job) {
+        return '';
+    }
     const canLearnSentence = (canLearn) => {
         if(canLearn.length > 0) {
             let result = `\n\nI'm motivate to learn ${canLearn[0]}`;

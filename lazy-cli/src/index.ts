@@ -3,13 +3,8 @@
 import fs from 'fs';
 import path from 'path';
 import { Command } from 'commander';
-import { template } from './template/templateCommand';
-import { getLetter } from './letter/letterCommand';
-import { register } from './register/registerCommand';
-import { registered } from './register/registeredCommand';
+import { getConfig } from "./generateConfig";
 import { modules } from './modules/modulesCommand';
-import { registerCommands } from './modules/runCommands';
-import { tools } from "./toolbox/projectCommand";
 
 const config = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')).toString());
 const program = new Command();
@@ -19,18 +14,15 @@ program
     .name(config.name)
     .description(config.description)
     .version(config.version);
-// template
-template(program);
-// register
-register(program);
-registered(program);
-// formal letter
-getLetter(program);
-// toolbox
-tools(program);
-// Modules
-modules(program);
-
-// Register all custom mods
-registerCommands(program);
+program.command("@mod")
+    .description("Get the mod path.")
+    .action(() => {
+        console.log(`Modules are located at ${getConfig.rootPath}.`);
+    });
+program.command("@fdb")
+    .description("Get the file database path.")
+    .action(() => {
+        console.log(`File database is located at ${getConfig.dbPath}.`);
+    });
+modules(program, getConfig);
 program.parse();
