@@ -119,7 +119,7 @@ ${letterContent.footerLetter}
 const newFormalLetter = (profile, tempPath, job, language, config) => {
     const content = formal(profile, job, language, config);
     if(content === undefined) {
-        console.log(`The ${language} version of ${job.template} template doesn't exist. You should make it if you need it.`);
+        console.log(`The ${language} version of ${job.template} template for ${job.jobPlace} doesn't exist. You should make it if you need it.`);
         return;
     }
     // Create temp .tex file

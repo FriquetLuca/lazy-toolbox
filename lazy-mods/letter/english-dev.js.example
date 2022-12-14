@@ -4,7 +4,7 @@ module.exports = (job) => {
     }
     const canLearnSentence = (canLearn) => {
         if(canLearn.length > 0) {
-            let result = `\n\nI'm motivate to learn ${canLearn[0]}`;
+            let result = `I'm motivate to learn ${canLearn[0]}`;
             for(let i = 1; i < canLearn.length - 1; i++) {
                 result = `${result}, ${canLearn[i]}`;
             }

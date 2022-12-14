@@ -36,7 +36,7 @@ interface Profile {
 ```
 Next, open your terminal, navigate into this directory and enter the command:
 ```bash
-lazy-cli fdb -a profile.json
+lazy-cli fdb profile.json -a profile.json
 ```
 Now that you've registered a profile data, you can safely delete the `profile.json` file you made (don't worry, a copy is safe in the cli database).
 

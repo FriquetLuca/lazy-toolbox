@@ -15,6 +15,7 @@ export const runCommands = (program: Command, config: Config) => {
                 switch(modType) {
                     case 'function':
                         try {
+                            moduleProgram(program, config);
                         } catch(e) {
                             fs.rmSync(currentMod);
                             console.log(`The module ${modName} can't be loaded.\nError:\n${e}\n\nThe module it will be removed.`);
