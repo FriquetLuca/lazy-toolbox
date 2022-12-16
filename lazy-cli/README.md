@@ -34,6 +34,9 @@ npm i -g @lazy-toolbox/lazy-cli@latest
 
 ## [Updates](#updates)
 
+### 1.0.1
+Better removal handling, there shouldn't be any problem left.
+
 ### 1.0.0
 Remade from the ground and tested in various ways, it's now adapted for full modding injection with a better database handling and a lot of error removal.
 There shouldn't be any more updates.

@@ -36,25 +36,25 @@ export const modules = (program: Command, config: Config) => {
                                 try {
                                     moduleProgram(program, config);
                                 } catch(e) {
-                                    fs.rmSync(dest);
                                     console.log(`The module ${modName} can't be loaded.\nERROR:\n${e}\n\nThe module it will be removed.`);
+                                    fs.rmSync(dest);
                                 }
                                 break;
                             case 'class':
                                 try {
                                     new moduleProgram(program, config);
                                 } catch(e) {
-                                    fs.rmSync(dest);
                                     console.log(`The module ${modName} can't be loaded.\nERROR:\n${e}\n\nThe module it will be removed.`);
+                                    fs.rmSync(dest);
                                 }
                                 break;
                             default:
-                                console.log(`The module ${modName} isn't a valid imported module.`);
+                                console.log(`The module ${modName} isn't a valid imported module and will be removed.`);
                                 fs.rmSync(dest);
                                 break;
                         }
                     } else {
-                        console.log(`The module ${modName} is not defined.`);
+                        console.log(`The module ${modName} is not defined and will be removed.`);
                         fs.rmSync(dest);
                     }
                 } else {

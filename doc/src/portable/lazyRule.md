@@ -19,6 +19,7 @@ class LazyRule {
     static keyword(...keywordList: string[]): BasicRule;
     static any(name: string): BasicRule;
     static parseString(name: string, between: string): BasicRule;
+    static regex(name: string, regex: RegExp): BasicRule;
 }
 ```
 

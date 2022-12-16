@@ -1,10 +1,11 @@
 ## [Updates](#updates)
 
-### v0.0.11 - New rules
+### v0.0.12 - New rules
 
 New content was added:
 - Add `simpleKeys` to `LazyRule`.
 - Add `parseString` to `LazyRule`.
+- Add `regex` to `LazyRule`.
 
 New modifications were introduced:
 - Introduction of an override of `patternSet` and `IsPatternEnd` in `simpleCharbox` for new rules in nested content.

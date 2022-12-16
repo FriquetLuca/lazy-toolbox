@@ -3,21 +3,22 @@ const os = require('os');
 const getTime = (timeVar) => {
     let h, m, s;
     if(timeVar) {
-        switch(timeVar.length) {
+        const tvar = timeVar.split(':');
+        switch(tvar.length) {
             case 1:
-                h = timeVar[0];
+                h = tvar[0];
                 m = 0;
                 s = 0;
                 break;
             case 2:
-                h = timeVar[0];
-                m = timeVar[1];
+                h = tvar[0];
+                m = tvar[1];
                 s = 0;
                 break;
             case 3:
-                h = timeVar[0];
-                m = timeVar[1];
-                s = timeVar[2];
+                h = tvar[0];
+                m = tvar[1];
+                s = tvar[2];
                 break;
             default:
                 h = 0;
@@ -35,14 +36,16 @@ const getTime = (timeVar) => {
         mins: Number(m) % 60,
         secs: Number(s) % 60
     };
-};
+}; 
 module.exports = (program, config) => {
     program
         .command('cron')
         .description('Make CRON making easier.')
         .argument('<taskName>', 'The name of the task to execute on the OS CRON.')
         .option('-c, --cmd <command>', 'The command to execute on the OS CRON.')
-        .option('-d, --daily [time...]', 'Create a daily CRON command with the time specified as: <time...> := [hour] [min] [sec]')
+        //.option('-i, --interval [time]', 'Create an interval CRON command executed every [H:M:S] specified as H, H:M or H:M:S.')
+        //.option('-w, --weekly [time]', 'Create a weekly CRON command executed every [H:M:S] specified as H, H:M or H:M:S.')
+        .option('-d, --daily [time]', 'Create a daily CRON command executed every [H:M:S] specified as H, H:M or H:M:S.')
         .option('-r, --remove', 'Remove a specific CRON task.')
         .action((taskName, options) => {
             if(options.daily) {
@@ -56,12 +59,12 @@ module.exports = (program, config) => {
                 if (os.platform() === 'win32') {
                     exec(`schtasks /query /tn "${taskName}"`, (error, stdout, stderr) => {
                         if (error) {
-                          // Task is not registered, create it
-                          const newShell = spawn('schtasks', ['/create', '/tn', taskName, '/tr', options.cmd, '/sc', 'DAILY', '/st', time]);
-                          newShell.on('exit', () => console.log(`The CRON ${taskName} has been set to ${time}.`));
+                            // Task is not registered, create it
+                            const newShell = spawn('schtasks', ['/create', '/tn', taskName, '/tr', options.cmd, '/sc', 'DAILY', '/st', time]);
+                            newShell.on('exit', () => console.log(`The CRON ${taskName} has been set to ${time}.`));
                         } else {
-                          // Task is already registered, do not create it
-                          console.log(`The CRON ${taskName} already exists.`);
+                            // Task is already registered, do not create it
+                            console.log(`The CRON ${taskName} already exists.`);
                         }
                     });
                 } else {
@@ -80,11 +83,7 @@ module.exports = (program, config) => {
                 if (os.platform() === 'win32') {
                     const deleteShell = spawn('schtasks', ['/delete', '/f',  '/tn', taskName]);
                     deleteShell.on('exit', (code) => {
-                        if (code === 0) {
-                        console.log(`The CRON ${taskName} has been removed.`);
-                        } else {
-                        console.log(`Error removing the CRON ${taskName}.`);
-                        }
+                        console.log(code === 0 ? `The CRON ${taskName} has been removed.` : `Error removing the CRON ${taskName}.`);
                     });
                 } else {
 

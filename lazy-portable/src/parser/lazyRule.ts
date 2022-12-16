@@ -42,7 +42,7 @@ export class LazyRule {
      * A basic pattern to extract a specific character.
      * @param {string} name Name of the pattern.
      * @param {(c:string) => boolean} predicate The function to test the character.
-     * @returns {BasicRule} Return a char pattern.
+     * @returns {BasicRule} Return a rule.
      */
     public static simpleChar(name: string, predicate: (c:string) => boolean): BasicRule {
         return {
@@ -58,7 +58,7 @@ export class LazyRule {
      * A basic pattern to extract a specific string.
      * @param {string} name Name of the pattern.
      * @param {string} extractString The function to test the string.
-     * @returns {BasicRule} Return a char pattern.
+     * @returns {BasicRule} Return a rule.
      */
     public static simpleKeys(name: string, ...extractStrings: string[]): BasicRule {
         return {
@@ -96,7 +96,7 @@ export class LazyRule {
      * @param {string} end The string that end the charbox.
      * @param {LazyPattern[] | undefined} overridePatternSet An override to use new rules inside the charbox.
      * @param {(i: number, c: string, txt: string) => boolean | undefined} overrideIsPatternEnd An override to use a new end pattern to handle special cases.
-     * @returns {BasicRule} Return a charbox pattern.
+     * @returns {BasicRule} Return a rule.
      */
     public static simpleCharbox(name: string, begin: string, end: string, overridePatternSet?: LazyPattern[], overrideIsPatternEnd?: (i: number, c: string, txt: string) => boolean): BasicRule {
         return {
@@ -143,7 +143,7 @@ export class LazyRule {
     }
     /**
      * A basic rule to extract words. Words can only be made with letters.
-     * @returns {BasicRule} Return a word pattern.
+     * @returns {BasicRule} Return a rule.
      */
     public static word(): BasicRule
     {
@@ -171,7 +171,7 @@ export class LazyRule {
     /**
      * A basic rule to extract numbers. The number can only be written in the form `125` or either `1.2123` if `comaOverDot = false` otherwise `1,2123`.
      * @param {boolean} comaOverDot If true, numbers must be written as "x,y" instead of "x.y".
-     * @returns {BasicRule} A basic number pattern.
+     * @returns {BasicRule} Return a rule.
      */
     public static number(comaOverDot: boolean = false, exp: boolean = false): BasicRule
     {
@@ -236,7 +236,7 @@ export class LazyRule {
     }
     /**
      * A basic rule to extract a variable name. The variable name must be composed of only letters and underscores.
-     * @returns 
+     * @returns {BasicRule} Return a rule.
      */
     public static variable(): BasicRule {
         return {
@@ -268,7 +268,7 @@ export class LazyRule {
     /**
      * A basic rule to extract keywords. They must begin by a letter or an underscore and can only contains letters or underscores.
      * @param {string[]} keywordList A list of keywords.
-     * @returns {BasicRule} A basic keyword pattern.
+     * @returns {BasicRule} Return a rule.
      */
     public static keyword(...keywordList: string[]): BasicRule {
         return {
@@ -318,6 +318,7 @@ export class LazyRule {
     /**
      * A basic pattern to extract any character without exception.
      * @param {string} name Name of the rule.
+     * @returns {BasicRule} Return a rule.
      */
     public static any(name: string): BasicRule {
         return {
@@ -333,6 +334,7 @@ export class LazyRule {
      * A basic pattern to extract a string like syntax. It will work the same as c/c++/c#/js/java/... string. So whatever is your `between` value, if it's "\\myStringValue", it will be escaped.
      * @param {string} name Name of the rule.
      * @param {string} between The string container. If between = '"', then it will parse a string the same way js does.
+     * @returns {BasicRule} Return a rule.
      */
     public static parseString(name: string, between: string): BasicRule {
         return {
@@ -368,5 +370,35 @@ export class LazyRule {
                 return result;
             }
         };
+    }
+    /**
+     * A basic pattern rule to test a regex. Note: when you write your regex, think like you're at the start of the string for the test.
+     * @param {string} name Name of the rule.
+     * @param {RegExp} regex The regex
+     * @returns {BasicRule} Return a rule.
+     */
+    public static regex(name: string, regex: RegExp): BasicRule {
+        let regExpResult: RegExpExecArray;
+        return {
+            name: name,
+            defaultValue: '',
+            isPattern: (i: number, c: string, txt: string) => { 
+                const result = regex.exec(txt.slice(i));
+                if (result && result.index == 0) {
+                    regExpResult = result;
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            fetch: (index: number, c: string, txt: string) => {
+                const result = {
+                    name: name,
+                    content: txt.substring(index, index + regExpResult[0].length),
+                    lastIndex: index + regExpResult[0].length - 1
+                };
+                return result;
+            }
+        }
     }
 }
