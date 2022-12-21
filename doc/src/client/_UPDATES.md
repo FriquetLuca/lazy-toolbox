@@ -5,6 +5,9 @@
 New content were added:
 - Add `onEvent`, `onEventAll`, `removeEvent` and `removeEventAll` in `LazyDoc`.
 
+New patches were introduced:
+- Fixed overloading of some functions for `.ts` ans `.mts` files.
+
 ### [v0.0.9 - Basic support](#se-vo-o-o)
 
 New content were added:
