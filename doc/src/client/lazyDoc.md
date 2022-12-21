@@ -5,7 +5,6 @@ interface HTMLTag {
     id?: string;
     class?: string[];
     childs?: HTMLElement[];
-    // New on version: 0.0.7
     innerHTML?: string;
     attributes?: {[name: string]: string};
     eventListeners?: {[name: string]: (e: Event)=>void};
@@ -14,6 +13,15 @@ class LazyDoc {
     static newTag(tagName: string, element?: HTMLTag): HTMLElement;
     static newTag<K extends keyof HTMLElementTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementTagNameMap[K];
     static newTag<K extends keyof HTMLElementDeprecatedTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementDeprecatedTagNameMap[K];
+    static onEvent<K extends keyof HTMLElementEventMap>(query: string, type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    static onEvent(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    static onEventAll<K extends keyof HTMLElementEventMap>(query: string, type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    static onEventAll(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    static removeEvent(query: string, type: keyof ElementEventMap, listener: (this: Element, ev: Event) => any, options?: boolean | EventListenerOptions | undefined): void;
+    static removeEvent(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    static removeEventAll(query: string, type: keyof ElementEventMap, listener: (this: Element, ev: Event) => any, options?: boolean | EventListenerOptions | undefined): void;
+    static removeEventAll(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+
 }
 ```
 
@@ -52,6 +60,8 @@ const newDiv = LazyDoc.newTag({
         }
     }
 });
+// Add an event listener by using a query
+LazyDoc.onEvent('div > p', 'click', (e) => console.log(e));
 /*
 Same as creating the element:
 <div id="uwu" class="className anotherClassName" value="0" owo="uwu">

@@ -1,5 +1,10 @@
 ## [Updates](#updates)
 
+### [v0.0.10 - Lazier doc](#se-vo-o-o)
+
+New content were added:
+- Add `onEvent`, `onEventAll`, `removeEvent` and `removeEventAll` in `LazyDoc`.
+
 ### [v0.0.9 - Basic support](#se-vo-o-o)
 
 New content were added:
