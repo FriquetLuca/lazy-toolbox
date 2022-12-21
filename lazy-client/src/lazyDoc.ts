@@ -45,9 +45,9 @@ export class LazyDoc {
      * @param {string} tagName The name of an element.
      * @param {HTMLTag} element The content of the element.
      */
-    public static newTag(tagName: string, element?: HTMLTag): HTMLElement;
     public static newTag<K extends keyof HTMLElementTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementTagNameMap[K];
     public static newTag<K extends keyof HTMLElementDeprecatedTagNameMap>(tagName: K, element?: HTMLTag): HTMLElementDeprecatedTagNameMap[K];
+    public static newTag(tagName: string, element?: HTMLTag): HTMLElement;
     public static newTag(tagName: string, element?: HTMLTag): HTMLElement {
         const eventSection = document.createElement(tagName);
         if(element) {
@@ -88,8 +88,8 @@ export class LazyDoc {
      * @param {EventListenerOrEventListenerObject} listener An event listener function.
      * @param {undefined | boolean | AddEventListenerOptions} options The options argument sets listener-specific options.
      */
-    public static onEvent(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
     public static onEvent<K extends keyof HTMLElementEventMap>(query: string, type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    public static onEvent(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
     public static onEvent(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void {
         const currentElement = document.querySelector(query);
         currentElement?.addEventListener(type, listener, options);
@@ -101,8 +101,8 @@ export class LazyDoc {
      * @param {EventListenerOrEventListenerObject} listener An event listener function.
      * @param {undefined | boolean | AddEventListenerOptions} options The options argument sets listener-specific options.
      */
-    public static onEventAll(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
     public static onEventAll<K extends keyof HTMLElementEventMap>(query: string, type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    public static onEventAll(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
     public static onEventAll(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void {
         const allElements = document.querySelectorAll(query);
         for(let currentElement of allElements) {
@@ -116,8 +116,8 @@ export class LazyDoc {
      * @param {EventListenerOrEventListenerObject} listener The event listener function.
      * @param {undefined | boolean | AddEventListenerOptions} options The options argument sets listener-specific options.
      */
-    public static removeEvent(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     public static removeEvent(query: string, type: keyof ElementEventMap, listener: (this: Element, ev: Event) => any, options?: boolean | EventListenerOptions | undefined): void;
+    public static removeEvent(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     public static removeEvent(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void {
         const currentElement = document.querySelector(query);
         currentElement?.removeEventListener(type, listener, options);
@@ -129,8 +129,8 @@ export class LazyDoc {
      * @param {EventListenerOrEventListenerObject} listener The event listener function.
      * @param {undefined | boolean | AddEventListenerOptions} options The options argument sets listener-specific options.
      */
-    public static removeEventAll(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     public static removeEventAll(query: string, type: keyof ElementEventMap, listener: (this: Element, ev: Event) => any, options?: boolean | EventListenerOptions | undefined): void;
+    public static removeEventAll(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     public static removeEventAll(query: string, type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void {
         const allElements = document.querySelectorAll(query);
         for(const currentElement of allElements) {

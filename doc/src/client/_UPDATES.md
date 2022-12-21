@@ -1,5 +1,9 @@
 ## [Updates](#updates)
 
+### [v0.0.11 - Overload order](#se-vo-o-o)
+
+Fixed the order of overloads.
+
 ### [v0.0.10 - Lazier doc](#se-vo-o-o)
 
 New content were added:
