@@ -41,9 +41,13 @@ npm i @lazy-toolbox/client
 
 ## [Updates](#updates)
 
-### [v0.0.11 - Overload order](#se-vo-o-o)
+### [v0.0.13 - LazyInteractivity](#se-vo-o-o)
 
-Fixed the order of overloads.
+New content were added:
+- Add `LazyTristate`, `LazyDualstate`, `LazyHashRouter` and `LazyInteractivity` class.
+
+New modification were introduced:
+- Fixed the order of overloads.
 
 ### [v0.0.10 - Lazier doc](#se-vo-o-o)
 
@@ -306,6 +310,40 @@ const { LazyFile } = require('@lazy-toolbox/client');
 LazyFile.saveAs('newFile.txt', 'This is some content for this file.');
 ```
 
+#### [LazyHashRouter](#lazyHashRouter)
+
+```ts
+interface getter {
+    page: string | undefined;
+    result: any;
+}
+class LazyHashRouter {
+    static getAllUrlParams(url?: string): getter;
+    static setAllUrlParams(page: string, object: {[name: string]: any}): string;
+}
+```
+
+A lazy way to handle url parameters on a page.
+
+Example:
+
+```js
+const { LazyHashRouter } = require('@lazy-toolbox/client');
+const myObject = {
+    id: 123,
+    name: "Someone",
+    family: [
+        'sister', 'brother', 'son', 'mom', 'dad'
+    ]
+};
+const actualPage = LazyHashRouter.getAllUrlParams();
+if(actualPage.page !== "welcome") {
+    const urlParams = LazyHashRouter.setAllUrlParams("welcome", myObject);
+    window.location.href = `./${urlParams}`;
+}
+console.log(`Welcome ${actualPage.name}.`);
+```
+
 #### [LazyHtNetwork](#lazyHtNetwork)
 
 ```ts
@@ -343,6 +381,40 @@ LazyHtNetwork.getJSON('http://somewhere.com/jsonFileToGet/', (json) => {
 });
 ```
 
+#### [LazyInteractivity](#lazyInteractivity)
+```ts
+class LazyInteractivity {
+    static loadDefault(): void;
+    static dualstate(...inputsElements: HTMLInputElement[]): void;
+    static tristate(...inputsElements: HTMLInputElement[]): void;
+}
+```
+
+A lazy way to make interactive elements.
+
+Example:
+
+`main.js`
+```js
+const { LazyInteractivity } = require('@lazy-toolbox/client');
+LazyInteractivity.loadDefault();
+const dualstate = document.querySelector('input[dualstate]');
+dualstate.addEventListener('change', (e) => {
+    console.log(e.target.value);
+});
+const tristate = document.querySelector('input[tristate]');
+tristate.addEventListener('change', (e) => {
+    console.log(e.target.value);
+});
+```
+`index.html`
+```html
+<!--Since it's a state, it will be triggering a onchange event if the state change-->
+<input dualstate type="text">
+<br>
+<!--Since it's a state, it will be triggering a onchange event if the state change-->
+<input tristate type="text">
+```
 #### [LazySchedule](#lazySchedule)
 ```ts
 class LazySchedule {

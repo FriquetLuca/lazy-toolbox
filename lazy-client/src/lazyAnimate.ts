@@ -17,7 +17,7 @@ export class LazyAnimate {
         });
     }
     /**
-     * Inject into the HTML new elements behaviour.
+     * Inject into the HTML new element behaviour.
      */
     public static loadDefault(): void {
         document.querySelectorAll('details[animated]').forEach((el) => {

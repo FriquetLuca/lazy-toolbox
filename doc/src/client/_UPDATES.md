@@ -1,8 +1,12 @@
 ## [Updates](#updates)
 
-### [v0.0.11 - Overload order](#se-vo-o-o)
+### [v0.0.13 - LazyInteractivity](#se-vo-o-o)
 
-Fixed the order of overloads.
+New content were added:
+- Add `LazyTristate`, `LazyDualstate`, `LazyHashRouter` and `LazyInteractivity` class.
+
+New modification were introduced:
+- Fixed the order of overloads.
 
 ### [v0.0.10 - Lazier doc](#se-vo-o-o)
 
