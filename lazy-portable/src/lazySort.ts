@@ -1,10 +1,31 @@
-interface RequiredOrder {
+/**
+ * An interface representing a dependency object.
+ */
+export interface RequiredOrder {
+    /**
+     * Name of the dependency.
+     */
     name: string,
+    /**
+     * The data content of the dependency.
+     */
     content: any,
+    /**
+     * The required dependency of this dependency.
+     */
     required?: string[]
 }
+/**
+ * A lazy way to sort some datas.
+ */
 export class LazySort {
-    public static byRequired(myDatas: RequiredOrder[], allMustExist: boolean = false) {
+    /**
+     * Order an array with a topological sort, taing the order by component requirement.
+     * @param {RequiredOrder[]} myDatas An array containing all the required elements to sort.
+     * @param {boolean} allMustExist A boolean to check if a required element doesn't exist, then the element shouldn't be present.
+     * @returns {RequiredOrder[]} An array with the elements correctly ordered.
+     */
+    public static byRequired(myDatas: RequiredOrder[], allMustExist: boolean = false): RequiredOrder[] {
         const nodeMap: {[label: string]: RequiredOrder} = {};
         for (const data of myDatas) {
             nodeMap[data.name] = data;

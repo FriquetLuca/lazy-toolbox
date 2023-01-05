@@ -8,4 +8,5 @@
     - [LazyParsing](#lazyParsing)
     - [LazyPattern](#lazyPattern)
     - [LazyRule](#lazyRule)
+    - [LazySort](#lazySort)
     - [LazyText](#lazyText)

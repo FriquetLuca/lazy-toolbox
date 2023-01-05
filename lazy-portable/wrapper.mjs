@@ -4,6 +4,7 @@ export { LazyDataGraph, GraphPoint } from "./dist/lazyDataGraph";
 export { LazyParsing, PatternResult } from "./dist/parser/lazyParsing";
 export { LazyPattern, PatternFound } from "./dist/parser/lazyPattern";
 export { LazyRule, BasicRule } from "./dist/parser/lazyRule";
+export { LazySort } from "./dist/lazySort";
 export { LazyText } from "./dist/lazyText";
 export { getType } from "./dist/lazyTypeof";
 export { dateLog, dateLogMS } from "./dist/lazyLog";

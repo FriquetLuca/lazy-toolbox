@@ -1,5 +1,10 @@
 ## [Updates](#updates)
 
+### v0.0.13 - Topology Sorting
+
+New content was added:
+- Add `LazySort` class.
+
 ### v0.0.13 - New rules
 
 New content was added:
