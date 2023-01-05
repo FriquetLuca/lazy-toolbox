@@ -14,20 +14,20 @@ export type DualstateState = keyof typeof DUAL_STATE;
  */
 export class LazyDualstate {
     constructor(item: HTMLInputElement) {
-        const itemValue = item.getAttribute('value') ?? 'false';
+        const itemValue = (item.value !== "" ? item.value : undefined) ?? 'false';
         item.readOnly = true;
         item.size = 1;
         if(!itemValue) {
-            item.setAttribute('value', LazyTristate.FALSE);
+            item.value = LazyTristate.FALSE;
             item.innerText = LazyTristate.FALSE;
         } else {
             const stateSymbol = LazyDualstate.getState(itemValue);
-            item.setAttribute('value', stateSymbol);
+            item.value = stateSymbol;
             item.innerText = stateSymbol;
         }
         item.addEventListener('click', (e) => {
-            const nextVal = LazyDualstate.nextState(<DualstateState>item.getAttribute('value'));
-            item.setAttribute('value', nextVal);
+            const nextVal = LazyDualstate.nextState((<HTMLInputElement>e.target).value);
+            item.value = nextVal;
             item.innerText = nextVal;
             if ("createEvent" in document) {
                 var evt = document.createEvent("Event");

@@ -15,20 +15,20 @@ export type TristateState = keyof typeof TRISTATE_STATE;
  */
 export class LazyTristate {
     constructor(item: HTMLInputElement) {
-        const itemValue = item.getAttribute('value') ?? 'neutral';
+        const itemValue = (item.value !== "" ? item.value : undefined) ?? 'neutral';
         item.readOnly = true;
         item.size = 1;
         if(!itemValue) {
-            item.setAttribute('value', LazyTristate.NEUTRAL);
+            item.value = LazyTristate.NEUTRAL;
             item.innerText = LazyTristate.NEUTRAL;
         } else {
             const stateSymbol = LazyTristate.getState(itemValue);
-            item.setAttribute('value', stateSymbol);
+            item.value = stateSymbol;
             item.innerText = stateSymbol;
         }
         item.addEventListener('click', (e) => {
-            const nextVal = LazyTristate.nextState(<TristateState>item.getAttribute('value'));
-            item.setAttribute('value', nextVal);
+            const nextVal = LazyTristate.nextState((<HTMLInputElement>e.target).value);
+            item.value = nextVal;
             item.innerText = nextVal;
             if ("createEvent" in document) {
                 var evt = document.createEvent("Event");

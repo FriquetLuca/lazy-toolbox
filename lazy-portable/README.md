@@ -41,7 +41,7 @@ npm i @lazy-toolbox/portable
 
 ## [Updates](#updates)
 
-### v0.0.12 - New rules
+### v0.0.13 - New rules
 
 New content was added:
 - Add `simpleKeys` to `LazyRule`.
@@ -51,6 +51,7 @@ New content was added:
 New modifications were introduced:
 - Introduction of an override of `patternSet` and `IsPatternEnd` in `simpleCharbox` for new rules in nested content.
 - Add `exp` parse for numbers.
+- Patch the wrong return type of `combinationArrayNRNO` in `LazyMath`.
 
 ### v0.0.10 - Charbox failing
 

@@ -1,6 +1,6 @@
 ## [Updates](#updates)
 
-### [v0.0.13 - LazyInteractivity](#se-vo-o-o)
+### [v0.0.16 - LazyInteractivity](#se-vo-o-o)
 
 New content were added:
 - Add `LazyTristate`, `LazyDualstate`, `LazyHashRouter` and `LazyInteractivity` class.
