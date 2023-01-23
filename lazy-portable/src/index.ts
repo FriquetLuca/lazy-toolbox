@@ -1,6 +1,7 @@
 export { LazyMath } from "./lazyMath";
 export { LazyMapper } from "./lazyMapper";
 export { LazyDataGraph, GraphPoint } from "./lazyDataGraph";
+export { LazySort } from "./lazySort";
 export { LazyText } from "./lazyText";
 export { LazyParsing, PatternResult } from "./parser/lazyParsing";
 export { LazyPattern, PatternFound } from "./parser/lazyPattern";

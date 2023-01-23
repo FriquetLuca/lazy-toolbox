@@ -51,6 +51,7 @@ Lazy Toolbox is made of multiples parts, you can find the sources of those parts
 	    - [LazyPattern](#lazyPattern)
 	    - [LazyRule](#lazyRule)
 	    - [LazySort](#lazySort)
+	    - [LazySort](#lazySort)
 	    - [LazyText](#lazyText)
 	- [Server](#server)
 	    - [LazyClientSocket](#lazyClientSocket)

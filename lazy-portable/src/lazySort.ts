@@ -1,29 +1,29 @@
 /**
  * A representation of a dependencies data.
  */
-interface RequiredOrder {
+export interface RequiredOrder {
     /**
      * Name of the dependencie.
      */
     name: string,
     /**
-     * Content of the dependencie.
+     * The data content of the dependency.
      */
     content: any,
     /**
-     * The list of all required dependencies.
+     * The required dependency of this dependency.
      */
     required?: string[]
 }
 /**
- * A lazy way to sort some particular structure.
+ * A lazy way to sort some datas.
  */
 export class LazySort {
     /**
-     * Sort elements by dependencies.
-     * @param {RequiredOrder[]} myDatas The list of all elements.
-     * @param {boolean} allMustExist If true, it will remove all elements that require an unexisting dependencie.
-     * @returns {RequiredOrder[]} The list of all elements sorted by dependencies.
+     * Order an array with a topological sort, taing the order by component requirement.
+     * @param {RequiredOrder[]} myDatas An array containing all the required elements to sort.
+     * @param {boolean} allMustExist A boolean to check if a required element doesn't exist, then the element shouldn't be present.
+     * @returns {RequiredOrder[]} An array with the elements correctly ordered.
      */
     public static byRequired(myDatas: RequiredOrder[], allMustExist: boolean = false): RequiredOrder[] {
         const nodeMap: {[label: string]: RequiredOrder} = {};

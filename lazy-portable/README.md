@@ -32,6 +32,7 @@ The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-too
 	    - [LazyPattern](#lazyPattern)
 	    - [LazyRule](#lazyRule)
 	    - [LazySort](#lazySort)
+	    - [LazySort](#lazySort)
 	    - [LazyText](#lazyText)
 
 ## [Installation (NPM)](#install-npm)
@@ -518,36 +519,75 @@ class LazySort {
 }
 ```
 
-A lazy way to sort some particular structure.
+A lazy way to sort some datas.
 
 Example:
 
 ```js
 const { LazySort } = require('@lazy-toolbox/portable');
-const arr = [
+const testDatas = [
     {
-        name: "c",
-        content: "C",
-        required: ["a", "b"]
+        name: "Cart",
+        content: "Cart making",
+        required: [
+            "Fire",
+            "Wheel",
+            "Iron",
+        ]
     },
     {
-        name: "a",
-        content: "A"
+        name: "Minerals",
+        content: "Minerals extraction"
     },
     {
-        name: "b",
-        content: "B",
-        required: ["a"]
+        name: "Wheel",
+        content: "Wheel discovery"
     },
+    {
+        name: "Car",
+        content: "Car making",
+        required: [
+            "Engine",
+            "Cart",
+            "Wheel"
+        ]
+    },
+    {
+        name: "Fire",
+        content: "Fire discovery"
+    },
+    {
+        name: "Iron",
+        content: "Iron discovery",
+        required: [
+            "Fire",
+            "Minerals"
+        ]
+    }
 ];
-const results = LazySort.byRequired(arr);
-for(const r of results) {
-    console.log(r.name);
+const showContent = (label, ds) => {
+    console.log(label);
+    let i = 1;
+    for(const d of ds) {
+        console.log(`${i++}) ${d.name}`);
+    }
 }
+showContent("Not all must exist", LazySort.byRequired(testDatas, false));
+showContent("All must exist", LazySort.byRequired(testDatas, true));
 /*
-a
-b
-c
+Not all must exist
+1) Fire
+2) Wheel
+3) Minerals
+4) Iron
+5) Cart
+6) Car
+All must exist
+1) Fire
+2) Wheel
+3) Minerals
+4) Iron
+5) Cart
 */
 ```
 #### [LazyText](#lazyText)
