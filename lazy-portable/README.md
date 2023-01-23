@@ -32,7 +32,6 @@ The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-too
 	    - [LazyPattern](#lazyPattern)
 	    - [LazyRule](#lazyRule)
 	    - [LazySort](#lazySort)
-	    - [LazySort](#lazySort)
 	    - [LazyText](#lazyText)
 
 ## [Installation (NPM)](#install-npm)
@@ -44,7 +43,7 @@ npm i @lazy-toolbox/portable
 
 ## [Updates](#updates)
 
-### v0.0.16 - Topological sort
+### v0.0.17 - Topological sort
 
 New content was added:
 - Add `LazyCounter` class.
@@ -519,7 +518,7 @@ class LazySort {
 }
 ```
 
-A lazy way to sort some datas.
+A lazy way to sort some particular structure.
 
 Example:
 

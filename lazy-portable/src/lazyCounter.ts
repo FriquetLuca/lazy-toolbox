@@ -1,7 +1,7 @@
 /**
  * A structure representing a required material.
  */
-interface RequiredMaterial {
+export interface RequiredMaterial {
     /**
      * The material name.
      */
@@ -18,7 +18,7 @@ interface RequiredMaterial {
 /**
  * A structure representing a material that can be made.
  */
-interface MaterialCounter {
+export interface MaterialCounter {
     /**
      * Name of the material.
      */
