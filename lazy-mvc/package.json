@@ -1,0 +1,36 @@
+{
+  "name": "lazy-mvc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/app.js",
+  "scripts": {
+    "sass": "(sass ./src/server/views/:./public/stylesheetsComp --no-source-map --style compressed) && (postcss public/stylesheetsComp/ --dir ./public/assets/stylesheets/ --use autoprefixer) && (rm -rf public/stylesheetsComp)",
+    "webpack": "webpack",
+    "tsc": "(rm -rf dist/) && tsc",
+    "start": "node dist/server/app.js",
+    "starting": "ts-node src/server/app.ts",
+    "dev": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@types/ws": "^8.5.4",
+    "autoprefixer": "^10.4.13",
+    "dotenv": "^16.0.3",
+    "dotenv-webpack": "^8.0.1",
+    "gulp": "^4.0.2",
+    "postcss": "^8.4.21",
+    "postcss-cli": "^10.1.0",
+    "sass": "^1.57.1",
+    "ts-loader": "^9.4.2",
+    "ts-node": "^10.9.1",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  },
+  "dependencies": {
+    "lazy-toolbox": "^1.4.12"
+  }
+}
