@@ -1,6 +1,6 @@
 ## [Updates](#updates)
 
-### v0.0.16 - Topological sort
+### v0.0.17 - Topological sort
 
 New content was added:
 - Add `LazyCounter` class.
