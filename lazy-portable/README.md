@@ -24,12 +24,14 @@ The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-too
 	    - [dateLog](#dateLog)
 	    - [dateLogMS](#dateLogMs)
 	    - [getType](#getType)
+	    - [LazyCounter](#lazyCounter)
 	    - [LazyDataGraph](#lazyDataGraph)
 	    - [LazyMapper](#lazyMapper)
 	    - [LazyMath](#lazyMath)
 	    - [LazyParsing](#lazyParsing)
 	    - [LazyPattern](#lazyPattern)
 	    - [LazyRule](#lazyRule)
+	    - [LazySort](#lazySort)
 	    - [LazyText](#lazyText)
 
 ## [Installation (NPM)](#install-npm)
@@ -40,6 +42,12 @@ npm i @lazy-toolbox/portable
 ```
 
 ## [Updates](#updates)
+
+### v0.0.16 - Topological sort
+
+New content was added:
+- Add `LazyCounter` class.
+- Add `LazySort` class.
 
 ### v0.0.13 - New rules
 
@@ -143,6 +151,64 @@ const y = [ 'a', 'b' ];
 console.log(getType(x)); // class
 console.log(getType(y)); // array
 // Everything else is the same as typeof
+```
+
+#### [LazyCounter](#lazyCounter)
+```ts
+interface RequiredMaterial {
+    name: string;
+    quantity?: number;
+    price?: number;
+}
+interface MaterialCounter {
+    name: string;
+    required?: RequiredMaterial[];
+    price: number;
+}
+class LazyCounter {
+    static fullPrice(itemName: string, ...materials: MaterialCounter[]): number;
+    static allRowMaterials(itemName: string, ...materials: MaterialCounter[]): RequiredMaterial[];
+}
+```
+
+A lazy way to count in crafting structure.
+
+Example:
+
+```js
+const { LazyCounter } = require('@lazy-toolbox/portable');
+const materials = [
+    {
+        name: "wood",
+        price: 1
+    },
+    {
+        name: "steel",
+        price: 5
+    },
+    {
+        name: "sword",
+        required: [
+            {
+                name: "wood",
+                quantity: 1
+            },
+            {
+                name: "steel",
+                quantity: 2
+            }
+        ],
+        price: 100
+    }
+]
+console.log(LazyCounter.fullPrice("sword", materials)); // 111
+for(const item of LazyCounter.allRowMaterials("sword", materials)) {
+    console.log(`${item.name}: ${item.quantity}`);
+}
+/*
+wood: 1
+steel: 2
+*/
 ```
 
 #### [LazyDataGraph](#lazyDataGraph)
@@ -439,6 +505,50 @@ Example:
 ```js
 const { LazyParsing, LazyRule } = require('@lazy-toolbox/portable');
 const parsingRules = LazyParsing.createSet(LazyRule.number(), LazyRule.word());
+```
+#### [LazySort](#lazySort)
+```ts
+interface RequiredOrder {
+    name: string,
+    content: any,
+    required?: string[]
+}
+class LazySort {
+    static byRequired(myDatas: RequiredOrder[], allMustExist: boolean = false): RequiredOrder[];
+}
+```
+
+A lazy way to sort some particular structure.
+
+Example:
+
+```js
+const { LazySort } = require('@lazy-toolbox/portable');
+const arr = [
+    {
+        name: "c",
+        content: "C",
+        required: ["a", "b"]
+    },
+    {
+        name: "a",
+        content: "A"
+    },
+    {
+        name: "b",
+        content: "B",
+        required: ["a"]
+    },
+];
+const results = LazySort.byRequired(arr);
+for(const r of results) {
+    console.log(r.name);
+}
+/*
+a
+b
+c
+*/
 ```
 #### [LazyText](#lazyText)
 ```ts

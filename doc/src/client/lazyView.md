@@ -2,12 +2,16 @@
 
 ```ts
 class LazyView {
+    static div: HTMLDivElement;
     static replaceInsert(actualElement: HTMLElement, targetElement: string, newHTMLContent: string): void;
+    static getNodeContent(node: Node): string | null;
+    static getNodeType(node: any): string;
     static inject(htmlDoc: string, toInject: {[name: string]: string}): string;
     static toNode(content: string): ChildNode | null;
     static toNodeList(content: string): NodeListOf<ChildNode>;
     static toArray(content: string): ChildNode[];
     static toText(content: ChildNode[]): string;
+    static stringToHTML(str: string): HTMLElement;
 }
 ```
 

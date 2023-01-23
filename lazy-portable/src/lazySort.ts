@@ -1,10 +1,31 @@
+/**
+ * A representation of a dependencies data.
+ */
 interface RequiredOrder {
+    /**
+     * Name of the dependencie.
+     */
     name: string,
+    /**
+     * Content of the dependencie.
+     */
     content: any,
+    /**
+     * The list of all required dependencies.
+     */
     required?: string[]
 }
+/**
+ * A lazy way to sort some particular structure.
+ */
 export class LazySort {
-    public static byRequired(myDatas: RequiredOrder[], allMustExist: boolean = false) {
+    /**
+     * Sort elements by dependencies.
+     * @param {RequiredOrder[]} myDatas The list of all elements.
+     * @param {boolean} allMustExist If true, it will remove all elements that require an unexisting dependencie.
+     * @returns {RequiredOrder[]} The list of all elements sorted by dependencies.
+     */
+    public static byRequired(myDatas: RequiredOrder[], allMustExist: boolean = false): RequiredOrder[] {
         const nodeMap: {[label: string]: RequiredOrder} = {};
         for (const data of myDatas) {
             nodeMap[data.name] = data;

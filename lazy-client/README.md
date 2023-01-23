@@ -27,6 +27,7 @@ The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-too
 	    - [LazyDoc](#lazyDoc)
 	    - [LazyFile](#lazyFile)
 	    - [LazyHtNetwork](#lazyHtNetwork)
+	    - [LazyReact](#lazyReact)
 	    - [LazySchedule](#lazySchedule)
 	    - [LazyTabularTextArea](#lazyTabularTextArea)
 	    - [LazyTheme](#lazyTheme)
@@ -40,6 +41,14 @@ npm i @lazy-toolbox/client
 ```
 
 ## [Updates](#updates)
+
+### [v0.0.19 - LazyReact](#se-vo-o-o)
+
+New content were added:
+- Add `LazyDOMDiffing`, `LazyReact` and `LazyView` class.
+
+New modification were introduced:
+- Add `getNodeContent`, `getNodeType` and `stringToHTML` to `LazyView`.
 
 ### [v0.0.16 - LazyInteractivity](#se-vo-o-o)
 
@@ -415,6 +424,79 @@ tristate.addEventListener('change', (e) => {
 <!--Since it's a state, it will be triggering a onchange event if the state change-->
 <input tristate type="text">
 ```
+#### [LazyReact](#lazyReact)
+```ts
+interface LazyReactOptions {
+    selector: string;
+    data: {[label: string]: any};
+    component: (data: {[label: string]: any}) => string;
+}
+class LazyReact {
+    component: (data: {[label: string]: any}) => string;
+    debounce: number | null;
+    data: {[label: string]: any};
+    constructor(options: LazyReactOptions);
+    render(): void;
+    static load(options: LazyReactOptions): {[label: string]: any};
+}
+```
+
+A lazy way to make reactive components.
+
+Example:
+
+Usual code:
+```js
+const { LazyReact } = require('@lazy-toolbox/client');
+const app = LazyReact.load({
+    selector: '#app',
+    data: {
+        head: 'Task to achieve',
+        todo: ['Task A', 'Task B', 'Task C', 'Task D']
+    },
+    component: function (props) {
+        return `
+            <h1>${props.head}</h1>
+            <ul>
+                ${props.todo.map(function (tdo) {
+                    return `<li>${tdo}</li>`;
+                }).join('')}
+            </ul>`;
+    }
+});
+
+// After 3 seconds, update the data and render a new UI
+setTimeout(function () {
+    app.todo.push('Task E');
+}, 3000);
+```
+
+Alternative code:
+```js
+const { LazyReact } = require('@lazy-toolbox/client');
+const app = new LazyReact({
+    selector: '#app',
+    data: {
+        head: 'Task to achieve',
+        todo: ['Task A', 'Task B', 'Task C', 'Task D']
+    },
+    component: function (props) {
+        return `
+            <h1>${props.head}</h1>
+            <ul>
+                ${props.todo.map(function (tdo) {
+                    return `<li>${tdo}</li>`;
+                }).join('')}
+            </ul>`;
+    }
+});
+// Render a UI from the component.
+app.render();
+// After 3 seconds, update the data and render a new UI.
+setTimeout(function () {
+    app.data.todo.push('Task E');
+}, 3000);
+```
 #### [LazySchedule](#lazySchedule)
 ```ts
 class LazySchedule {
@@ -521,12 +603,16 @@ console.log(myThemes.theme());
 
 ```ts
 class LazyView {
+    static div: HTMLDivElement;
     static replaceInsert(actualElement: HTMLElement, targetElement: string, newHTMLContent: string): void;
+    static getNodeContent(node: Node): string | null;
+    static getNodeType(node: any): string;
     static inject(htmlDoc: string, toInject: {[name: string]: string}): string;
     static toNode(content: string): ChildNode | null;
     static toNodeList(content: string): NodeListOf<ChildNode>;
     static toArray(content: string): ChildNode[];
     static toText(content: ChildNode[]): string;
+    static stringToHTML(str: string): HTMLElement;
 }
 ```
 

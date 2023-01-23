@@ -5,6 +5,7 @@
     - [LazyDoc](#lazyDoc)
     - [LazyFile](#lazyFile)
     - [LazyHtNetwork](#lazyHtNetwork)
+    - [LazyReact](#lazyReact)
     - [LazySchedule](#lazySchedule)
     - [LazyTabularTextArea](#lazyTabularTextArea)
     - [LazyTheme](#lazyTheme)

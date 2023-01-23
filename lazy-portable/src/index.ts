@@ -5,5 +5,7 @@ export { LazyText } from "./lazyText";
 export { LazyParsing, PatternResult } from "./parser/lazyParsing";
 export { LazyPattern, PatternFound } from "./parser/lazyPattern";
 export { LazyRule, BasicRule } from "./parser/lazyRule";
+export { LazySort } from "./lazySort";
+export { LazyCounter } from "./lazyCounter";
 export { getType } from "./lazyTypeof";
 export { dateLog, dateLogMS } from "./lazyLog";

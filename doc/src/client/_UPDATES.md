@@ -1,5 +1,13 @@
 ## [Updates](#updates)
 
+### [v0.0.19 - LazyReact](#se-vo-o-o)
+
+New content were added:
+- Add `LazyDOMDiffing`, `LazyReact` and `LazyView` class.
+
+New modification were introduced:
+- Add `getNodeContent`, `getNodeType` and `stringToHTML` to `LazyView`.
+
 ### [v0.0.16 - LazyInteractivity](#se-vo-o-o)
 
 New content were added:

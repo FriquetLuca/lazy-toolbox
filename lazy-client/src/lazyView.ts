@@ -53,6 +53,42 @@ export class LazyView {
         }
     }
     /**
+     * Get the text content of a node
+     * @param  {Node} node The node
+     * @return {string|null} The text content
+     */
+    public static getNodeContent(node: Node): string | null {
+        if (node.childNodes && node.childNodes.length > 0) {
+            return null;
+        }
+        return node.textContent;
+    }
+    /**
+     * Get the type of a node.
+     * @param {Node} node The node
+     * @return {string} The type
+     */
+    public static getNodeType(node: any): string {
+        switch(node.nodeType) {
+            case 3:
+                return 'text';
+            case 8:
+                return 'comment';
+            default:
+                return node.tagName.toLowerCase();
+        }
+    }
+    /**
+     * Convert a template string into HTML DOM nodes.
+     * @param  {string} str The template string
+     * @return {Node} The template HTML
+     */
+    public static stringToHTML(str: string): HTMLElement {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(str, 'text/html');
+        return doc.body;
+    }
+    /**
      * Inject a bunch of datas inside a HTML document.
      * @param {string} htmlDoc The HTML document given as a string.
      * @param {{[name: string]: string}} toInject The data to inject inside the document.
