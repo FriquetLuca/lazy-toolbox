@@ -1,7 +1,6 @@
 import path from "path";
 import dotenv from "dotenv";
-import fs from "fs";
-import { LazyRouter, LazyModLoader, LazyFS } from "lazy-toolbox";
+import { LazyRouter, LazyFS } from "lazy-toolbox";
 
 dotenv.config();
 const _ROOT = {

@@ -29,6 +29,12 @@ module.exports = [
             providedExports: true, // Tells webpack to figure out which exports are provided by modules to generate more efficient code for export * from ...
             removeAvailableModules: true, // Tells webpack to detect and remove modules from chunks when these modules are already included in all parents.
             usedExports: true, // <- remove unused function
+        },
+        watch: true,
+        watchOptions: {
+            aggregateTimeout: 200,
+            poll: 1000, // Check for changes every second
+            ignored: ['/node_modules', '/public', '/Server', '/vendor'],
         }
     }
 ];

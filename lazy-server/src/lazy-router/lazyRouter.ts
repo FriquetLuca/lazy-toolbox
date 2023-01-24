@@ -291,6 +291,9 @@ export class LazyRouter {
      * Start listening to the port.
      */
     public start(): void {
+        process.on('SIGTERM', async () => {
+            await this.fastify.close();
+        });
         this.fastify.listen({ port: this.port, host: this.host }, function (err: Error | null) {
             if (err) {
                 console.error(err);

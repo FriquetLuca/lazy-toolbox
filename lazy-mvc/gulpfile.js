@@ -8,11 +8,11 @@ const simpleTasks = [
     command: "npm run tsc",
     watch: "src/server/**/*.{ts,tsx,js}"
   },
-  {
-    name: "sass",
-    command: "npm run sass",
-    watch: "src/server/views/**/*.{sass,scss,css}"
-  }
+  // {
+  //   name: "sass",
+  //   command: "npm run sass",
+  //   watch: "src/server/views/**/*.{sass,scss,css}"
+  // }
 ];
 
 // This task will run `npm run sass` on any .sass, .scss, or .css file that is changed inside the Server/Views/Pages directory
@@ -35,7 +35,7 @@ const callbackLog = (cb) => {
   }
 };
 const serverCb = (cb) => {
-  const currentProcess = spawn('npm', ['run', 'start'], {
+  const currentProcess = spawn('npm', ['run', 'starting'], {
     cwd: __dirname,
     stdio: ['ipc'],
   });
@@ -88,7 +88,7 @@ for(const task of simpleTasks) {
 gulp.task('webpack', webpackCb);
 
 // This is the default task that will run all of the above tasks
-gulp.task('default', gulp.parallel(simpleTasks.map((task) => {
+gulp.task('default', gulp.parallel("webpack", simpleTasks.map((task) => {
   return task.name;
 })));
 
