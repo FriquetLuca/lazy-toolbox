@@ -11,7 +11,6 @@ class LazyReact {
     data: {[label: string]: any};
     constructor(options: LazyReactOptions);
     render(): void;
-    static load(options: LazyReactOptions): {[label: string]: any};
 }
 ```
 
@@ -19,33 +18,6 @@ A lazy way to make reactive components.
 
 Example:
 
-Usual code:
-```js
-const { LazyReact } = require('@lazy-toolbox/client');
-const app = LazyReact.load({
-    selector: '#app',
-    data: {
-        head: 'Task to achieve',
-        todo: ['Task A', 'Task B', 'Task C', 'Task D']
-    },
-    component: function (props) {
-        return `
-            <h1>${props.head}</h1>
-            <ul>
-                ${props.todo.map(function (tdo) {
-                    return `<li>${tdo}</li>`;
-                }).join('')}
-            </ul>`;
-    }
-});
-
-// After 3 seconds, update the data and render a new UI
-setTimeout(function () {
-    app.todo.push('Task E');
-}, 3000);
-```
-
-Alternative code:
 ```js
 const { LazyReact } = require('@lazy-toolbox/client');
 const app = new LazyReact({

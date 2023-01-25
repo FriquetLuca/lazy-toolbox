@@ -1,5 +1,11 @@
 ## [Updates](#updates)
 
+### v0.0.18 - Bundle and Singleton
+
+New content was added:
+- Add `LazySingleton` class.
+- A bundle for portability.
+
 ### v0.0.17 - Topological sort
 
 New content was added:

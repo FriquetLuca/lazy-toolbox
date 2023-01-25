@@ -3,6 +3,7 @@ export { LazyMapper } from "./lazyMapper";
 export { LazyDataGraph, GraphPoint } from "./lazyDataGraph";
 export { LazySort, RequiredOrder } from "./lazySort";
 export { LazyCounter, RequiredMaterial, MaterialCounter } from "./lazyCounter";
+export { LazySingleton } from "./lazySingleton";
 export { LazyText } from "./lazyText";
 export { LazyParsing, PatternResult } from "./parser/lazyParsing";
 export { LazyPattern, PatternFound } from "./parser/lazyPattern";

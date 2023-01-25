@@ -1,5 +1,13 @@
 ## [Updates](#updates)
 
+### [v0.0.20 - LazyDOM](#se-vo-o-o)
+
+New content were added:
+- Add `LazyDOM` class.
+
+New content were modified:
+- Removed `load` method from `LazyReact` and create the equivalent into `LazyDOM` named as `react` method.
+
 ### [v0.0.19 - LazyReact](#se-vo-o-o)
 
 New content were added:

@@ -14,3 +14,20 @@
 Made to handle a bunch of cases that have to be handle on either a server or a client part.
 
 The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-toolbox).
+
+There is also a bundle for thoses who don't want to use NodeJS.
+To use it, just add in your HTML:
+```HTML
+<script src="./lazyPortable.js" type="module"></script>
+```
+You can change the type module if needed.
+
+Suppose you have a `test.js` script in which you want to use the `lazyPortable.js` bundle like this for example:
+```HTML
+<script src="./test.js" defer></script>
+```
+You can use the `LazyPortable` global variable to access all of the `LazyPortable` classes.
+Example:
+```js
+console.log(LazyPortable.LazyMath.modulo(3, 2));
+```

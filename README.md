@@ -285,6 +285,54 @@ Same as creating the element:
 */
 ```
 
+#### [LazyDOM](#lazyDOM)
+```ts
+
+```
+
+Example:
+
+```html
+<div id="app"></div>
+```
+
+```js
+const { LazyDOM } = require('@lazy-toolbox/client');
+
+// Create a reactive component.
+const app = LazyDOM.react({
+    selector: '#app',
+    data: {
+        head: 'Task to achieve',
+        todo: ['Task A', 'Task B', 'Task C', 'Task D']
+    },
+    component: function (props) {
+        return `
+            <h1>${props.head}</h1>
+            <ul>
+                ${props.todo.map(function (tdo) {
+                    return `<li>${tdo}</li>`;
+                }).join('')}
+            </ul>`;
+    }
+});
+
+// Observe changes in the DOM from the body of the document.
+LazyDOM.observe(document.body, (elements: MutationRecord[]) => {
+    for(const element of elements) {
+        for(const currentNode of element.addedNodes) {
+            // Show only new added node that is an HTML element
+            if(currentNode.nodeType === Node.ELEMENT_NODE) {
+                console.log(currentNode);
+            }
+        }
+    }
+});
+// After 3 seconds, update the data and render a new UI
+setTimeout(function () {
+    app.todo.push('Task E');
+}, 3000);
+```
 #### [LazyFile](#lazyFile)
 
 ```ts
@@ -421,7 +469,6 @@ class LazyReact {
     data: {[label: string]: any};
     constructor(options: LazyReactOptions);
     render(): void;
-    static load(options: LazyReactOptions): {[label: string]: any};
 }
 ```
 
@@ -429,33 +476,6 @@ A lazy way to make reactive components.
 
 Example:
 
-Usual code:
-```js
-const { LazyReact } = require('@lazy-toolbox/client');
-const app = LazyReact.load({
-    selector: '#app',
-    data: {
-        head: 'Task to achieve',
-        todo: ['Task A', 'Task B', 'Task C', 'Task D']
-    },
-    component: function (props) {
-        return `
-            <h1>${props.head}</h1>
-            <ul>
-                ${props.todo.map(function (tdo) {
-                    return `<li>${tdo}</li>`;
-                }).join('')}
-            </ul>`;
-    }
-});
-
-// After 3 seconds, update the data and render a new UI
-setTimeout(function () {
-    app.todo.push('Task E');
-}, 3000);
-```
-
-Alternative code:
 ```js
 const { LazyReact } = require('@lazy-toolbox/client');
 const app = new LazyReact({
@@ -1063,6 +1083,32 @@ Example:
 ```js
 const { LazyParsing, LazyRule } = require('@lazy-toolbox/portable');
 const parsingRules = LazyParsing.createSet(LazyRule.number(), LazyRule.word());
+```
+#### [LazySingleton](#lazySingleton)
+```ts
+class LazySingleton {
+    protected constructor();
+    static instanceFactory<T extends LazySingleton>(this: new (...args: any[]) => T, ...args: any[]): T;
+    static getInstance<T extends LazySingleton>(): T;
+}
+```
+
+A lazy singleton representation to not bother about doing it at all nor ever.
+
+Example:
+```js
+const { LazySingleton } = require('@lazy-toolbox/portable');
+class ExampleSingleton extends LazySingleton {
+    constructor(name) {
+        super();
+        this.name = name;
+    }
+    sayName() {
+        return `My name is ${this.name}`;
+    }
+}
+const myExampleSingleton = new ExampleSingleton.instanceFactory("Amazing");
+console.log(myExampleSingleton.sayName(myExampleSingleton));
 ```
 #### [LazySort](#lazySort)
 ```ts

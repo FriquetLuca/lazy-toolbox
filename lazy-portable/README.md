@@ -15,6 +15,22 @@ Made to handle a bunch of cases that have to be handle on either a server or a c
 
 The source code is available on [GitHub](https://github.com/FriquetLuca/lazy-toolbox).
 
+There is also a bundle for thoses who don't want to use NodeJS.
+To use it, just add in your HTML:
+```HTML
+<script src="./lazyPortable.js" type="module"></script>
+```
+You can change the type module if needed.
+
+Suppose you have a `test.js` script in which you want to use the `lazyPortable.js` bundle like this for example:
+```HTML
+<script src="./test.js" defer></script>
+```
+You can use the `LazyPortable` global variable to access all of the `LazyPortable` classes.
+Example:
+```js
+console.log(LazyPortable.LazyMath.modulo(3, 2));
+```
 ## Index
 
 - [Installation (NPM)](#install-npm)
@@ -42,6 +58,12 @@ npm i @lazy-toolbox/portable
 ```
 
 ## [Updates](#updates)
+
+### v0.0.18 - Bundle and Singleton
+
+New content was added:
+- Add `LazySingleton` class.
+- A bundle for portability.
 
 ### v0.0.17 - Topological sort
 
@@ -505,6 +527,32 @@ Example:
 ```js
 const { LazyParsing, LazyRule } = require('@lazy-toolbox/portable');
 const parsingRules = LazyParsing.createSet(LazyRule.number(), LazyRule.word());
+```
+#### [LazySingleton](#lazySingleton)
+```ts
+class LazySingleton {
+    protected constructor();
+    static instanceFactory<T extends LazySingleton>(this: new (...args: any[]) => T, ...args: any[]): T;
+    static getInstance<T extends LazySingleton>(): T;
+}
+```
+
+A lazy singleton representation to not bother about doing it at all nor ever.
+
+Example:
+```js
+const { LazySingleton } = require('@lazy-toolbox/portable');
+class ExampleSingleton extends LazySingleton {
+    constructor(name) {
+        super();
+        this.name = name;
+    }
+    sayName() {
+        return `My name is ${this.name}`;
+    }
+}
+const myExampleSingleton = new ExampleSingleton.instanceFactory("Amazing");
+console.log(myExampleSingleton.sayName(myExampleSingleton));
 ```
 #### [LazySort](#lazySort)
 ```ts

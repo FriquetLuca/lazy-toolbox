@@ -42,6 +42,14 @@ npm i @lazy-toolbox/client
 
 ## [Updates](#updates)
 
+### [v0.0.20 - LazyDOM](#se-vo-o-o)
+
+New content were added:
+- Add `LazyDOM` class.
+
+New content were modified:
+- Removed `load` method from `LazyReact` and create the equivalent into `LazyDOM` named as `react` method.
+
 ### [v0.0.19 - LazyReact](#se-vo-o-o)
 
 New content were added:
@@ -301,6 +309,54 @@ Same as creating the element:
 */
 ```
 
+#### [LazyDOM](#lazyDOM)
+```ts
+
+```
+
+Example:
+
+```html
+<div id="app"></div>
+```
+
+```js
+const { LazyDOM } = require('@lazy-toolbox/client');
+
+// Create a reactive component.
+const app = LazyDOM.react({
+    selector: '#app',
+    data: {
+        head: 'Task to achieve',
+        todo: ['Task A', 'Task B', 'Task C', 'Task D']
+    },
+    component: function (props) {
+        return `
+            <h1>${props.head}</h1>
+            <ul>
+                ${props.todo.map(function (tdo) {
+                    return `<li>${tdo}</li>`;
+                }).join('')}
+            </ul>`;
+    }
+});
+
+// Observe changes in the DOM from the body of the document.
+LazyDOM.observe(document.body, (elements: MutationRecord[]) => {
+    for(const element of elements) {
+        for(const currentNode of element.addedNodes) {
+            // Show only new added node that is an HTML element
+            if(currentNode.nodeType === Node.ELEMENT_NODE) {
+                console.log(currentNode);
+            }
+        }
+    }
+});
+// After 3 seconds, update the data and render a new UI
+setTimeout(function () {
+    app.todo.push('Task E');
+}, 3000);
+```
 #### [LazyFile](#lazyFile)
 
 ```ts
@@ -437,7 +493,6 @@ class LazyReact {
     data: {[label: string]: any};
     constructor(options: LazyReactOptions);
     render(): void;
-    static load(options: LazyReactOptions): {[label: string]: any};
 }
 ```
 
@@ -445,33 +500,6 @@ A lazy way to make reactive components.
 
 Example:
 
-Usual code:
-```js
-const { LazyReact } = require('@lazy-toolbox/client');
-const app = LazyReact.load({
-    selector: '#app',
-    data: {
-        head: 'Task to achieve',
-        todo: ['Task A', 'Task B', 'Task C', 'Task D']
-    },
-    component: function (props) {
-        return `
-            <h1>${props.head}</h1>
-            <ul>
-                ${props.todo.map(function (tdo) {
-                    return `<li>${tdo}</li>`;
-                }).join('')}
-            </ul>`;
-    }
-});
-
-// After 3 seconds, update the data and render a new UI
-setTimeout(function () {
-    app.todo.push('Task E');
-}, 3000);
-```
-
-Alternative code:
 ```js
 const { LazyReact } = require('@lazy-toolbox/client');
 const app = new LazyReact({

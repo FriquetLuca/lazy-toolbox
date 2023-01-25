@@ -5,6 +5,7 @@ export { LazyParsing, PatternResult } from "./dist/parser/lazyParsing";
 export { LazyPattern, PatternFound } from "./dist/parser/lazyPattern";
 export { LazyRule, BasicRule } from "./dist/parser/lazyRule";
 export { LazySort, RequiredOrder } from "./dist/lazySort";
+export { LazySingleton } from "./dist/lazySingleton";
 export { LazyText } from "./dist/lazyText";
 export { LazyCounter, RequiredMaterial, MaterialCounter } from "./dist/lazyCounter";
 export { getType } from "./dist/lazyTypeof";

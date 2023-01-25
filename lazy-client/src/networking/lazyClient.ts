@@ -1,4 +1,4 @@
-import {LazySchedule} from './lazySchedule';
+import {LazySchedule} from '../components/lazySchedule';
 /**
  * A lazy socket client to setup a websocket communication.
  * @method send Send a packet with datas to the server.

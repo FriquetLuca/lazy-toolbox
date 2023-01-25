@@ -1,4 +1,4 @@
-import { LazyReact } from "./lazyReact";
+import { LazyReactComponent } from "./lazyReact";
 import { LazyView } from "./lazyView";
 /**
  * A lazy handler for responsive components.
@@ -28,14 +28,14 @@ export interface LazyHandler {
     deleteProperty: (obj: any, prop: any) => boolean;
 }
 /**
- * A lazy way to achieve DOM Diffing
+ * A lazy way to achieve DOM Diffing.
  */
 export class LazyDOMDiffing {
     /**
      * Setup a debounce renderer.
-     * @param {LazyReact} instance The instance of a lazy react component.
+     * @param {LazyReactComponent} instance The instance of a lazy react component.
      */
-    private static debounceRender(instance: LazyReact): void {
+    private static debounceRender(instance: LazyReactComponent): void {
         // If there's a pending render, cancel it
         if (instance.debounce) {
             window.cancelAnimationFrame(instance.debounce);
@@ -47,10 +47,10 @@ export class LazyDOMDiffing {
     };
     /**
      * A proxy handler for reactive components.
-     * @param {LazyReact} instance The reactive instance.
+     * @param {LazyReactComponent} instance The reactive instance.
      * @returns {LazyHandler} The handler associated with the reactive instance.
      */
-    public static handler(instance: LazyReact): LazyHandler {
+    public static handler(instance: LazyReactComponent): LazyHandler {
         return {
             get: function (obj: any, prop: any): any {
                 if (['[object Object]', '[object Array]'].indexOf(Object.prototype.toString.call(obj[prop])) > -1) {

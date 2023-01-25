@@ -19,3 +19,5 @@ lazy-mvc/package-lock.json
 lazy-mvc/.env
 lazy-mvc/public/assets/scripts
 lazy-mvc/public/assets/stylesheets
+lazy-portable/.vscode
+lazy-client/.vscode

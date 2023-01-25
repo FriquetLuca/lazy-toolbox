@@ -9,7 +9,7 @@ export class LazySchedule {
     private timerCalc: (tries: number) => number;
     private tries: number;
     private maxTries: number;
-    private timer: number | undefined;
+    private timer: any;
     private startingTime: number = -1;
     private deltaTime: number = 0;
     private isStopped: boolean = false;

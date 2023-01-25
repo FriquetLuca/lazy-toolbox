@@ -1,5 +1,5 @@
-import { LazyDualstate } from "./lazyDualstate";
-import { LazyTristate } from './lazyTristate';
+import { LazyDualstate } from "../components/lazyDualstate";
+import { LazyTristate } from '../components/lazyTristate';
 /**
  * A lazy way to make interactive elements.
  */
