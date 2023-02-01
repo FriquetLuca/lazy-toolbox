@@ -27,6 +27,10 @@ export interface LazyReactOptions {
      * @returns {string} The HTML string representation of the component.
      */
     component: (data: {[label: string]: any}) => string;
+    /**
+     * The behaviours of the reactive component.
+     */
+    behaviours?: {[label: string]: any};
 }
 const _COMPONENTS: Map<string,any> = new Map();
 class LazyReactSingletonFactory {
@@ -96,6 +100,10 @@ export abstract class LazyReactComponent extends LazyReactSingletonFactory {
      */
     public component: (data: {[label: string]: any}) => string;
     /**
+     * The behaviours of the reactive component.
+     */
+    public behaviours: {[label: string]: any};
+    /**
      * The rebounce number to keep track of rebounces.
      */
     public debounce: number | null;
@@ -117,6 +125,7 @@ export abstract class LazyReactComponent extends LazyReactSingletonFactory {
         this.debounce = null;
         this.datas = {};
         this.subscribers = new Set();
+        this.behaviours = options.behaviours || {};
         if(options.observers) {
             for(const sub of options.observers) {
                 this.subscribers.add(sub);
@@ -165,7 +174,7 @@ export abstract class LazyReactComponent extends LazyReactSingletonFactory {
         // Convert the template to HTML
         const templateHTML = LazyView.stringToHTML(this.component(this.datas));
         // Diff the DOM
-        LazyDOMDiffing.diff(templateHTML, this.elem);
+        LazyDOMDiffing.diff(templateHTML, this.elem, this.behaviours);
         for(const subscriber of this.subscribers) {
             subscriber.notification(this);
         }

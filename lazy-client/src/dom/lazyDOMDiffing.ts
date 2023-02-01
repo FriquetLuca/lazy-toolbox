@@ -71,12 +71,30 @@ export class LazyDOMDiffing {
             }
         };
     }
+    private static behaviourInjector(elem: Node, behaviours: {[label: string]: any}) {
+        if(elem instanceof HTMLElement) {
+            for(const behaviourLabel in behaviours) {
+                const currentBehaviour = behaviours[behaviourLabel];
+                const behaviourAttributeName = `${behaviourLabel.toLowerCase()}`;
+                const initializedAttr = `f-${behaviourAttributeName}`;
+                (<HTMLElement>elem).querySelectorAll(`[${behaviourAttributeName}]`).forEach((elem: Element) => {
+                    if((<HTMLElement>elem).getAttribute(initializedAttr) !== "1") {
+                        const attr = (<HTMLElement>elem).getAttribute(behaviourAttributeName);
+                        if(attr) {
+                            elem.addEventListener(attr, currentBehaviour);
+                            (<HTMLElement>elem).setAttribute(initializedAttr, "1");
+                        }
+                    }
+                });
+            }
+        }
+    }
     /**
      * Compare the template to the UI and updates.
      * @param {Node} template The template HTML.
      * @param {Node} elem The UI HTML.
      */
-    public static diff(template: Node, elem: Node): void {
+    public static diff(template: Node, elem: Node, behaviours: {[label: string]: any}): void {
         // Get arrays of child nodes
         const domNodes = Array.prototype.slice.call(elem.childNodes);
         const templateNodes = Array.prototype.slice.call(template.childNodes);
@@ -113,15 +131,15 @@ export class LazyDOMDiffing {
             // This uses a document fragment to minimize reflows
             if (domNodes[index].childNodes.length < 1 && node.childNodes.length > 0) {
                 const fragment = document.createDocumentFragment();
-                LazyDOMDiffing.diff(node, fragment);
+                LazyDOMDiffing.diff(node, fragment, behaviours);
                 domNodes[index].appendChild(fragment);
                 return;
             }
             // If there are existing child elements that need to be modified, diff them
             if (node.childNodes.length > 0) {
-                LazyDOMDiffing.diff(node, domNodes[index]);
+                LazyDOMDiffing.diff(node, domNodes[index], behaviours);
             }
         });
-
+        LazyDOMDiffing.behaviourInjector(elem, behaviours);        
     }
 }
